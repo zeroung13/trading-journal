@@ -1,0 +1,292 @@
+{
+  "lastSync": "2026-04-01T07:09:02.355Z",
+  "crypto": [
+    {
+      "id": "32d0081c-521f-809f-87b3-fb13172e272b",
+      "source": "crypto",
+      "num": "1",
+      "date": "2026-03-25",
+      "result": "W",
+      "dayOfWeek": "Wednesday",
+      "asset": "BTC",
+      "htfBias": "Neutral",
+      "oneRPct": null,
+      "rr": 3.100428040704,
+      "maxRR": 3.1,
+      "drawdown": "0%",
+      "direction": "Buy",
+      "session": "LO",
+      "setup": "OMFL",
+      "deliveryNarrative": [
+        "MMBM"
+      ],
+      "entryModel": "LTF confirmation",
+      "entryPDA": [
+        "CSD",
+        "FVG"
+      ],
+      "entryType": "Limit",
+      "tradeType": "Intrasession",
+      "emotions": [],
+      "mmxmTF": [
+        "m5"
+      ],
+      "mmxmNarr": "LRS/B",
+      "sl": 24764,
+      "tp": 76779,
+      "dd": 0,
+      "slUnit": "ticks",
+      "dailyChart": "https://www.tradingview.com/x/VpF9Isnh/",
+      "hourlyChart": "https://www.tradingview.com/x/VOk3auir/",
+      "entryChart": "https://www.tradingview.com/x/aOldN9Rl/",
+      "notes": "Good Trade"
+    },
+    {
+      "id": "32f0081c-521f-8014-95db-d5effd81b3ec",
+      "source": "crypto",
+      "num": "2",
+      "date": "2026-03-26",
+      "result": "W",
+      "dayOfWeek": "Thursday",
+      "asset": "ETH",
+      "htfBias": "Bearish",
+      "oneRPct": null,
+      "rr": 2.871753246753,
+      "maxRR": 2.8,
+      "drawdown": "18.51%",
+      "direction": "Sell",
+      "session": "LO",
+      "setup": "LO continuation",
+      "deliveryNarrative": [
+        "AMD"
+      ],
+      "entryModel": "LTF confirmation",
+      "entryPDA": [
+        "FVG",
+        "CSD"
+      ],
+      "entryType": "Limit",
+      "tradeType": "Intrasession",
+      "emotions": [],
+      "mmxmTF": [
+        "m5"
+      ],
+      "mmxmNarr": null,
+      "sl": 616,
+      "tp": 1769,
+      "dd": 114,
+      "slUnit": "ticks",
+      "dailyChart": "https://www.tradingview.com/x/OCt02uL6/",
+      "hourlyChart": "https://www.tradingview.com/x/PmGcztoc/",
+      "entryChart": "https://www.tradingview.com/x/SGGyBGfH/",
+      "notes": "Asia 세션 통합 이후 확장 그리고 LO 이후 통합 과정에서 박스 미들 레인지 진입을 한 케이스. 결과는 좋았지만 좋은 타점은 아닌듯함."
+    },
+    {
+      "id": "32f0081c-521f-8022-8161-d4a8bf996410",
+      "source": "crypto",
+      "num": "3",
+      "date": "2026-03-26",
+      "result": "W",
+      "dayOfWeek": "Thursday",
+      "asset": "BTC",
+      "htfBias": "Bearish",
+      "oneRPct": null,
+      "rr": 2.054312564797,
+      "maxRR": 2.05,
+      "drawdown": "5.57%",
+      "direction": "Sell",
+      "session": "NY",
+      "setup": "NY continuation",
+      "deliveryNarrative": [
+        "AMD"
+      ],
+      "entryModel": "LTF confirmation",
+      "entryPDA": [
+        "FVG"
+      ],
+      "entryType": "Limit",
+      "tradeType": "Intrasession",
+      "emotions": [
+        "Uncertainty(불확실)"
+      ],
+      "mmxmTF": [
+        "m5"
+      ],
+      "mmxmNarr": null,
+      "sl": 29901,
+      "tp": 61426,
+      "dd": 1664,
+      "slUnit": "ticks",
+      "dailyChart": "https://www.tradingview.com/x/svp6KdqY/",
+      "hourlyChart": "https://www.tradingview.com/x/WV9nhYCp/",
+      "entryChart": "https://www.tradingview.com/x/rNGtXcjk/",
+      "notes": "SMT가 없어서 조금 고민을 했지만 긴 윗꼬리를 보고 매도세가 들어왔다고 판단하에 FVG에서 진입"
+    },
+    {
+      "id": "3320081c-521f-8069-b212-e937419e3d92",
+      "source": "crypto",
+      "num": "4",
+      "date": "2026-03-29",
+      "result": "L",
+      "dayOfWeek": "Sunday",
+      "asset": "BTC",
+      "htfBias": "Bearish",
+      "oneRPct": 3,
+      "rr": -1,
+      "maxRR": 3,
+      "drawdown": "100%",
+      "direction": "Buy",
+      "session": "out of session",
+      "setup": "OMFL",
+      "deliveryNarrative": [
+        "MMBM"
+      ],
+      "entryModel": "LTF confirmation",
+      "entryPDA": [
+        "FVG"
+      ],
+      "entryType": "Limit",
+      "tradeType": "Intraday",
+      "emotions": [
+        "Greed"
+      ],
+      "mmxmTF": [
+        "m5"
+      ],
+      "mmxmNarr": "LRS/B",
+      "sl": 1877,
+      "tp": 5603,
+      "dd": 1877,
+      "slUnit": "ticks",
+      "dailyChart": "https://www.tradingview.com/x/1iEMGOU5/",
+      "hourlyChart": "https://www.tradingview.com/x/1jluloXr/",
+      "entryChart": "https://www.tradingview.com/x/dyMFINP3/",
+      "notes": "Daily -FVG까지 가격이 이끌릴것으로 판단하고 역추세 매매를 함.\n추세 매매를 하려면 Daily -FVG를 터치하는걸 보고 숏 포지션을 생각해야함."
+    }
+  ],
+  "futures": [
+    {
+      "id": "32d0081c-521f-80cb-a7cf-e455eb66b155",
+      "source": "futures",
+      "num": "1",
+      "date": "2026-03-24",
+      "result": "L",
+      "dayOfWeek": "TuesDay",
+      "asset": "MNQ",
+      "htfBias": null,
+      "oneRPct": null,
+      "rr": -1,
+      "maxRR": 0.42,
+      "drawdown": "100%",
+      "direction": "Buy",
+      "session": "LO",
+      "setup": "LO continuation",
+      "deliveryNarrative": [
+        "MMBM"
+      ],
+      "entryModel": "LTF confirmation",
+      "entryPDA": [
+        "CSD"
+      ],
+      "entryType": "Limit",
+      "tradeType": "Intraday",
+      "emotions": [
+        "Rushing(서두름)"
+      ],
+      "mmxmTF": [
+        "m5"
+      ],
+      "mmxmNarr": "1st stage of re-accumulation",
+      "sl": 362,
+      "tp": 1470,
+      "dd": 362,
+      "slUnit": "pips",
+      "dailyChart": "https://www.tradingview.com/x/3Q35NQQZ/",
+      "hourlyChart": "https://www.tradingview.com/x/eqXeu9FC/",
+      "entryChart": "https://www.tradingview.com/x/vghPdaJ7/",
+      "notes": "상단에 Bearish PDA가 있는데 displacement가 없는 타점을 잡음"
+    },
+    {
+      "id": "32f0081c-521f-8088-8511-d54506da9a3e",
+      "source": "futures",
+      "num": "2",
+      "date": "2026-03-27",
+      "result": "L",
+      "dayOfWeek": "Thursday",
+      "asset": "MNQ",
+      "htfBias": "Bearish",
+      "oneRPct": 1,
+      "rr": -1,
+      "maxRR": 0.66,
+      "drawdown": "100%",
+      "direction": "Buy",
+      "session": "NY",
+      "setup": "NY reversal",
+      "deliveryNarrative": [
+        "AMD"
+      ],
+      "entryModel": "LTF confirmation",
+      "entryPDA": [
+        "FVG"
+      ],
+      "entryType": "Limit",
+      "tradeType": "Intraday",
+      "emotions": [
+        "Impatience(기다림x)"
+      ],
+      "mmxmTF": [
+        "m15"
+      ],
+      "mmxmNarr": null,
+      "sl": 750,
+      "tp": 1723.5,
+      "dd": 750,
+      "slUnit": "pips",
+      "dailyChart": "https://www.tradingview.com/x/CU85JGHv/",
+      "hourlyChart": "https://www.tradingview.com/x/f3ReDHuz/",
+      "entryChart": "https://www.tradingview.com/x/Yya6DdEn/",
+      "notes": "크기가 작은 FVG + 스윙포인트를 형성하면서 가격이 내려오고 있었는데 급하게 지정가로 진입함. 원래 반전 구역에서는 2차 컨펌(PB)를 기다렸으면 손실이 발생하지 않았음."
+    },
+    {
+      "id": "3340081c-521f-808c-89b1-f454f1aa9bac",
+      "source": "futures",
+      "num": "3",
+      "date": "2026-03-30",
+      "result": "L",
+      "dayOfWeek": "Monday",
+      "asset": "MES",
+      "htfBias": null,
+      "oneRPct": null,
+      "rr": -1,
+      "maxRR": 0,
+      "drawdown": "100%",
+      "direction": "Buy",
+      "session": "NY",
+      "setup": "NY continuation",
+      "deliveryNarrative": [
+        "MMBM"
+      ],
+      "entryModel": "LTF double confirmation",
+      "entryPDA": [
+        "PB"
+      ],
+      "entryType": "Limit",
+      "tradeType": "Intrasession",
+      "emotions": [
+        "Greed"
+      ],
+      "mmxmTF": [
+        "m15"
+      ],
+      "mmxmNarr": "2nd stage of re-accumulation",
+      "sl": 88,
+      "tp": 189,
+      "dd": 88,
+      "slUnit": "pips",
+      "dailyChart": "https://www.tradingview.com/x/ab4FwwMk/",
+      "hourlyChart": "https://www.tradingview.com/x/DrwY4no9/",
+      "entryChart": "https://www.tradingview.com/x/2PWtmzcU/",
+      "notes": "HTF의 Bias는 H4 > H1 weak high 급습을 기다린 후 숏 셋업을 찾는건데 EQHs를 만드는걸 보고 한번 찌르지 않을까 싶어서 프리미엄존에서 롱 셋업을 찾음 > 기다리지못함 / Bias 역행"
+    }
+  ]
+}
