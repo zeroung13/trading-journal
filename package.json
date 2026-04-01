@@ -1,0 +1,7 @@
+{
+  "name": "trading-journal",
+  "private": true,
+  "dependencies": {
+    "@notionhq/client": "^2.2.0"
+  }
+}
