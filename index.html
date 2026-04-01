@@ -176,6 +176,25 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 .fb-item:last-child{border-bottom:none}
 .fb-icon{font-size:16px;flex-shrink:0;margin-top:1px}
 
+/* capture rate / dd analysis */
+.cap-section{margin-top:16px}
+.cap-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:900px){.cap-grid{grid-template-columns:1fr}}
+.cap-card{background:var(--cbg);border:1px solid var(--b1);border-radius:10px;padding:20px}
+.cap-title{font-size:14px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.cap-sub{font-size:11px;color:var(--t2);margin-bottom:16px}
+.cap-big{font-size:36px;font-weight:800;line-height:1;margin-bottom:4px}
+.cap-detail{font-size:12px;color:var(--t1);line-height:1.7}
+.cap-meter{height:8px;background:var(--b1);border-radius:4px;margin:12px 0;overflow:hidden}
+.cap-meter-fill{height:100%;border-radius:4px;transition:width .4s}
+.dd-bars{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.dd-row{display:flex;align-items:center;gap:10px}
+.dd-label{font-size:12px;color:var(--t1);width:70px;flex-shrink:0;text-align:right}
+.dd-bar-wrap{flex:1;height:24px;background:var(--b1);border-radius:4px;overflow:hidden;position:relative}
+.dd-bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:8px;font-size:11px;font-weight:600;color:#fff;min-width:fit-content;transition:width .4s}
+.dd-stat{font-size:11px;color:var(--t2);width:90px;flex-shrink:0;text-align:right}
+.cap-feedback{margin-top:14px;padding:12px 14px;background:var(--cbg2);border:1px solid var(--b1);border-radius:8px;font-size:13px;line-height:1.6;color:var(--t1)}
+
 /* buttons */
 .btn{border-radius:6px;border:none;cursor:pointer;font-size:13px;font-weight:500;transition:all .15s;white-space:nowrap;padding:8px 16px}
 .btn-p{background:var(--ac);color:#fff}.btn-p:hover{background:var(--ac2)}
@@ -372,6 +391,25 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
         <div class="card">
           <div class="card-hd"><div class="card-ttl">HTF Bias Accuracy</div></div>
           <div class="ch-wrap-sm"><canvas id="ch-bias"></canvas></div>
+        </div>
+      </div>
+      <!-- CAPTURE RATE & DD ANALYSIS -->
+      <div class="cap-section">
+        <div class="cap-grid">
+          <div class="cap-card">
+            <div class="cap-title">🎯 Capture Rate</div>
+            <div class="cap-sub">Max RR 대비 실제로 가져간 비율 — TP 전략 효율성</div>
+            <div class="cap-big" id="cap-rate">—</div>
+            <div class="cap-meter"><div class="cap-meter-fill" id="cap-meter-fill"></div></div>
+            <div class="cap-detail" id="cap-detail"></div>
+            <div class="cap-feedback" id="cap-feedback"></div>
+          </div>
+          <div class="cap-card">
+            <div class="cap-title">📉 DD Zone Analysis</div>
+            <div class="cap-sub">DD% 구간별 승률 — 역행 깊이와 결과의 상관관계</div>
+            <div class="dd-bars" id="dd-bars"></div>
+            <div class="cap-feedback" id="dd-feedback"></div>
+          </div>
         </div>
       </div>
       <!-- NOTES INSIGHT -->
@@ -716,6 +754,8 @@ function renderAnalytics(){
   renderBarChart('ch-pda',groupWinRateMulti(T,'entryPDA'),'Win Rate %');
   renderBarChart('ch-emo',groupAvgRMulti(T,'emotions'),'Avg R',true);
   renderBarChart('ch-bias',groupWinRate(T,'htfBias'),'Win Rate %');
+  renderCaptureRate(T);
+  renderDDAnalysis(T);
   renderNotesInsight(T);
 }
 
@@ -764,6 +804,157 @@ function renderBarChart(id,data,label,isR=false){
       plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>isR?fR(c.parsed.y):c.parsed.y+'%'}}},
       scales:{x:{ticks:{color:'#4f5475',font:{size:10}},grid:{color:'#252840'}},
         y:{ticks:{color:'#8b91b8',font:{size:10},callback:v=>isR?v+'R':v+'%'},grid:{color:'#252840'}}}}});
+}
+
+// ══════════════════════════════════════════════════
+// CAPTURE RATE & DD ANALYSIS
+// ══════════════════════════════════════════════════
+function renderCaptureRate(T){
+  // only trades with both maxRR and rr
+  const valid=T.filter(t=>t.maxRR!=null&&t.maxRR>0&&t.rr!=null&&typeof t.rr==='number');
+  const capEl=document.getElementById('cap-rate');
+  const meterEl=document.getElementById('cap-meter-fill');
+  const detailEl=document.getElementById('cap-detail');
+  const fbEl=document.getElementById('cap-feedback');
+
+  if(valid.length<2){
+    capEl.textContent='—';capEl.style.color='var(--t2)';
+    meterEl.style.width='0%';
+    detailEl.innerHTML='<span style="color:var(--t2)">Max RR과 RR 데이터가 있는 거래가 2건 이상 필요합니다</span>';
+    fbEl.style.display='none';
+    return;
+  }
+
+  const rates=valid.map(t=>{
+    const actual=getR(t);
+    return{maxRR:t.maxRR,actual,capture:actual>0?(actual/t.maxRR*100):0,result:t.result,asset:t.asset||'',date:t.date||''};
+  });
+
+  // wins only for capture rate (losses are -1R by definition)
+  const wins=rates.filter(r=>r.result==='W');
+  const avgCapture=wins.length?wins.reduce((s,r)=>s+r.capture,0)/wins.length:0;
+  const avgLeftOnTable=wins.length?wins.reduce((s,r)=>s+(r.maxRR-r.actual),0)/wins.length:0;
+  const totalLeft=wins.reduce((s,r)=>s+(r.maxRR-r.actual),0);
+
+  // color based on capture rate
+  const capColor=avgCapture>=75?'var(--g)':avgCapture>=50?'var(--y)':'var(--r)';
+  capEl.textContent=avgCapture.toFixed(1)+'%';
+  capEl.style.color=capColor;
+  meterEl.style.width=Math.min(100,avgCapture).toFixed(1)+'%';
+  meterEl.style.background=capColor;
+
+  detailEl.innerHTML=`
+    승리 거래 ${wins.length}건 기준<br>
+    평균 Max RR: <strong>${(wins.reduce((s,r)=>s+r.maxRR,0)/wins.length).toFixed(2)}R</strong> → 실제 평균: <strong>${(wins.reduce((s,r)=>s+r.actual,0)/wins.length).toFixed(2)}R</strong><br>
+    거래당 평균 <strong style="color:var(--r)">${avgLeftOnTable.toFixed(2)}R</strong> 놓침 · 총 <strong style="color:var(--r)">${totalLeft.toFixed(2)}R</strong> 미확보
+  `;
+
+  // feedback
+  fbEl.style.display='';
+  let fb='';
+  if(avgCapture>=75){
+    fb='✅ TP 전략이 효율적입니다. 수익의 대부분을 가져가고 있습니다.';
+  }else if(avgCapture>=50){
+    fb='⚠️ Max RR의 절반 정도만 캡처하고 있습니다. TP를 조금 더 늘리거나, 부분 청산 전략을 고려해보세요.';
+  }else{
+    fb='🔴 수익의 상당 부분을 놓치고 있습니다. 조기 청산 습관이 있는지 점검해보세요. Trail Stop이나 부분 청산으로 개선할 수 있습니다.';
+  }
+  // worst capture trade
+  if(wins.length){
+    const worst=wins.reduce((a,b)=>a.capture<b.capture?a:b);
+    if(worst.capture<50){
+      fb+=`<br><br>📌 최악의 캡처: ${worst.date.slice(0,10)} ${worst.asset} — Max ${worst.maxRR.toFixed(1)}R 중 ${worst.actual.toFixed(2)}R만 확보 (${worst.capture.toFixed(0)}%)`;
+    }
+  }
+  fbEl.innerHTML=fb;
+}
+
+function renderDDAnalysis(T){
+  // DD% = dd/sl * 100 (or use drawdown field directly)
+  const valid=T.filter(t=>{
+    // try drawdown field first (already percentage)
+    if(t.drawdown!=null&&typeof t.drawdown==='string'){
+      const pct=parseFloat(t.drawdown);
+      if(!isNaN(pct))return true;
+    }
+    // calculate from dd and sl
+    if(t.dd!=null&&t.sl!=null&&t.sl>0)return true;
+    return false;
+  });
+
+  const barsEl=document.getElementById('dd-bars');
+  const fbEl=document.getElementById('dd-feedback');
+
+  if(valid.length<3){
+    barsEl.innerHTML='<div style="color:var(--t2);font-size:13px;padding:10px">DD 데이터가 있는 거래가 3건 이상 필요합니다</div>';
+    fbEl.style.display='none';
+    return;
+  }
+
+  // get DD percentage for each trade
+  const trades=valid.map(t=>{
+    let ddPct;
+    if(t.drawdown!=null&&typeof t.drawdown==='string'){
+      ddPct=parseFloat(t.drawdown);
+    }
+    if((ddPct==null||isNaN(ddPct))&&t.dd!=null&&t.sl!=null&&t.sl>0){
+      ddPct=(t.dd/t.sl)*100;
+    }
+    return{ddPct,result:t.result,r:getR(t)};
+  }).filter(t=>!isNaN(t.ddPct));
+
+  // group into zones
+  const zones=[
+    {label:'0-25%',min:0,max:25,color:'var(--g)'},
+    {label:'25-50%',min:25,max:50,color:'var(--y)'},
+    {label:'50-75%',min:50,max:75,color:'#f97316'},
+    {label:'75-100%',min:75,max:100,color:'var(--r)'},
+    {label:'100%',min:100,max:Infinity,color:'#991b1b'}
+  ];
+
+  const zoneData=zones.map(z=>{
+    const inZone=trades.filter(t=>t.ddPct>=z.min&&t.ddPct<z.max);
+    const wins=inZone.filter(t=>t.result==='W').length;
+    const wr=inZone.length?Math.round(wins/inZone.length*100):0;
+    const avgR=inZone.length?(inZone.reduce((s,t)=>s+t.r,0)/inZone.length):0;
+    return{...z,count:inZone.length,wins,wr,avgR};
+  });
+
+  const maxCount=Math.max(...zoneData.map(z=>z.count),1);
+
+  barsEl.innerHTML=zoneData.map(z=>{
+    const barW=z.count?Math.max(z.count/maxCount*100,8):0;
+    const wrColor=z.wr>=50?'var(--g)':z.wr>=35?'var(--y)':'var(--r)';
+    return`<div class="dd-row">
+      <div class="dd-label">${z.label}</div>
+      <div class="dd-bar-wrap">
+        <div class="dd-bar-fill" style="width:${barW}%;background:${z.color}">${z.count}건</div>
+      </div>
+      <div class="dd-stat">승률 <strong style="color:${wrColor}">${z.wr}%</strong> · ${fR(z.avgR)}</div>
+    </div>`;
+  }).join('');
+
+  // feedback
+  fbEl.style.display='';
+  const lowDD=zoneData[0].count+zoneData[1].count;
+  const highDD=zoneData[2].count+zoneData[3].count+zoneData[4].count;
+  const lowDDWr=lowDD?Math.round((zoneData[0].wins+zoneData[1].wins)/lowDD*100):0;
+  const highDDWr=highDD?Math.round((zoneData[2].wins+zoneData[3].wins+(zoneData[4]?.wins||0))/highDD*100):0;
+  const slHit=zoneData[4];
+
+  let fb='';
+  if(lowDD&&highDD){
+    fb=`DD 50% 미만(${lowDD}건) 승률: <strong style="color:${lowDDWr>=50?'var(--g)':'var(--r)'}">${lowDDWr}%</strong> vs DD 50% 이상(${highDD}건) 승률: <strong style="color:${highDDWr>=50?'var(--g)':'var(--r)'}">${highDDWr}%</strong>`;
+    if(lowDDWr>highDDWr+15){
+      fb+='<br>⚠️ 역행이 깊어질수록 승률이 크게 떨어집니다. 50% 이상 역행 시 조기 손절을 고려해보세요.';
+    }else if(highDDWr>=lowDDWr){
+      fb+='<br>✅ 역행이 깊어도 승률이 유지됩니다. SL 위치가 잘 잡혀있습니다.';
+    }
+  }
+  if(slHit&&slHit.count>0){
+    fb+=`<br>📌 SL 100% 도달(풀 손절): ${slHit.count}건 — 전체의 ${Math.round(slHit.count/trades.length*100)}%`;
+  }
+  fbEl.innerHTML=fb;
 }
 
 // ══════════════════════════════════════════════════
