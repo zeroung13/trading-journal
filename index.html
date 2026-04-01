@@ -838,7 +838,7 @@ function renderCaptureRate(T){
 
   // color based on capture rate
   const capColor=avgCapture>=75?'var(--g)':avgCapture>=50?'var(--y)':'var(--r)';
-  capEl.textContent=avgCapture.toFixed(1)+'%';
+  capEl.textContent=(avgCapture>=100?Math.round(avgCapture):avgCapture.toFixed(1))+'%';
   capEl.style.color=capColor;
   meterEl.style.width=Math.min(100,avgCapture).toFixed(1)+'%';
   meterEl.style.background=capColor;
