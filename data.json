@@ -1,5 +1,5 @@
 {
-  "lastSync": "2026-04-01T07:09:02.355Z",
+  "lastSync": "2026-04-01T22:32:27.305Z",
   "crypto": [
     {
       "id": "32d0081c-521f-809f-87b3-fb13172e272b",
@@ -162,6 +162,49 @@
       "hourlyChart": "https://www.tradingview.com/x/1jluloXr/",
       "entryChart": "https://www.tradingview.com/x/dyMFINP3/",
       "notes": "Daily -FVG까지 가격이 이끌릴것으로 판단하고 역추세 매매를 함.\n추세 매매를 하려면 Daily -FVG를 터치하는걸 보고 숏 포지션을 생각해야함."
+    },
+    {
+      "id": "3350081c-521f-8005-adb5-f196788777c6",
+      "source": "crypto",
+      "num": "5",
+      "date": "2026-03-31",
+      "result": "L",
+      "dayOfWeek": "TuesDay",
+      "asset": "BTC",
+      "htfBias": "Bearish",
+      "oneRPct": 2,
+      "rr": -1,
+      "maxRR": 0.83,
+      "drawdown": "100%",
+      "direction": "Sell",
+      "session": "NY",
+      "setup": "NY continuation",
+      "deliveryNarrative": [
+        "no model"
+      ],
+      "entryModel": "LTF double confirmation",
+      "entryPDA": [
+        "PB",
+        "FVG"
+      ],
+      "entryType": "Limit",
+      "tradeType": "Intrasession",
+      "emotions": [
+        "FOMO",
+        "Forcing(억지)"
+      ],
+      "mmxmTF": [
+        "m5"
+      ],
+      "mmxmNarr": null,
+      "sl": 50019,
+      "tp": 111823,
+      "dd": 50019,
+      "slUnit": "ticks",
+      "dailyChart": "https://www.tradingview.com/x/O0VUWDWs/",
+      "hourlyChart": "https://www.tradingview.com/x/57TSYBkw/",
+      "entryChart": "https://www.tradingview.com/x/0L7Et7YL/",
+      "notes": "ERL > ERL의 오더 페어링을 생각하지 못함. 시간봉에서 보면 그냥 Consolidation 중이었는데 BOS로 추세가 지속되길 기도한듯함. 가장 중요한것은 H1 -FVG를 종가로 돌파하면서 추세 전환의 신호가 있었는데 Bearish Bias만 맹신하고 숏 셋업만 찾았음."
     }
   ],
   "futures": [
@@ -287,6 +330,47 @@
       "hourlyChart": "https://www.tradingview.com/x/DrwY4no9/",
       "entryChart": "https://www.tradingview.com/x/2PWtmzcU/",
       "notes": "HTF의 Bias는 H4 > H1 weak high 급습을 기다린 후 숏 셋업을 찾는건데 EQHs를 만드는걸 보고 한번 찌르지 않을까 싶어서 프리미엄존에서 롱 셋업을 찾음 > 기다리지못함 / Bias 역행"
+    },
+    {
+      "id": "3350081c-521f-801f-92a9-e3e8549d5927",
+      "source": "futures",
+      "num": "4",
+      "date": "2026-03-31",
+      "result": "L",
+      "dayOfWeek": "TuesDay",
+      "asset": "MYM",
+      "htfBias": "Neutral",
+      "oneRPct": null,
+      "rr": -1,
+      "maxRR": 0.5,
+      "drawdown": "100%",
+      "direction": "Sell",
+      "session": "NY",
+      "setup": "NY reversal",
+      "deliveryNarrative": [
+        "AMD"
+      ],
+      "entryModel": "TS",
+      "entryPDA": [
+        "FVG"
+      ],
+      "entryType": "Limit",
+      "tradeType": "Intrasession",
+      "emotions": [
+        "Forcing(억지)"
+      ],
+      "mmxmTF": [
+        "m5"
+      ],
+      "mmxmNarr": null,
+      "sl": 183,
+      "tp": 354,
+      "dd": 183,
+      "slUnit": "pips",
+      "dailyChart": "https://www.tradingview.com/x/lP9sAs2T/",
+      "hourlyChart": "https://www.tradingview.com/x/WEAg3DJ9/",
+      "entryChart": "https://www.tradingview.com/x/kGKO7iTR/",
+      "notes": "시간봉에서 명확한 Bullish Order Flow가 보였지만 반전만 생각함. 시간봉에서 빅 음봉으로 -OB가 생성되긴 했지만 아직 Order flow의 반전은 아니었기 때문에 섵부른 판단이었음. 단순하게 BSL을 털고 SSL을 터는 3마켓 패턴이 보임."
     }
   ]
 }
