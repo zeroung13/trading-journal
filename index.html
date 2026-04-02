@@ -41,16 +41,21 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--mbg
 #app{display:none}
 #app.show{display:flex}
 #sb{width:var(--sw);min-height:100vh;background:var(--sbg);border-right:1px solid var(--b1);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:50;transition:width .22s;overflow:hidden}
-#sb.col{width:58px}
+#sb.col{width:58px;cursor:pointer}
+#sb.col:hover{background:linear-gradient(90deg,var(--sbg),rgba(94,106,210,.06));border-right-color:var(--ac)}
 .sb-logo{height:58px;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid var(--b1);gap:10px;flex-shrink:0}
 .sb-li{width:30px;height:30px;background:var(--ac);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;flex-shrink:0;font-family:'JetBrains Mono',monospace}
 .sb-lt{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:15px;white-space:nowrap;letter-spacing:-0.5px}.sb-lt span{color:var(--ac2)}
-.sb-tog{margin-left:auto;background:none;border:none;color:var(--t2);cursor:pointer;font-size:15px;padding:4px;flex-shrink:0}
+.sb-tog{margin-left:auto;background:none;border:none;color:var(--t2);cursor:pointer;font-size:15px;padding:4px;flex-shrink:0;transition:color .15s}
 .sb-tog:hover{color:var(--t0)}
 #sb.col .sb-lt,#sb.col .nav-lbl,#sb.col .src-lbl{display:none}
-#sb.col .sb-tog{margin-left:0}
+#sb.col .sb-tog{margin-left:0;font-size:18px;color:var(--ac)}
+#sb.col:hover .sb-tog{color:var(--ac2);transform:scale(1.2)}
 #sb.col .nav-it{padding:10px;justify-content:center}
 #sb.col .src-it{padding:6px;justify-content:center}
+.sb-open-hint{display:none;position:absolute;left:50%;bottom:16px;transform:translateX(-50%);font-size:9px;color:var(--t2);white-space:nowrap;letter-spacing:.3px;text-transform:uppercase;pointer-events:none}
+#sb.col .sb-open-hint{display:block}
+#sb.col:hover .sb-open-hint{color:var(--ac)}
 
 .sb-nav{padding:8px 0;flex:1}
 .nav-it{display:flex;align-items:center;gap:10px;padding:10px 18px;color:var(--t1);cursor:pointer;border-left:3px solid transparent;transition:all .15s;white-space:nowrap;font-size:13px}
@@ -310,7 +315,7 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 <div id="app">
 
 <!-- SIDEBAR -->
-<aside id="sb">
+<aside id="sb" onclick="sbAreaClick(event)">
   <div class="sb-logo">
     <div class="sb-li">nn</div>
     <div class="sb-lt">nnmn<span>.log</span></div>
@@ -339,6 +344,7 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
       <span class="src-dot" style="background:var(--blue)"></span><span class="src-lbl">Futures</span>
     </div>
   </div>
+  <div class="sb-open-hint">› 열기</div>
 </aside>
 
 <div class="aw" id="aw">
@@ -696,6 +702,12 @@ function toggleSB(){
   const sb=document.getElementById('sb'),aw=document.getElementById('aw');
   sb.classList.toggle('col');aw.classList.toggle('col');
   document.getElementById('sb-tog').textContent=sb.classList.contains('col')?'›':'‹';
+}
+function sbAreaClick(e){
+  const sb=document.getElementById('sb');
+  if(!sb.classList.contains('col'))return; // 열려있으면 무시
+  if(e.target.closest('.sb-tog'))return; // 토글버튼 클릭은 toggleSB가 처리
+  toggleSB();
 }
 function chkMob(){document.getElementById('mob-btn').style.display=window.innerWidth<768?'block':'none'}
 function toggleMob(){document.getElementById('sb').classList.toggle('mob')}
