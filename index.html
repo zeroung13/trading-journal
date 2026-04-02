@@ -71,8 +71,8 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--mbg
 .src-it.on{background:var(--acbg);color:var(--ac2)}
 .src-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 
-.aw{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;min-height:100vh;transition:margin-left .22s}
-.aw.col{margin-left:58px}
+.aw{margin-left:var(--sw);width:calc(100vw - var(--sw));flex:1;display:flex;flex-direction:column;min-height:100vh;transition:margin-left .22s,width .22s;overflow-x:hidden}
+.aw.col{margin-left:58px;width:calc(100vw - 58px)}
 
 .tb{height:58px;background:var(--sbg);border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:40;flex-shrink:0}
 .tb-title{font-size:17px;font-weight:700}
@@ -81,7 +81,7 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--mbg
 .btn-tb{background:var(--cbg2);border:1px solid var(--b1);color:var(--t1);padding:6px 13px;border-radius:6px;font-size:12px;cursor:pointer;transition:all .15s}
 .btn-tb:hover{color:var(--t0);border-color:var(--b2)}
 
-.content{padding:20px 22px;flex:1}
+.content{padding:20px 22px;flex:1;max-width:100%;overflow-x:hidden}
 .view{display:none}.view.on{display:block}
 
 /* ── STAT CARDS ── */
@@ -95,8 +95,8 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--mbg
 .pos{color:var(--g)}.neg{color:var(--r)}.neu{color:var(--t0)}
 
 /* ── LAYOUT ── */
-.dash-mid{display:grid;grid-template-columns:1fr 195px;gap:14px;margin-bottom:16px}
-.dash-bot{display:grid;grid-template-columns:1fr 310px;gap:14px;margin-bottom:16px}
+.dash-mid{display:grid;grid-template-columns:minmax(0,1fr) 195px;gap:14px;margin-bottom:16px}
+.dash-bot{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:14px;margin-bottom:16px}
 .dash-analytics{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .card{background:var(--cbg);border:1px solid var(--b1);border-radius:8px;padding:17px}
 .card-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}
@@ -289,7 +289,7 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 @media(max-width:860px){.dash-mid{grid-template-columns:1fr}}
 @media(max-width:768px){
   #sb{transform:translateX(-100%)}#sb.mob{transform:translateX(0)}
-  .aw,.aw.col{margin-left:0}
+  .aw,.aw.col{margin-left:0;width:100vw}
   .stat-row{grid-template-columns:1fr 1fr}
 }
 @media(max-width:480px){.content{padding:13px}}
