@@ -205,6 +205,38 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 .dd-stat{font-size:11px;color:var(--t2);width:90px;flex-shrink:0;text-align:right}
 .cap-feedback{margin-top:14px;padding:12px 14px;background:var(--cbg2);border:1px solid var(--b1);border-radius:8px;font-size:13px;line-height:1.6;color:var(--t1)}
 
+/* monthly report */
+.mr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.mr-card{background:var(--cbg2);border:1px solid var(--b1);border-radius:8px;padding:14px}
+.mr-month{font-size:13px;font-weight:700;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.mr-r{font-size:18px;font-weight:800}
+.mr-row{display:flex;justify-content:space-between;font-size:11px;color:var(--t1);padding:3px 0;border-bottom:1px solid var(--b1)}
+.mr-row:last-child{border-bottom:none}
+.mr-row strong{color:var(--t0)}
+.mr-trend{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:600;padding:2px 6px;border-radius:3px}
+.mr-up{background:rgba(16,185,129,.12);color:var(--g)}
+.mr-down{background:rgba(244,63,94,.12);color:var(--r)}
+.mr-flat{background:rgba(255,255,255,.04);color:var(--t2)}
+
+/* streak behavior */
+.sb-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:800px){.sb-grid{grid-template-columns:1fr}}
+.sb-card{background:var(--cbg2);border:1px solid var(--b1);border-radius:8px;padding:16px}
+.sb-label{font-size:12px;color:var(--t2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px}
+.sb-val{font-size:20px;font-weight:700;margin-bottom:4px}
+.sb-desc{font-size:11px;color:var(--t1);line-height:1.5}
+
+/* session x setup matrix */
+.mx-wrap{overflow-x:auto;margin-top:10px}
+.mx-table{width:100%;border-collapse:collapse;font-size:12px}
+.mx-table th{padding:8px 10px;text-align:center;color:var(--t2);font-size:10px;text-transform:uppercase;letter-spacing:.3px;border-bottom:1px solid var(--b1);background:var(--cbg2);font-weight:500}
+.mx-table td{padding:7px 10px;text-align:center;border-bottom:1px solid var(--b1)}
+.mx-table tr:last-child td{border-bottom:none}
+.mx-table td:first-child{text-align:left;font-weight:600;color:var(--t0);white-space:nowrap}
+.mx-cell{display:inline-flex;flex-direction:column;align-items:center;gap:1px}
+.mx-wr{font-weight:700;font-size:12px}
+.mx-n{font-size:9px;color:var(--t2)}
+
 /* buttons */
 .btn{border-radius:4px;border:none;cursor:pointer;font-size:13px;font-weight:510;transition:all .15s;white-space:nowrap;padding:8px 16px}
 .btn-p{background:var(--ac);color:#fff}.btn-p:hover{background:var(--ac2)}
@@ -313,7 +345,12 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
       </div>
       <div class="dash-bot">
         <div class="card">
-          <div class="card-hd"><div class="card-ttl">Cumulative R Curve</div></div>
+          <div class="card-hd">
+            <div class="card-ttl">Cumulative R Curve</div>
+            <label style="font-size:11px;color:var(--t2);display:flex;align-items:center;gap:5px;cursor:pointer">
+              <input type="checkbox" id="eq-ap-toggle" onchange="renderDash()" style="accent-color:var(--ac)"> A+ Only 비교
+            </label>
+          </div>
           <div class="ch-wrap"><canvas id="eq-ch"></canvas></div>
         </div>
         <div class="card">
@@ -437,6 +474,27 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
             <div class="cap-sub">DD% 구간별 승률 — 역행 깊이와 결과의 상관관계</div>
             <div class="dd-bars" id="dd-bars"></div>
             <div class="cap-feedback" id="dd-feedback"></div>
+          </div>
+        </div>
+      </div>
+      <!-- MONTHLY REPORT CARD -->
+      <div class="insight-card" style="margin-top:16px">
+        <div class="insight-title">📅 Monthly Report Card</div>
+        <div class="mr-grid" id="mr-grid"></div>
+      </div>
+      <!-- STREAK BEHAVIOR -->
+      <div class="cap-section" style="margin-top:16px">
+        <div class="cap-grid">
+          <div class="cap-card">
+            <div class="cap-title">🔥 Post-Streak Behavior</div>
+            <div class="cap-sub">2연패 후 다음 거래의 품질과 결과</div>
+            <div class="sb-grid" id="sb-streak"></div>
+            <div class="cap-feedback" id="sb-feedback"></div>
+          </div>
+          <div class="cap-card">
+            <div class="cap-title">🔀 Session × Setup Matrix</div>
+            <div class="cap-sub">어떤 세션에서 어떤 셋업이 잘 작동하는지</div>
+            <div class="mx-wrap" id="mx-wrap"></div>
           </div>
         </div>
       </div>
@@ -670,12 +728,26 @@ function calToday(){const n=new Date();cY=n.getFullYear();cM=n.getMonth();render
 // ── EQUITY CHART
 function renderEqCh(T){
   const ctx=document.getElementById('eq-ch').getContext('2d');
+  const showAP=document.getElementById('eq-ap-toggle')?.checked;
   let cum=0;const lb=[],dt=[];
   T.forEach(t=>{cum+=getR(t);lb.push(t.date?.slice(0,10)||'');dt.push(parseFloat(cum.toFixed(3)))});
   if(charts.eq){charts.eq.destroy()}
   const col=cum>=0?'#10b981':'#f43f5e';
-  charts.eq=new Chart(ctx,{type:'line',data:{labels:lb,datasets:[{data:dt,borderColor:col,backgroundColor:col+'14',fill:true,tension:.3,pointRadius:dt.length>80?0:3,pointHoverRadius:5,borderWidth:2}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fR(c.parsed.y)}}},
+  const datasets=[{label:'All Trades',data:dt,borderColor:col,backgroundColor:col+'14',fill:true,tension:.3,pointRadius:dt.length>80?0:3,pointHoverRadius:5,borderWidth:2}];
+
+  if(showAP){
+    let cumAP=0;const dtAP=[];
+    T.forEach(t=>{
+      const g=gradeSetup(t).grade;
+      if(g==='A+'||g==='A') cumAP+=getR(t);
+      dtAP.push(parseFloat(cumAP.toFixed(3)));
+    });
+    datasets.push({label:'A/A+ Only',data:dtAP,borderColor:'#828fff',backgroundColor:'rgba(130,143,255,.08)',fill:true,tension:.3,pointRadius:0,pointHoverRadius:4,borderWidth:2,borderDash:[5,3]});
+  }
+
+  charts.eq=new Chart(ctx,{type:'line',data:{labels:lb,datasets},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:showAP,labels:{color:'#d0d6e0',font:{size:10},boxWidth:12,padding:10}},tooltip:{callbacks:{label:c=>c.dataset.label+': '+fR(c.parsed.y)}}},
       scales:{x:{ticks:{color:'#62666d',maxTicksLimit:8,font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}},y:{ticks:{color:'#62666d',font:{size:10},callback:v=>v+'R'},grid:{color:'rgba(255,255,255,0.04)'}}}}});
 }
 
@@ -816,6 +888,9 @@ function renderAnalytics(){
   renderOFAlignment(T);
   renderCaptureRate(T);
   renderDDAnalysis(T);
+  renderMonthlyReport(T);
+  renderStreakBehavior(T);
+  renderSessionSetupMatrix(T);
   renderNotesInsight(T);
 }
 
@@ -1140,6 +1215,206 @@ function renderDDAnalysis(T){
     fb+=`<br>📌 SL 100% 도달(풀 손절): ${slHit.count}건 — 전체의 ${Math.round(slHit.count/trades.length*100)}%`;
   }
   fbEl.innerHTML=fb;
+}
+
+// ══════════════════════════════════════════════════
+// MONTHLY REPORT CARD
+// ══════════════════════════════════════════════════
+function renderMonthlyReport(T){
+  const grid=document.getElementById('mr-grid');
+  if(!T.length){grid.innerHTML='<div style="color:var(--t2);font-size:13px">데이터 없음</div>';return}
+
+  const byMonth={};
+  T.forEach(t=>{
+    if(!t.date)return;
+    const m=t.date.slice(0,7);// YYYY-MM
+    if(!byMonth[m])byMonth[m]=[];
+    byMonth[m].push(t);
+  });
+
+  const months=Object.keys(byMonth).sort();
+  let prevAvgR=null;
+
+  grid.innerHTML=months.map(m=>{
+    const trades=byMonth[m];
+    const s=stats(trades);
+    const apCount=trades.filter(t=>{const g=gradeSetup(t).grade;return g==='A+'||g==='A'}).length;
+    const apPct=trades.length?Math.round(apCount/trades.length*100):0;
+    const avgR=s.aR;
+
+    let trendCls='mr-flat',trendIcon='→',trendTxt='—';
+    if(prevAvgR!==null){
+      const diff=avgR-prevAvgR;
+      if(diff>0.1){trendCls='mr-up';trendIcon='↑';trendTxt='+'+diff.toFixed(2)+'R'}
+      else if(diff<-0.1){trendCls='mr-down';trendIcon='↓';trendTxt=diff.toFixed(2)+'R'}
+      else{trendTxt='±0'}
+    }
+    prevAvgR=avgR;
+
+    const rc=s.tR>=0?'var(--g)':'var(--r)';
+    const wrColor=s.wr>=0.5?'var(--g)':s.wr>=0.35?'var(--y)':'var(--r)';
+    const [yr,mo]=m.split('-');
+    const moNames=['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const label=moNames[parseInt(mo)]+' '+yr;
+
+    return`<div class="mr-card">
+      <div class="mr-month">
+        <span>${label}</span>
+        <span class="mr-trend ${trendCls}">${trendIcon} ${trendTxt}</span>
+      </div>
+      <div class="mr-r" style="color:${rc}">${fR(s.tR)}</div>
+      <div class="mr-row"><span>거래 수</span><strong>${s.n}건</strong></div>
+      <div class="mr-row"><span>승률</span><strong style="color:${wrColor}">${(s.wr*100).toFixed(0)}%</strong></div>
+      <div class="mr-row"><span>평균 R</span><strong style="color:${rc}">${fR(s.aR)}</strong></div>
+      <div class="mr-row"><span>A/A+ 비율</span><strong style="color:${apPct>=50?'var(--g)':'var(--t1)'}">${apPct}%</strong></div>
+      <div class="mr-row"><span>이익계수</span><strong>${isFinite(s.pf)?s.pf.toFixed(2):'∞'}</strong></div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════
+// STREAK BEHAVIOR ANALYSIS
+// ══════════════════════════════════════════════════
+function renderStreakBehavior(T){
+  const streakDiv=document.getElementById('sb-streak');
+  const fbDiv=document.getElementById('sb-feedback');
+
+  if(T.length<5){
+    streakDiv.innerHTML='<div style="color:var(--t2);font-size:13px;grid-column:1/-1">거래 5건 이상 필요합니다</div>';
+    fbDiv.style.display='none';
+    return;
+  }
+
+  // find trades after 2+ consecutive losses
+  const afterStreak=[];
+  const afterNormal=[];
+  let loseStreak=0;
+
+  for(let i=0;i<T.length;i++){
+    if(i>0){
+      if(loseStreak>=2){
+        afterStreak.push(T[i]);
+      }else{
+        afterNormal.push(T[i]);
+      }
+    }
+    if(T[i].result==='L')loseStreak++;
+    else loseStreak=0;
+  }
+
+  // stats for after-streak trades
+  const asGrades={};
+  afterStreak.forEach(t=>{
+    const g=gradeSetup(t).grade;
+    if(!asGrades[g])asGrades[g]=0;
+    asGrades[g]++;
+  });
+
+  const asStats=stats(afterStreak);
+  const anStats=stats(afterNormal);
+
+  const asWrColor=asStats.wr>=0.5?'var(--g)':asStats.wr>=0.35?'var(--y)':'var(--r)';
+  const anWrColor=anStats.wr>=0.5?'var(--g)':anStats.wr>=0.35?'var(--y)':'var(--r)';
+  const asRColor=asStats.aR>=0?'var(--g)':'var(--r)';
+  const anRColor=anStats.aR>=0?'var(--g)':'var(--r)';
+
+  // grade distribution bar
+  const gradeOrder=['A+','A','B','C'];
+  const gradeColors={'A+':'#828fff','A':'#10b981','B':'#f59e0b','C':'#f43f5e'};
+  const totalAS=afterStreak.length||1;
+  const gradeBars=gradeOrder.map(g=>{
+    const pct=Math.round((asGrades[g]||0)/totalAS*100);
+    return pct>0?`<span style="width:${pct}%;background:${gradeColors[g]};height:100%;display:inline-block;border-radius:2px" title="${g}: ${pct}%"></span>`:'';
+  }).join('');
+
+  streakDiv.innerHTML=`
+    <div class="sb-card">
+      <div class="sb-label">2연패 후 거래</div>
+      <div class="sb-val" style="color:${asRColor}">${afterStreak.length?fR(asStats.aR):'—'}</div>
+      <div class="sb-desc">
+        ${afterStreak.length}건 · 승률 <strong style="color:${asWrColor}">${afterStreak.length?(asStats.wr*100).toFixed(0)+'%':'—'}</strong>
+        ${afterStreak.length?'<div style="margin-top:6px;font-size:10px;color:var(--t2)">Grade 분포</div><div style="height:6px;display:flex;gap:1px;border-radius:3px;overflow:hidden;margin-top:3px">'+gradeBars+'</div>':''}
+      </div>
+    </div>
+    <div class="sb-card">
+      <div class="sb-label">일반 거래</div>
+      <div class="sb-val" style="color:${anRColor}">${afterNormal.length?fR(anStats.aR):'—'}</div>
+      <div class="sb-desc">
+        ${afterNormal.length}건 · 승률 <strong style="color:${anWrColor}">${afterNormal.length?(anStats.wr*100).toFixed(0)+'%':'—'}</strong>
+      </div>
+    </div>`;
+
+  fbDiv.style.display='';
+  let fb='';
+  if(afterStreak.length>=3){
+    if(asStats.aR<anStats.aR-0.3){
+      fb='⚠️ 2연패 후 거래 성과가 일반 거래보다 확실히 나쁩니다. 연패 후 당일 종료 규칙을 철저히 지키세요.';
+    }else if(asStats.aR>=anStats.aR){
+      fb='✅ 연패 후에도 안정적으로 거래하고 있습니다. 감정 관리가 잘 되고 있습니다.';
+    }else{
+      fb='📊 연패 후 약간의 성과 저하가 있습니다. 데이터가 더 쌓이면 패턴이 명확해질 수 있습니다.';
+    }
+    // check grade quality after streak
+    const bcPct=Math.round(((asGrades['B']||0)+(asGrades['C']||0))/totalAS*100);
+    if(bcPct>=60&&afterStreak.length>=3){
+      fb+=`<br>📌 연패 후 B/C급 거래 비율이 ${bcPct}%입니다. 틸트 매매의 징후일 수 있습니다.`;
+    }
+  }else if(afterStreak.length>0){
+    fb='데이터가 부족합니다. 더 많은 거래가 쌓이면 정확한 분석이 가능합니다.';
+  }else{
+    fb='아직 2연패 이상의 기록이 없습니다.';
+  }
+  fbDiv.innerHTML=fb;
+}
+
+// ══════════════════════════════════════════════════
+// SESSION × SETUP MATRIX
+// ══════════════════════════════════════════════════
+function renderSessionSetupMatrix(T){
+  const wrap=document.getElementById('mx-wrap');
+  const sessions=['LO','NY','LC','Asia'];
+  const setupSet=new Set();
+  T.forEach(t=>{if(t.setup&&t.session)setupSet.add(t.setup)});
+  const setups=[...setupSet].sort();
+
+  if(!setups.length||!T.filter(t=>t.setup&&t.session).length){
+    wrap.innerHTML='<div style="color:var(--t2);font-size:13px;padding:10px">Setup + Session 데이터가 필요합니다</div>';
+    return;
+  }
+
+  // build matrix
+  const mx={};
+  sessions.forEach(se=>{mx[se]={};setups.forEach(su=>{mx[se][su]={w:0,n:0,sum:0}})});
+  T.forEach(t=>{
+    if(!t.setup||!t.session)return;
+    if(!mx[t.session])return;
+    if(!mx[t.session][t.setup])mx[t.session][t.setup]={w:0,n:0,sum:0};
+    mx[t.session][t.setup].n++;
+    mx[t.session][t.setup].sum+=getR(t);
+    if(t.result==='W')mx[t.session][t.setup].w++;
+  });
+
+  let html='<table class="mx-table"><thead><tr><th>Setup</th>';
+  sessions.forEach(s=>{html+=`<th>${s}</th>`});
+  html+='</tr></thead><tbody>';
+
+  setups.forEach(su=>{
+    html+=`<tr><td>${su}</td>`;
+    sessions.forEach(se=>{
+      const d=mx[se][su];
+      if(!d||!d.n){
+        html+='<td style="color:var(--t2)">—</td>';
+      }else{
+        const wr=Math.round(d.w/d.n*100);
+        const avgR=d.sum/d.n;
+        const wrColor=wr>=50?'var(--g)':wr>=35?'var(--y)':'var(--r)';
+        html+=`<td><div class="mx-cell"><span class="mx-wr" style="color:${wrColor}">${wr}%</span><span class="mx-n">${d.n}건 · ${fR(avgR)}</span></div></td>`;
+      }
+    });
+    html+='</tr>';
+  });
+  html+='</tbody></table>';
+  wrap.innerHTML=html;
 }
 
 // ══════════════════════════════════════════════════
