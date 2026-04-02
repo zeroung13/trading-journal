@@ -160,6 +160,11 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 .of-bear{background:rgba(244,63,94,.15);color:#f43f5e}
 .of-range{background:rgba(245,158,11,.15);color:#f59e0b}
 .of-none{background:rgba(255,255,255,.04);color:var(--t2)}
+.grade{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:22px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:.3px;padding:0 6px}
+.grade-ap{background:rgba(94,106,210,.2);color:#828fff;border:1px solid rgba(94,106,210,.35)}
+.grade-a{background:rgba(16,185,129,.15);color:#10b981;border:1px solid rgba(16,185,129,.3)}
+.grade-b{background:rgba(245,158,11,.12);color:#f59e0b;border:1px solid rgba(245,158,11,.25)}
+.grade-c{background:rgba(244,63,94,.12);color:#f43f5e;border:1px solid rgba(244,63,94,.25)}
 .note-toggle{cursor:pointer;color:var(--ac);font-size:12px;display:inline-flex;align-items:center;gap:3px;transition:color .15s}
 .note-toggle:hover{color:var(--ac2)}
 .note-row td{padding:0 !important;border-bottom:1px solid var(--b1)}
@@ -343,6 +348,9 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
         <select class="fi" id="ff-dir" onchange="renderTbl()">
           <option value="">전체 방향</option><option>Buy</option><option>Sell</option>
         </select>
+        <select class="fi" id="ff-grade" onchange="renderTbl()">
+          <option value="">전체 등급</option><option value="A+">A+</option><option value="A">A</option><option value="B">B</option><option value="C">C</option>
+        </select>
         <input class="fi" id="ff-asset" type="text" placeholder="종목..." oninput="renderTbl()" style="width:80px">
         <input class="fi" id="ff-from" type="date" onchange="renderTbl()">
         <span style="color:var(--t2);font-size:12px">~</span>
@@ -354,7 +362,7 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
           <table>
             <thead><tr>
               <th>#</th><th>날짜</th><th>종목</th><th>방향</th>
-              <th>D</th><th>H1</th>
+              <th>D</th><th>H1</th><th>Grade</th>
               <th>결과</th><th>RR</th><th>Max RR</th>
               <th>세션</th><th>Setup</th><th>Entry PDA</th><th>감정</th>
               <th>Charts</th><th>노트</th>
@@ -385,6 +393,10 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
         <div class="card">
           <div class="card-hd"><div class="card-ttl">Setup Performance (Avg R)</div></div>
           <div class="ch-wrap-sm"><canvas id="ch-setup"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><div class="card-ttl">Grade Performance (Avg R)</div></div>
+          <div class="ch-wrap-sm"><canvas id="ch-grade"></canvas></div>
         </div>
         <div class="card">
           <div class="card-hd"><div class="card-ttl">Entry PDA Win Rate</div></div>
@@ -688,6 +700,7 @@ function getFiltered(){
   const se=document.getElementById('ff-session')?.value||'';
   const re=document.getElementById('ff-result')?.value||'';
   const di=document.getElementById('ff-dir')?.value||'';
+  const gr=document.getElementById('ff-grade')?.value||'';
   const as=(document.getElementById('ff-asset')?.value||'').toLowerCase();
   const fr=document.getElementById('ff-from')?.value||'';
   const to=document.getElementById('ff-to')?.value||'';
@@ -695,12 +708,36 @@ function getFiltered(){
     if(se&&t.session!==se)return false;
     if(re&&t.result!==re)return false;
     if(di&&t.direction!==di)return false;
+    if(gr&&gradeSetup(t).grade!==gr)return false;
     if(as&&!(t.asset||'').toLowerCase().includes(as))return false;
     const d=t.date?.slice(0,10)||'';
     if(fr&&d<fr)return false;
     if(to&&d>to)return false;
     return true;
   }).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+}
+
+function gradeSetup(t){
+  const dof=t.dailyOF;
+  const h1=t.h1OF;
+  const dir=t.direction;
+  const narr=t.deliveryNarrative;
+  const hasNarr=narr&&Array.isArray(narr)?narr.filter(n=>n&&n!=='no model').length>0:(narr&&narr!=='no model'?true:false);
+
+  // C: Daily OF or H1 OF missing/Ranging
+  if(!dof||dof==='Ranging'||!h1) return{grade:'C',cls:'grade-c',tip:'Daily OF 불명확 또는 H1 미입력'};
+
+  // Check direction matches Daily OF
+  const dirMatch=(dof==='Bullish'&&dir==='Buy')||(dof==='Bearish'&&dir==='Sell');
+  // Check H1 aligned with Daily
+  const aligned=dof===h1;
+
+  if(!dirMatch) return{grade:'B',cls:'grade-b',tip:'방향이 Daily OF와 불일치'};
+  if(!aligned) return{grade:'B',cls:'grade-b',tip:'H1 OF가 Daily와 미정렬'};
+
+  // Aligned + direction match
+  if(hasNarr) return{grade:'A+',cls:'grade-ap',tip:'Daily+H1 정렬 + 방향일치 + Narrative ✅'};
+  return{grade:'A',cls:'grade-a',tip:'Daily+H1 정렬 + 방향일치 (Narrative 없음)'};
 }
 
 function renderTbl(){
@@ -721,6 +758,7 @@ function renderTbl(){
     const srcDot=t.source==='crypto'?'🟡':'🔵';
     const ofCls=v=>v==='Bullish'?'of-bull':v==='Bearish'?'of-bear':v==='Ranging'?'of-range':'of-none';
     const ofIcon=v=>v==='Bullish'?'▲':v==='Bearish'?'▼':v==='Ranging'?'—':'·';
+    const g=gradeSetup(t);
     return`<tr>
       <td>${srcDot} ${t.num||''}</td>
       <td style="white-space:nowrap;font-variant-numeric:tabular-nums">${t.date?.slice(0,10)||''}<br><span style="font-size:10px;color:var(--t2)">${t.dayOfWeek||''}</span></td>
@@ -728,6 +766,7 @@ function renderTbl(){
       <td><span class="badge ${dirBadge}">${t.direction||''}</span></td>
       <td><span class="of-dot ${ofCls(t.dailyOF)}" title="Daily: ${t.dailyOF||'N/A'}">${ofIcon(t.dailyOF)}</span></td>
       <td><span class="of-dot ${ofCls(t.h1OF)}" title="H1: ${t.h1OF||'N/A'}">${ofIcon(t.h1OF)}</span></td>
+      <td><span class="grade ${g.cls}" title="${g.tip}">${g.grade}</span></td>
       <td><span class="badge ${resBadge}">${t.result||''}</span></td>
       <td class="${rc}" style="font-variant-numeric:tabular-nums">${fR(r)}</td>
       <td style="font-variant-numeric:tabular-nums">${t.maxRR!=null?t.maxRR.toFixed(1)+'R':'—'}</td>
@@ -737,11 +776,11 @@ function renderTbl(){
       <td>${emos||''}</td>
       <td style="white-space:nowrap">${links||'—'}</td>
       <td>${note}</td>
-    </tr>${t.notes?`<tr class="note-row" id="${noteId}" style="display:none"><td colspan="15"><div class="note-cell">${t.notes}</div></td></tr>`:''}`;
+    </tr>${t.notes?`<tr class="note-row" id="${noteId}" style="display:none"><td colspan="16"><div class="note-cell">${t.notes}</div></td></tr>`:''}`;
   }).join('');
 }
 
-function clrF(){['ff-session','ff-result','ff-dir','ff-asset','ff-from','ff-to'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});renderTbl()}
+function clrF(){['ff-session','ff-result','ff-dir','ff-grade','ff-asset','ff-from','ff-to'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});renderTbl()}
 
 function toggleNote(id){
   const row=document.getElementById(id);
@@ -770,6 +809,7 @@ function renderAnalytics(){
   renderBarChart('ch-session',groupWinRate(T,'session'),'Win Rate %');
   renderBarChart('ch-dow',groupWinRate(T,'dayOfWeek'),'Win Rate %');
   renderBarChart('ch-setup',groupAvgR(T,'setup'),'Avg R',true);
+  renderGradeChart(T);
   renderBarChart('ch-pda',groupWinRateMulti(T,'entryPDA'),'Win Rate %');
   renderBarChart('ch-emo',groupAvgRMulti(T,'emotions'),'Avg R',true);
   renderBarChart('ch-bias',groupWinRate(T,'htfBias'),'Win Rate %');
@@ -824,6 +864,21 @@ function renderBarChart(id,data,label,isR=false){
       plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>isR?fR(c.parsed.y):c.parsed.y+'%'}}},
       scales:{x:{ticks:{color:'#62666d',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}},
         y:{ticks:{color:'#d0d6e0',font:{size:10},callback:v=>isR?v+'R':v+'%'},grid:{color:'rgba(255,255,255,0.04)'}}}}});
+}
+
+// ══════════════════════════════════════════════════
+// GRADE PERFORMANCE
+// ══════════════════════════════════════════════════
+function renderGradeChart(T){
+  const grades={'A+':{sum:0,n:0,w:0},'A':{sum:0,n:0,w:0},'B':{sum:0,n:0,w:0},'C':{sum:0,n:0,w:0}};
+  T.forEach(t=>{
+    const g=gradeSetup(t).grade;
+    if(grades[g]){grades[g].n++;grades[g].sum+=getR(t);if(t.result==='W')grades[g].w++}
+  });
+  const data=Object.entries(grades).filter(([,d])=>d.n>0).map(([label,d])=>({
+    label:label+' ('+d.n+')',value:parseFloat((d.sum/d.n).toFixed(2)),count:d.n
+  }));
+  renderBarChart('ch-grade',data,'Avg R',true);
 }
 
 // ══════════════════════════════════════════════════
