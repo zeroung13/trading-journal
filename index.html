@@ -155,6 +155,11 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 .tag-chip{background:var(--cbg2);color:var(--t1);padding:2px 6px;border-radius:3px;font-size:11px;border:1px solid var(--b1);display:inline-block;margin:1px}
 .rp{color:var(--g);font-weight:600}.rn{color:var(--r);font-weight:600}
 .chart-link{color:var(--blue);text-decoration:none;font-size:11px}.chart-link:hover{text-decoration:underline}
+.of-dot{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:4px;font-size:10px;font-weight:700;line-height:1}
+.of-bull{background:rgba(16,185,129,.15);color:#10b981}
+.of-bear{background:rgba(244,63,94,.15);color:#f43f5e}
+.of-range{background:rgba(245,158,11,.15);color:#f59e0b}
+.of-none{background:rgba(255,255,255,.04);color:var(--t2)}
 .note-toggle{cursor:pointer;color:var(--ac);font-size:12px;display:inline-flex;align-items:center;gap:3px;transition:color .15s}
 .note-toggle:hover{color:var(--ac2)}
 .note-row td{padding:0 !important;border-bottom:1px solid var(--b1)}
@@ -348,7 +353,8 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
         <div class="tbl-wrap">
           <table>
             <thead><tr>
-              <th>#</th><th>날짜</th><th>종목</th><th>방향</th><th>HTF Bias</th>
+              <th>#</th><th>날짜</th><th>종목</th><th>방향</th>
+              <th>D</th><th>H1</th>
               <th>결과</th><th>RR</th><th>Max RR</th>
               <th>세션</th><th>Setup</th><th>Entry PDA</th><th>감정</th>
               <th>Charts</th><th>노트</th>
@@ -713,12 +719,15 @@ function renderTbl(){
     const noteId='note-'+Math.random().toString(36).slice(2,8);
     const note=t.notes?`<span class="note-toggle" onclick="toggleNote('${noteId}')">📝 펼치기</span>`:'';
     const srcDot=t.source==='crypto'?'🟡':'🔵';
+    const ofCls=v=>v==='Bullish'?'of-bull':v==='Bearish'?'of-bear':v==='Ranging'?'of-range':'of-none';
+    const ofIcon=v=>v==='Bullish'?'▲':v==='Bearish'?'▼':v==='Ranging'?'—':'·';
     return`<tr>
       <td>${srcDot} ${t.num||''}</td>
       <td style="white-space:nowrap;font-variant-numeric:tabular-nums">${t.date?.slice(0,10)||''}<br><span style="font-size:10px;color:var(--t2)">${t.dayOfWeek||''}</span></td>
       <td><strong>${t.asset||''}</strong></td>
       <td><span class="badge ${dirBadge}">${t.direction||''}</span></td>
-      <td>${t.htfBias||'—'}</td>
+      <td><span class="of-dot ${ofCls(t.dailyOF)}" title="Daily: ${t.dailyOF||'N/A'}">${ofIcon(t.dailyOF)}</span></td>
+      <td><span class="of-dot ${ofCls(t.h1OF)}" title="H1: ${t.h1OF||'N/A'}">${ofIcon(t.h1OF)}</span></td>
       <td><span class="badge ${resBadge}">${t.result||''}</span></td>
       <td class="${rc}" style="font-variant-numeric:tabular-nums">${fR(r)}</td>
       <td style="font-variant-numeric:tabular-nums">${t.maxRR!=null?t.maxRR.toFixed(1)+'R':'—'}</td>
@@ -728,7 +737,7 @@ function renderTbl(){
       <td>${emos||''}</td>
       <td style="white-space:nowrap">${links||'—'}</td>
       <td>${note}</td>
-    </tr>${t.notes?`<tr class="note-row" id="${noteId}" style="display:none"><td colspan="14"><div class="note-cell">${t.notes}</div></td></tr>`:''}`;
+    </tr>${t.notes?`<tr class="note-row" id="${noteId}" style="display:none"><td colspan="15"><div class="note-cell">${t.notes}</div></td></tr>`:''}`;
   }).join('');
 }
 
