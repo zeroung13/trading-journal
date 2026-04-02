@@ -207,7 +207,9 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 
 /* monthly report */
 .mr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
-.mr-card{background:var(--cbg2);border:1px solid var(--b1);border-radius:8px;padding:14px}
+.mr-card{background:var(--cbg2);border:1px solid var(--b1);border-radius:8px;padding:14px;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.mr-card:hover{border-color:var(--b2);box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.mr-card.mr-active{border-color:var(--ac);box-shadow:0 0 0 1px var(--ac)}
 .mr-month{font-size:13px;font-weight:700;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
 .mr-r{font-size:18px;font-weight:800}
 .mr-row{display:flex;justify-content:space-between;font-size:11px;color:var(--t1);padding:3px 0;border-bottom:1px solid var(--b1)}
@@ -217,6 +219,35 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 .mr-up{background:rgba(16,185,129,.12);color:var(--g)}
 .mr-down{background:rgba(244,63,94,.12);color:var(--r)}
 .mr-flat{background:rgba(255,255,255,.04);color:var(--t2)}
+.mr-expand{font-size:10px;color:var(--t2);text-align:center;margin-top:8px;transition:color .15s}
+.mr-card:hover .mr-expand{color:var(--t1)}
+/* monthly detail panel */
+.mr-detail{display:none;grid-column:1/-1;background:var(--cbg);border:1px solid var(--ac);border-radius:10px;padding:20px;animation:mrFadeIn .2s ease}
+.mr-detail.mr-show{display:block}
+@keyframes mrFadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.mrd-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.mrd-title{font-size:15px;font-weight:700;color:var(--t0)}
+.mrd-close{background:none;border:1px solid var(--b2);color:var(--t2);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;transition:all .15s}
+.mrd-close:hover{background:var(--cbg2);color:var(--t0)}
+.mrd-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:900px){.mrd-grid{grid-template-columns:1fr}}
+.mrd-section{background:var(--cbg2);border:1px solid var(--b1);border-radius:8px;padding:14px}
+.mrd-section-title{font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.mrd-row{display:flex;justify-content:space-between;font-size:12px;color:var(--t1);padding:4px 0;border-bottom:1px solid var(--b1)}
+.mrd-row:last-child{border-bottom:none}
+.mrd-row strong{color:var(--t0)}
+.mrd-bar-wrap{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.mrd-bar-label{font-size:11px;color:var(--t2);width:36px;flex-shrink:0}
+.mrd-bar-track{flex:1;height:6px;background:rgba(255,255,255,.04);border-radius:3px;overflow:hidden}
+.mrd-bar-fill{height:100%;border-radius:3px;transition:width .3s}
+.mrd-bar-val{font-size:11px;color:var(--t1);width:36px;text-align:right;flex-shrink:0}
+.mrd-best-worst{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mrd-bw-card{padding:10px;border-radius:6px;font-size:11px}
+.mrd-bw-card.best{background:var(--gbg);border:1px solid var(--gbd)}
+.mrd-bw-card.worst{background:var(--rbg);border:1px solid var(--rbd)}
+.mrd-bw-label{color:var(--t2);margin-bottom:4px;font-weight:600}
+.mrd-bw-val{font-size:14px;font-weight:700}
+.mrd-week-chart{height:100px;margin-top:8px}
 
 /* streak behavior */
 .sb-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
@@ -265,7 +296,7 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 <div id="lock-screen">
   <div class="lock-box">
     <div class="lock-icon">🔒</div>
-    <div class="lock-title">Trading Journal</div>
+    <div class="lock-title" style="font-family:'JetBrains Mono',monospace">nnmn.log</div>
     <div class="lock-sub" id="lock-sub">비밀번호를 설정하세요</div>
     <input type="password" class="lock-input" id="lock-pw" placeholder="비밀번호" autofocus>
     <input type="password" class="lock-input" id="lock-pw2" placeholder="비밀번호 확인">
@@ -1220,6 +1251,7 @@ function renderDDAnalysis(T){
 // ══════════════════════════════════════════════════
 // MONTHLY REPORT CARD
 // ══════════════════════════════════════════════════
+let _mrMonthData={};
 function renderMonthlyReport(T){
   const grid=document.getElementById('mr-grid');
   if(!T.length){grid.innerHTML='<div style="color:var(--t2);font-size:13px">데이터 없음</div>';return}
@@ -1227,15 +1259,16 @@ function renderMonthlyReport(T){
   const byMonth={};
   T.forEach(t=>{
     if(!t.date)return;
-    const m=t.date.slice(0,7);// YYYY-MM
+    const m=t.date.slice(0,7);
     if(!byMonth[m])byMonth[m]=[];
     byMonth[m].push(t);
   });
+  _mrMonthData=byMonth;
 
   const months=Object.keys(byMonth).sort();
   let prevAvgR=null;
 
-  grid.innerHTML=months.map(m=>{
+  grid.innerHTML=months.map((m,idx)=>{
     const trades=byMonth[m];
     const s=stats(trades);
     const apCount=trades.filter(t=>{const g=gradeSetup(t).grade;return g==='A+'||g==='A'}).length;
@@ -1257,7 +1290,7 @@ function renderMonthlyReport(T){
     const moNames=['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     const label=moNames[parseInt(mo)]+' '+yr;
 
-    return`<div class="mr-card">
+    return`<div class="mr-card" data-month="${m}" onclick="toggleMonthDetail('${m}',this)">
       <div class="mr-month">
         <span>${label}</span>
         <span class="mr-trend ${trendCls}">${trendIcon} ${trendTxt}</span>
@@ -1268,8 +1301,204 @@ function renderMonthlyReport(T){
       <div class="mr-row"><span>평균 R</span><strong style="color:${rc}">${fR(s.aR)}</strong></div>
       <div class="mr-row"><span>A/A+ 비율</span><strong style="color:${apPct>=50?'var(--g)':'var(--t1)'}">${apPct}%</strong></div>
       <div class="mr-row"><span>이익계수</span><strong>${isFinite(s.pf)?s.pf.toFixed(2):'∞'}</strong></div>
+      <div class="mr-expand">클릭하여 상세 분석 보기</div>
     </div>`;
   }).join('');
+}
+
+/* ── Monthly Detail Panel ── */
+let _mrChart=null;
+function toggleMonthDetail(m,cardEl){
+  const grid=document.getElementById('mr-grid');
+  // remove existing detail
+  const existing=grid.querySelector('.mr-detail');
+  const wasOpen=existing&&existing.dataset.month===m;
+  if(existing){existing.remove();if(_mrChart){_mrChart.destroy();_mrChart=null}}
+  grid.querySelectorAll('.mr-card.mr-active').forEach(c=>c.classList.remove('mr-active'));
+  if(wasOpen)return;
+
+  cardEl.classList.add('mr-active');
+  const trades=_mrMonthData[m]||[];
+  const s=stats(trades);
+  const [yr,mo]=m.split('-');
+  const moNames=['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const label=moNames[parseInt(mo)]+' '+yr;
+
+  // ── Best / Worst trade
+  let bestT=null,worstT=null,bestR=-Infinity,worstR=Infinity;
+  trades.forEach(t=>{const r=getR(t);if(r>bestR){bestR=r;bestT=t}if(r<worstR){worstR=r;worstT=t}});
+
+  // ── Direction split
+  const longs=trades.filter(t=>t.direction==='Buy');
+  const shorts=trades.filter(t=>t.direction==='Sell');
+  const sL=stats(longs),sS=stats(shorts);
+
+  // ── Session split
+  const bySess={};
+  trades.forEach(t=>{const ss=t.session||'Unknown';if(!bySess[ss])bySess[ss]=[];bySess[ss].push(t)});
+
+  // ── Grade distribution
+  const gradeCounts={'A+':0,'A':0,'B':0,'C':0};
+  trades.forEach(t=>{const g=gradeSetup(t).grade;gradeCounts[g]=(gradeCounts[g]||0)+1});
+
+  // ── Weekly breakdown
+  const byWeek={};
+  trades.forEach(t=>{
+    if(!t.date)return;
+    const d=new Date(t.date);
+    const day=d.getDate();
+    const wk=day<=7?'1주차':day<=14?'2주차':day<=21?'3주차':day<=28?'4주차':'5주차';
+    if(!byWeek[wk])byWeek[wk]=[];
+    byWeek[wk].push(t);
+  });
+
+  // ── Streak analysis
+  let maxWS=0,maxLS=0,curW=0,curL=0;
+  trades.forEach(t=>{
+    if(t.result==='W'){curW++;curL=0;if(curW>maxWS)maxWS=curW}
+    else if(t.result==='L'){curL++;curW=0;if(curL>maxLS)maxLS=curL}
+    else{curW=0;curL=0}
+  });
+
+  // ── Capture rate
+  const withMax=trades.filter(t=>t.maxRR!=null&&t.rr!=null&&t.maxRR>0);
+  const avgCap=withMax.length?withMax.reduce((s,t)=>s+(t.rr/t.maxRR)*100,0)/withMax.length:null;
+
+  // ── Cumulative R data
+  const cumR=[];let cum=0;
+  trades.forEach(t=>{cum+=getR(t);cumR.push(cum)});
+
+  // ── Build detail panel
+  const panel=document.createElement('div');
+  panel.className='mr-detail mr-show';
+  panel.dataset.month=m;
+
+  const sessRows=Object.entries(bySess).map(([ss,arr])=>{
+    const st=stats(arr);
+    const c=st.tR>=0?'var(--g)':'var(--r)';
+    return`<div class="mrd-row"><span>${ss}</span><strong>${st.n}건 · <span style="color:${c}">${fR(st.tR)}</span> · 승률 ${(st.wr*100).toFixed(0)}%</strong></div>`;
+  }).join('');
+
+  const weekRows=Object.entries(byWeek).sort().map(([wk,arr])=>{
+    const st=stats(arr);
+    const c=st.tR>=0?'var(--g)':'var(--r)';
+    return`<div class="mrd-row"><span>${wk}</span><strong>${st.n}건 · <span style="color:${c}">${fR(st.tR)}</span></strong></div>`;
+  }).join('');
+
+  const gradeColors={'A+':'var(--ac2)','A':'var(--ac)','B':'var(--y)','C':'var(--t2)'};
+  const gradeBars=Object.entries(gradeCounts).map(([g,cnt])=>{
+    const pct=trades.length?Math.round(cnt/trades.length*100):0;
+    return`<div class="mrd-bar-wrap">
+      <span class="mrd-bar-label">${g}</span>
+      <div class="mrd-bar-track"><div class="mrd-bar-fill" style="width:${pct}%;background:${gradeColors[g]}"></div></div>
+      <span class="mrd-bar-val">${cnt}건</span>
+    </div>`;
+  }).join('');
+
+  const dirLColor=sL.tR>=0?'var(--g)':'var(--r)';
+  const dirSColor=sS.tR>=0?'var(--g)':'var(--r)';
+
+  panel.innerHTML=`
+    <div class="mrd-header">
+      <div class="mrd-title">${label} 상세 분석</div>
+      <button class="mrd-close" onclick="closeMonthDetail(event)">✕ 닫기</button>
+    </div>
+    <div class="mrd-grid">
+
+      <div class="mrd-section">
+        <div class="mrd-section-title">Best / Worst Trade</div>
+        <div class="mrd-best-worst">
+          <div class="mrd-bw-card best">
+            <div class="mrd-bw-label">🏆 Best</div>
+            <div class="mrd-bw-val" style="color:var(--g)">${bestT?fR(bestR):'—'}</div>
+            <div style="font-size:10px;color:var(--t2);margin-top:2px">${bestT?(bestT.asset||'')+(bestT.date?' · '+bestT.date.slice(5):''):''}</div>
+          </div>
+          <div class="mrd-bw-card worst">
+            <div class="mrd-bw-label">💀 Worst</div>
+            <div class="mrd-bw-val" style="color:var(--r)">${worstT?fR(worstR):'—'}</div>
+            <div style="font-size:10px;color:var(--t2);margin-top:2px">${worstT?(worstT.asset||'')+(worstT.date?' · '+worstT.date.slice(5):''):''}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mrd-section">
+        <div class="mrd-section-title">Direction 분석</div>
+        <div class="mrd-row"><span>Long</span><strong>${sL.n}건 · <span style="color:${dirLColor}">${fR(sL.tR)}</span> · 승률 ${(sL.wr*100).toFixed(0)}%</strong></div>
+        <div class="mrd-row"><span>Short</span><strong>${sS.n}건 · <span style="color:${dirSColor}">${fR(sS.tR)}</span> · 승률 ${(sS.wr*100).toFixed(0)}%</strong></div>
+        <div style="margin-top:10px">
+          <div class="mrd-section-title">Streak</div>
+          <div class="mrd-row"><span>최대 연속 승</span><strong style="color:var(--g)">${maxWS}회</strong></div>
+          <div class="mrd-row"><span>최대 연속 패</span><strong style="color:var(--r)">${maxLS}회</strong></div>
+          ${avgCap!=null?`<div class="mrd-row"><span>Capture Rate</span><strong>${avgCap>=100?Math.round(avgCap):avgCap.toFixed(1)}%</strong></div>`:''}
+        </div>
+      </div>
+
+      <div class="mrd-section">
+        <div class="mrd-section-title">Grade 분포</div>
+        ${gradeBars}
+      </div>
+
+      <div class="mrd-section">
+        <div class="mrd-section-title">Session 성과</div>
+        ${sessRows||'<div style="color:var(--t2);font-size:11px">세션 데이터 없음</div>'}
+      </div>
+
+      <div class="mrd-section">
+        <div class="mrd-section-title">주차별 성과</div>
+        ${weekRows||'<div style="color:var(--t2);font-size:11px">데이터 없음</div>'}
+      </div>
+
+      <div class="mrd-section">
+        <div class="mrd-section-title">Cumulative R</div>
+        <div class="mrd-week-chart"><canvas id="mrd-cum-chart"></canvas></div>
+      </div>
+
+    </div>`;
+
+  // Insert after clicked card
+  cardEl.after(panel);
+
+  // Render mini cumulative chart
+  const ctx=document.getElementById('mrd-cum-chart');
+  if(ctx&&cumR.length>1){
+    _mrChart=new Chart(ctx,{
+      type:'line',
+      data:{
+        labels:trades.map((_,i)=>'#'+(i+1)),
+        datasets:[{
+          data:cumR,
+          borderColor:'#5e6ad2',
+          backgroundColor:'rgba(94,106,210,.1)',
+          fill:true,
+          tension:.3,
+          pointRadius:3,
+          pointBackgroundColor:trades.map(t=>t.result==='W'?'#10b981':'#f43f5e'),
+          pointBorderWidth:0,
+          borderWidth:2
+        }]
+      },
+      options:{
+        responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fR(c.raw)}}},
+        scales:{
+          x:{display:true,ticks:{font:{size:9},color:'#62666d',maxRotation:0},grid:{display:false}},
+          y:{ticks:{font:{size:9},color:'#62666d',callback:v=>fR(v)},grid:{color:'rgba(255,255,255,.04)'}}
+        }
+      }
+    });
+  }
+
+  // Scroll into view
+  panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function closeMonthDetail(e){
+  e.stopPropagation();
+  const grid=document.getElementById('mr-grid');
+  const panel=grid.querySelector('.mr-detail');
+  if(panel)panel.remove();
+  if(_mrChart){_mrChart.destroy();_mrChart=null}
+  grid.querySelectorAll('.mr-card.mr-active').forEach(c=>c.classList.remove('mr-active'));
 }
 
 // ══════════════════════════════════════════════════
