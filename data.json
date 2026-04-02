@@ -1,5 +1,5 @@
 {
-  "lastSync": "2026-04-01T22:32:27.305Z",
+  "lastSync": "2026-04-02T22:26:35.438Z",
   "crypto": [
     {
       "id": "32d0081c-521f-809f-87b3-fb13172e272b",
@@ -36,6 +36,8 @@
       "tp": 76779,
       "dd": 0,
       "slUnit": "ticks",
+      "dailyOF": null,
+      "h1OF": null,
       "dailyChart": "https://www.tradingview.com/x/VpF9Isnh/",
       "hourlyChart": "https://www.tradingview.com/x/VOk3auir/",
       "entryChart": "https://www.tradingview.com/x/aOldN9Rl/",
@@ -76,6 +78,8 @@
       "tp": 1769,
       "dd": 114,
       "slUnit": "ticks",
+      "dailyOF": null,
+      "h1OF": null,
       "dailyChart": "https://www.tradingview.com/x/OCt02uL6/",
       "hourlyChart": "https://www.tradingview.com/x/PmGcztoc/",
       "entryChart": "https://www.tradingview.com/x/SGGyBGfH/",
@@ -106,9 +110,7 @@
       ],
       "entryType": "Limit",
       "tradeType": "Intrasession",
-      "emotions": [
-        "Uncertainty(불확실)"
-      ],
+      "emotions": [],
       "mmxmTF": [
         "m5"
       ],
@@ -117,6 +119,8 @@
       "tp": 61426,
       "dd": 1664,
       "slUnit": "ticks",
+      "dailyOF": null,
+      "h1OF": null,
       "dailyChart": "https://www.tradingview.com/x/svp6KdqY/",
       "hourlyChart": "https://www.tradingview.com/x/WV9nhYCp/",
       "entryChart": "https://www.tradingview.com/x/rNGtXcjk/",
@@ -158,6 +162,8 @@
       "tp": 5603,
       "dd": 1877,
       "slUnit": "ticks",
+      "dailyOF": null,
+      "h1OF": null,
       "dailyChart": "https://www.tradingview.com/x/1iEMGOU5/",
       "hourlyChart": "https://www.tradingview.com/x/1jluloXr/",
       "entryChart": "https://www.tradingview.com/x/dyMFINP3/",
@@ -190,8 +196,7 @@
       "entryType": "Limit",
       "tradeType": "Intrasession",
       "emotions": [
-        "FOMO",
-        "Forcing(억지)"
+        "FOMO"
       ],
       "mmxmTF": [
         "m5"
@@ -201,6 +206,8 @@
       "tp": 111823,
       "dd": 50019,
       "slUnit": "ticks",
+      "dailyOF": null,
+      "h1OF": null,
       "dailyChart": "https://www.tradingview.com/x/O0VUWDWs/",
       "hourlyChart": "https://www.tradingview.com/x/57TSYBkw/",
       "entryChart": "https://www.tradingview.com/x/0L7Et7YL/",
@@ -233,9 +240,7 @@
       ],
       "entryType": "Limit",
       "tradeType": "Intraday",
-      "emotions": [
-        "Rushing(서두름)"
-      ],
+      "emotions": [],
       "mmxmTF": [
         "m5"
       ],
@@ -244,6 +249,8 @@
       "tp": 1470,
       "dd": 362,
       "slUnit": "pips",
+      "dailyOF": null,
+      "h1OF": null,
       "dailyChart": "https://www.tradingview.com/x/3Q35NQQZ/",
       "hourlyChart": "https://www.tradingview.com/x/eqXeu9FC/",
       "entryChart": "https://www.tradingview.com/x/vghPdaJ7/",
@@ -274,9 +281,7 @@
       ],
       "entryType": "Limit",
       "tradeType": "Intraday",
-      "emotions": [
-        "Impatience(기다림x)"
-      ],
+      "emotions": [],
       "mmxmTF": [
         "m15"
       ],
@@ -285,6 +290,8 @@
       "tp": 1723.5,
       "dd": 750,
       "slUnit": "pips",
+      "dailyOF": null,
+      "h1OF": null,
       "dailyChart": "https://www.tradingview.com/x/CU85JGHv/",
       "hourlyChart": "https://www.tradingview.com/x/f3ReDHuz/",
       "entryChart": "https://www.tradingview.com/x/Yya6DdEn/",
@@ -326,6 +333,8 @@
       "tp": 189,
       "dd": 88,
       "slUnit": "pips",
+      "dailyOF": null,
+      "h1OF": null,
       "dailyChart": "https://www.tradingview.com/x/ab4FwwMk/",
       "hourlyChart": "https://www.tradingview.com/x/DrwY4no9/",
       "entryChart": "https://www.tradingview.com/x/2PWtmzcU/",
@@ -357,7 +366,7 @@
       "entryType": "Limit",
       "tradeType": "Intrasession",
       "emotions": [
-        "Forcing(억지)"
+        "Uncertainty"
       ],
       "mmxmTF": [
         "m5"
@@ -367,6 +376,8 @@
       "tp": 354,
       "dd": 183,
       "slUnit": "pips",
+      "dailyOF": null,
+      "h1OF": null,
       "dailyChart": "https://www.tradingview.com/x/lP9sAs2T/",
       "hourlyChart": "https://www.tradingview.com/x/WEAg3DJ9/",
       "entryChart": "https://www.tradingview.com/x/kGKO7iTR/",
