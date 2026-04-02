@@ -157,7 +157,9 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 .bl{background:var(--rbg);color:var(--r);border:1px solid var(--rbd)}
 .bbe{background:var(--ybg);color:var(--y);border:1px solid var(--ybd)}
 .blong{background:var(--gbg);color:var(--g)}.bshort{background:var(--rbg);color:var(--r)}
-.tag-chip{background:var(--cbg2);color:var(--t1);padding:2px 6px;border-radius:3px;font-size:11px;border:1px solid var(--b1);display:inline-block;margin:1px}
+.tag-chip{background:var(--cbg2);color:var(--t1);padding:2px 6px;border-radius:3px;font-size:11px;border:1px solid var(--b1);display:inline-block;margin:1px;position:relative;cursor:default}
+.tag-chip[title]:hover::after{content:attr(title);position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);background:#2a2b2d;color:var(--t0);padding:4px 8px;border-radius:4px;font-size:10px;white-space:nowrap;z-index:99;border:1px solid var(--b2);pointer-events:none}
+.tag-chip[title]:hover::before{content:'';position:absolute;bottom:100%;left:50%;transform:translateX(-50%);border:4px solid transparent;border-top-color:#2a2b2d;z-index:99;pointer-events:none}
 .rp{color:var(--g);font-weight:600}.rn{color:var(--r);font-weight:600}
 .chart-link{color:var(--blue);text-decoration:none;font-size:11px}.chart-link:hover{text-decoration:underline}
 .of-dot{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:4px;font-size:10px;font-weight:700;line-height:1}
@@ -864,7 +866,7 @@ function renderTbl(){
     const resBadge=t.result==='W'?'bw':t.result==='L'?'bl':'bbe';
     const dirBadge=t.direction==='Buy'?'blong':'bshort';
     const pdas=(t.entryPDA||[]).map(x=>`<span class="tag-chip">${x}</span>`).join(' ');
-    const emos=(t.emotions||[]).map(x=>`<span class="tag-chip">${x}</span>`).join(' ');
+    const emos=(t.emotions||[]).map(x=>{const m=x.match(/^([^(]+)\(([^)]+)\)$/);if(m)return`<span class="tag-chip" title="${m[2]}">${m[1]}</span>`;return`<span class="tag-chip">${x}</span>`}).join(' ');
     const links=[t.dailyChart?`<a class="chart-link" href="${t.dailyChart}" target="_blank">D</a>`:null,
       t.hourlyChart?`<a class="chart-link" href="${t.hourlyChart}" target="_blank">H</a>`:null,
       t.entryChart?`<a class="chart-link" href="${t.entryChart}" target="_blank">E</a>`:null].filter(Boolean).join(' ');
