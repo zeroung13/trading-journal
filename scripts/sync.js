@@ -85,6 +85,8 @@ function transform(page, source) {
     tp:  isCrypto ? prop(page, 'Ticks to TP')  : prop(page, 'Pips to TP'),
     dd:  isCrypto ? prop(page, 'max Ticks DD') : prop(page, 'max Pips DD'),
     slUnit: isCrypto ? 'ticks' : 'pips',
+    dailyOF:     prop(page, 'Daily OF'),
+    h1OF:        prop(page, 'H1 OF'),
     dailyChart:  prop(page, 'Daily Chart'),
     hourlyChart: prop(page, 'Hourly Chart'),
     entryChart:  prop(page, 'Entry Chart'),

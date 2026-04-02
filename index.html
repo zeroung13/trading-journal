@@ -392,6 +392,16 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
           <div class="card-hd"><div class="card-ttl">HTF Bias Accuracy</div></div>
           <div class="ch-wrap-sm"><canvas id="ch-bias"></canvas></div>
         </div>
+        <div class="card">
+          <div class="card-hd"><div class="card-ttl">OF Alignment (Daily + H1)</div></div>
+          <div class="ch-wrap-sm"><canvas id="ch-of"></canvas></div>
+        </div>
+      </div>
+      <!-- OF ALIGNMENT DETAIL -->
+      <div class="insight-card" style="margin-top:16px" id="of-section">
+        <div class="insight-title">🔄 Order Flow Alignment Analysis</div>
+        <div class="insight-grid" id="of-grid"></div>
+        <div class="cap-feedback" id="of-feedback"></div>
       </div>
       <!-- CAPTURE RATE & DD ANALYSIS -->
       <div class="cap-section">
@@ -754,6 +764,7 @@ function renderAnalytics(){
   renderBarChart('ch-pda',groupWinRateMulti(T,'entryPDA'),'Win Rate %');
   renderBarChart('ch-emo',groupAvgRMulti(T,'emotions'),'Avg R',true);
   renderBarChart('ch-bias',groupWinRate(T,'htfBias'),'Win Rate %');
+  renderOFAlignment(T);
   renderCaptureRate(T);
   renderDDAnalysis(T);
   renderNotesInsight(T);
@@ -804,6 +815,116 @@ function renderBarChart(id,data,label,isR=false){
       plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>isR?fR(c.parsed.y):c.parsed.y+'%'}}},
       scales:{x:{ticks:{color:'#62666d',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}},
         y:{ticks:{color:'#d0d6e0',font:{size:10},callback:v=>isR?v+'R':v+'%'},grid:{color:'rgba(255,255,255,0.04)'}}}}});
+}
+
+// ══════════════════════════════════════════════════
+// OF ALIGNMENT ANALYSIS
+// ══════════════════════════════════════════════════
+function renderOFAlignment(T){
+  const valid=T.filter(t=>t.dailyOF&&t.h1OF);
+  const ofGrid=document.getElementById('of-grid');
+  const ofFb=document.getElementById('of-feedback');
+  const section=document.getElementById('of-section');
+
+  if(!valid.length){
+    // still render empty chart
+    renderBarChart('ch-of',[],'Avg R',true);
+    ofGrid.innerHTML='<div style="color:var(--t2);font-size:13px;padding:10px">Daily OF / H1 OF 데이터가 있는 거래가 없습니다. 노션에서 기록해주세요.</div>';
+    ofFb.style.display='none';
+    return;
+  }
+
+  // classify alignment
+  const combos={};
+  valid.forEach(t=>{
+    const daily=t.dailyOF;
+    const h1=t.h1OF;
+    let label, grade;
+    if(daily===h1&&daily!=='Ranging'){
+      label=daily+' Aligned';
+      grade='A';
+    }else if(daily==='Ranging'||h1==='Ranging'){
+      label=(daily==='Ranging'?'D:Ranging':'D:'+daily)+' + '+(h1==='Ranging'?'H1:Ranging':'H1:'+h1);
+      grade='C';
+    }else{
+      // opposite: daily bull + h1 bear or vice versa
+      label='D:'+daily+' / H1:'+h1;
+      grade='B';
+    }
+    if(!combos[label])combos[label]={count:0,wins:0,totalR:0,grade,trades:[]};
+    combos[label].count++;
+    if(t.result==='W')combos[label].wins++;
+    combos[label].totalR+=getR(t);
+    combos[label].trades.push(t);
+  });
+
+  // bar chart
+  const chartData=Object.entries(combos)
+    .sort((a,b)=>b[1].totalR/b[1].count - a[1].totalR/a[1].count)
+    .map(([label,d])=>({label:label+' ('+d.count+')',value:parseFloat((d.totalR/d.count).toFixed(2)),count:d.count}));
+  renderBarChart('ch-of',chartData,'Avg R',true);
+
+  // detail cards
+  const gradeColors={A:'var(--g)',B:'var(--y)',C:'var(--t2)'};
+  const gradeLabels={A:'A급 (정렬)',B:'B급 (비정렬)',C:'C급 (불확실)'};
+  const sorted=Object.entries(combos).sort((a,b)=>{
+    const go={A:0,B:1,C:2};return(go[a[1].grade]||9)-(go[b[1].grade]||9);
+  });
+
+  ofGrid.innerHTML=sorted.map(([label,d])=>{
+    const avgR=d.totalR/d.count;
+    const wr=Math.round(d.wins/d.count*100);
+    const rc=avgR>=0?'var(--g)':'var(--r)';
+    const gc=gradeColors[d.grade];
+    return`<div class="kw-item">
+      <div>
+        <div class="kw-label" style="font-size:12px">${label}</div>
+        <div style="font-size:10px;color:${gc};margin-top:3px;font-weight:600">${gradeLabels[d.grade]}</div>
+      </div>
+      <div class="kw-stats">
+        <div class="kw-r" style="color:${rc}">${fR(avgR)}</div>
+        <div class="kw-count">${d.count}건 · 승률 ${wr}%</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // feedback
+  ofFb.style.display='';
+  const aligned=Object.entries(combos).filter(([,d])=>d.grade==='A');
+  const misaligned=Object.entries(combos).filter(([,d])=>d.grade==='B');
+
+  let fb='';
+  if(aligned.length&&misaligned.length){
+    const aTotal=aligned.reduce((s,[,d])=>s+d.totalR,0);
+    const aCount=aligned.reduce((s,[,d])=>s+d.count,0);
+    const aWins=aligned.reduce((s,[,d])=>s+d.wins,0);
+    const mTotal=misaligned.reduce((s,[,d])=>s+d.totalR,0);
+    const mCount=misaligned.reduce((s,[,d])=>s+d.count,0);
+    const mWins=misaligned.reduce((s,[,d])=>s+d.wins,0);
+    const aAvg=aCount?aTotal/aCount:0;
+    const mAvg=mCount?mTotal/mCount:0;
+    const aWr=aCount?Math.round(aWins/aCount*100):0;
+    const mWr=mCount?Math.round(mWins/mCount*100):0;
+
+    fb+=`📊 <strong>정렬(A급)</strong> ${aCount}건: 승률 <strong style="color:${aWr>=50?'var(--g)':'var(--r)'}">${aWr}%</strong>, 평균 <strong style="color:${aAvg>=0?'var(--g)':'var(--r)'}">${fR(aAvg)}</strong>`;
+    fb+=`<br>📊 <strong>비정렬(B급)</strong> ${mCount}건: 승률 <strong style="color:${mWr>=50?'var(--g)':'var(--r)'}">${mWr}%</strong>, 평균 <strong style="color:${mAvg>=0?'var(--g)':'var(--r)'}">${fR(mAvg)}</strong>`;
+
+    if(aAvg>mAvg+0.3){
+      fb+=`<br><br>✅ Daily + H1 정렬 시 성과가 확실히 좋습니다. 정렬된 경우에만 진입하면 수익성이 개선됩니다.`;
+    }else if(mAvg>aAvg){
+      fb+=`<br><br>⚠️ 비정렬 거래가 오히려 성과가 좋습니다. 데이터가 쌓이면 재확인해보세요.`;
+    }
+  }else if(aligned.length){
+    fb+='현재 모든 거래가 정렬(A급)입니다. 비정렬 데이터가 쌓이면 비교 분석이 가능합니다.';
+  }else if(misaligned.length){
+    fb+='⚠️ 정렬된 거래가 없습니다. Daily + H1 Order Flow가 같은 방향일 때만 진입하는 것을 권장합니다.';
+  }
+
+  const noOFCount=T.length-valid.length;
+  if(noOFCount>0){
+    fb+=`<br><br>📝 전체 ${T.length}건 중 ${noOFCount}건에 OF 데이터가 없습니다. 기록률을 높이면 분석 정확도가 올라갑니다.`;
+  }
+  ofFb.innerHTML=fb;
 }
 
 // ══════════════════════════════════════════════════
