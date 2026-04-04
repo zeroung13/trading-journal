@@ -1,5 +1,5 @@
 {
-  "lastSync": "2026-04-03T22:28:09.338Z",
+  "lastSync": "2026-04-04T16:41:29.377Z",
   "crypto": [
     {
       "id": "32d0081c-521f-809f-87b3-fb13172e272b",
@@ -212,6 +212,50 @@
       "hourlyChart": "https://www.tradingview.com/x/57TSYBkw/",
       "entryChart": "https://www.tradingview.com/x/0L7Et7YL/",
       "notes": "ERL > ERL의 오더 페어링을 생각하지 못함. 시간봉에서 보면 그냥 Consolidation 중이었는데 BOS로 추세가 지속되길 기도한듯함. 가장 중요한것은 H1 -FVG를 종가로 돌파하면서 추세 전환의 신호가 있었는데 Bearish Bias만 맹신하고 숏 셋업만 찾았음."
+    },
+    {
+      "id": "3380081c-521f-80a8-aff0-d4fc6869b760",
+      "source": "crypto",
+      "num": "6",
+      "date": "2026-04-03",
+      "result": "L",
+      "dayOfWeek": "Friday",
+      "asset": "BTC",
+      "htfBias": "Bearish",
+      "oneRPct": 2,
+      "rr": -1,
+      "maxRR": 0.21,
+      "drawdown": "100%",
+      "direction": "Sell",
+      "session": "NY",
+      "setup": "NY reversal",
+      "deliveryNarrative": [
+        "MMSM"
+      ],
+      "entryModel": "TS",
+      "entryPDA": [
+        "OB",
+        "iFVG"
+      ],
+      "entryType": "Limit",
+      "tradeType": "Swing",
+      "emotions": [
+        "Overconfidence"
+      ],
+      "mmxmTF": [
+        "h1"
+      ],
+      "mmxmNarr": "LRS/B",
+      "sl": 42949,
+      "tp": 114639,
+      "dd": 42949,
+      "slUnit": "ticks",
+      "dailyOF": "Bearish",
+      "h1OF": "Bearish",
+      "dailyChart": "https://www.tradingview.com/x/0n78lz4S/",
+      "hourlyChart": "https://www.tradingview.com/x/iz6Pl4AS/",
+      "entryChart": "https://www.tradingview.com/x/iz6Pl4AS/",
+      "notes": "금요일 밤에 조작이 나오고 주말이란걸 감안하면 너무 빠른 진입이었음. 최소한 1시간봉에서 들어가지말고, LTF 반응을 체크했어야함."
     }
   ],
   "futures": [
