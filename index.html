@@ -357,6 +357,7 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
     </div>
     <div class="tb-right">
       <div class="tb-sync" id="sync-info"></div>
+      <button class="btn-tb" id="sync-btn" onclick="triggerSync()">↻ Sync</button>
       <button class="btn-tb" onclick="exportCSV()">↓ CSV</button>
       <button class="btn-tb" onclick="logout()">🔒</button>
     </div>
@@ -1817,6 +1818,48 @@ function toast(msg){
 }
 
 document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('sb').classList.remove('mob')});
+
+// ══════════════════════════════════════════════════
+// NOTION SYNC (GitHub Actions trigger)
+// ══════════════════════════════════════════════════
+const SYNC_REPO='zeroung13/trading-journal';
+const SYNC_WORKFLOW='sync.yml';
+
+async function triggerSync(){
+  let token=localStorage.getItem('gh_pat');
+  if(!token){
+    token=prompt('GitHub Personal Access Token을 입력하세요.\n(처음 1회만 입력, 이후 브라우저에 저장됩니다)\n\nGitHub > Settings > Developer settings > Personal access tokens > Fine-grained tokens\n권한: Actions (Read and Write)');
+    if(!token)return;
+    localStorage.setItem('gh_pat',token.trim());
+  }
+  const btn=document.getElementById('sync-btn');
+  btn.disabled=true;btn.textContent='⏳ Syncing...';
+  try{
+    const res=await fetch(`https://api.github.com/repos/${SYNC_REPO}/actions/workflows/${SYNC_WORKFLOW}/dispatches`,{
+      method:'POST',
+      headers:{'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'},
+      body:JSON.stringify({ref:'main'})
+    });
+    if(res.status===204){
+      toast('Sync 시작! 1~2분 후 새로고침하세요.');
+      btn.textContent='✓ 요청 완료';
+      setTimeout(()=>{btn.textContent='↻ Sync';btn.disabled=false},5000);
+      // Auto-reload after 90 seconds
+      setTimeout(()=>{location.reload()},90000);
+    }else if(res.status===401||res.status===403){
+      localStorage.removeItem('gh_pat');
+      toast('토큰이 유효하지 않습니다. 다시 시도하세요.');
+      btn.textContent='↻ Sync';btn.disabled=false;
+    }else{
+      const err=await res.json().catch(()=>({}));
+      toast('Sync 실패: '+(err.message||res.status));
+      btn.textContent='↻ Sync';btn.disabled=false;
+    }
+  }catch(e){
+    toast('네트워크 오류: '+e.message);
+    btn.textContent='↻ Sync';btn.disabled=false;
+  }
+}
 </script>
 </body>
 </html>
