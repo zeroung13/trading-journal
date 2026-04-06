@@ -1,5 +1,5 @@
 {
-  "lastSync": "2026-04-05T22:25:47.240Z",
+  "lastSync": "2026-04-06T22:31:12.713Z",
   "crypto": [
     {
       "id": "32d0081c-521f-809f-87b3-fb13172e272b",
@@ -28,9 +28,12 @@
       "entryType": "Limit",
       "tradeType": "Intrasession",
       "emotions": [],
-      "mmxmTF": [
+      "entryTF": [
         "m5"
       ],
+      "model": "GxT",
+      "swingType": null,
+      "keyLevelTF": null,
       "mmxmNarr": "LRS/B",
       "sl": 24764,
       "tp": 76779,
@@ -70,9 +73,12 @@
       "entryType": "Limit",
       "tradeType": "Intrasession",
       "emotions": [],
-      "mmxmTF": [
+      "entryTF": [
         "m5"
       ],
+      "model": "Jokerszn",
+      "swingType": null,
+      "keyLevelTF": null,
       "mmxmNarr": null,
       "sl": 616,
       "tp": 1769,
@@ -111,9 +117,12 @@
       "entryType": "Limit",
       "tradeType": "Intrasession",
       "emotions": [],
-      "mmxmTF": [
+      "entryTF": [
         "m5"
       ],
+      "model": "Jokerszn",
+      "swingType": null,
+      "keyLevelTF": null,
       "mmxmNarr": null,
       "sl": 29901,
       "tp": 61426,
@@ -154,9 +163,12 @@
       "emotions": [
         "Greed"
       ],
-      "mmxmTF": [
+      "entryTF": [
         "m5"
       ],
+      "model": "Jokerszn",
+      "swingType": null,
+      "keyLevelTF": null,
       "mmxmNarr": "LRS/B",
       "sl": 1877,
       "tp": 5603,
@@ -198,9 +210,12 @@
       "emotions": [
         "FOMO"
       ],
-      "mmxmTF": [
+      "entryTF": [
         "m5"
       ],
+      "model": "Jokerszn",
+      "swingType": null,
+      "keyLevelTF": null,
       "mmxmNarr": null,
       "sl": 50019,
       "tp": 111823,
@@ -242,9 +257,12 @@
       "emotions": [
         "Overconfidence"
       ],
-      "mmxmTF": [
+      "entryTF": [
         "h1"
       ],
+      "model": "Jokerszn",
+      "swingType": null,
+      "keyLevelTF": null,
       "mmxmNarr": "LRS/B",
       "sl": 42949,
       "tp": 114639,
@@ -274,7 +292,7 @@
       "drawdown": "100%",
       "direction": "Buy",
       "session": "LO",
-      "setup": "LO continuation",
+      "setup": "OMFL",
       "deliveryNarrative": [
         "MMBM"
       ],
@@ -285,9 +303,12 @@
       "entryType": "Limit",
       "tradeType": "Intraday",
       "emotions": [],
-      "mmxmTF": [
+      "entryTF": [
         "m5"
       ],
+      "model": "Jokerszn",
+      "swingType": null,
+      "keyLevelTF": null,
       "mmxmNarr": "1st stage of re-accumulation",
       "sl": 362,
       "tp": 1470,
@@ -326,9 +347,12 @@
       "entryType": "Limit",
       "tradeType": "Intraday",
       "emotions": [],
-      "mmxmTF": [
+      "entryTF": [
         "m15"
       ],
+      "model": "Jokerszn",
+      "swingType": null,
+      "keyLevelTF": null,
       "mmxmNarr": null,
       "sl": 750,
       "tp": 1723.5,
@@ -369,9 +393,12 @@
       "emotions": [
         "Greed"
       ],
-      "mmxmTF": [
+      "entryTF": [
         "m15"
       ],
+      "model": "Jokerszn",
+      "swingType": null,
+      "keyLevelTF": null,
       "mmxmNarr": "2nd stage of re-accumulation",
       "sl": 88,
       "tp": 189,
@@ -412,9 +439,12 @@
       "emotions": [
         "Uncertainty"
       ],
-      "mmxmTF": [
+      "entryTF": [
         "m5"
       ],
+      "model": "Jokerszn",
+      "swingType": null,
+      "keyLevelTF": null,
       "mmxmNarr": null,
       "sl": 183,
       "tp": 354,
