@@ -510,6 +510,10 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
           <div class="card-hd"><div class="card-ttl">Model Win Rate</div></div>
           <div class="model-summary" id="model-summary"></div>
         </div>
+        <div class="card">
+          <div class="card-hd"><div class="card-ttl">Swing Type Win Rate</div></div>
+          <div class="ch-wrap-sm"><canvas id="ch-swing"></canvas></div>
+        </div>
       </div>
       <!-- OF ALIGNMENT DETAIL -->
       <div class="insight-card" style="margin-top:16px" id="of-section">
@@ -954,6 +958,7 @@ function renderAnalytics(){
   renderBarChart('ch-bias',groupWinRate(T,'htfBias'),'Win Rate %');
   renderBarChart('ch-model',groupAvgR(T,'model'),'Avg R',true);
   renderModelSummary(T);
+  renderBarChart('ch-swing',groupWinRate(T,'swingType'),'Win Rate %');
   renderOFAlignment(T);
   renderCaptureRate(T);
   renderDDAnalysis(T);
