@@ -1,5 +1,5 @@
 {
-  "lastSync": "2026-04-06T22:31:12.713Z",
+  "lastSync": "2026-04-07T22:33:29.300Z",
   "crypto": [
     {
       "id": "32d0081c-521f-809f-87b3-fb13172e272b",
@@ -456,6 +456,49 @@
       "hourlyChart": "https://www.tradingview.com/x/WEAg3DJ9/",
       "entryChart": "https://www.tradingview.com/x/kGKO7iTR/",
       "notes": "시간봉에서 명확한 Bullish Order Flow가 보였지만 반전만 생각함. 시간봉에서 빅 음봉으로 -OB가 생성되긴 했지만 아직 Order flow의 반전은 아니었기 때문에 섵부른 판단이었음. 단순하게 BSL을 털고 SSL을 터는 3마켓 패턴이 보임."
+    },
+    {
+      "id": "33b0081c-521f-809a-b83b-dc5f5136519f",
+      "source": "futures",
+      "num": "5",
+      "date": "2026-04-08",
+      "result": "W",
+      "dayOfWeek": "TuesDay",
+      "asset": "MNQ",
+      "htfBias": "Bearish",
+      "oneRPct": null,
+      "rr": 2,
+      "maxRR": 428,
+      "drawdown": "77.1%",
+      "direction": "Sell",
+      "session": "NY",
+      "setup": "Intracandle CSD",
+      "deliveryNarrative": [],
+      "entryModel": "One-Stage SMT",
+      "entryPDA": [
+        "V-shape",
+        "CSD"
+      ],
+      "entryType": "Market",
+      "tradeType": "Intrasession",
+      "emotions": [],
+      "entryTF": [
+        "m1"
+      ],
+      "model": "GxT",
+      "swingType": "C2 Reversal",
+      "keyLevelTF": "M15",
+      "mmxmNarr": null,
+      "sl": 214,
+      "tp": 428,
+      "dd": 165,
+      "slUnit": "pips",
+      "dailyOF": "Ranging",
+      "h1OF": "Bearish",
+      "dailyChart": "https://www.tradingview.com/x/6Rj8Qdjn/",
+      "hourlyChart": "https://www.tradingview.com/x/f32YPmwR/",
+      "entryChart": "https://www.tradingview.com/x/LUvKHXIe/",
+      "notes": "깔끔한 GxT 모델의 매매였음."
     }
   ]
 }
