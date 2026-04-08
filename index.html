@@ -654,6 +654,8 @@ function getTrades(){
 
 // Get R value from trade
 function getR(t){
+  // Actual RR (manual override) takes priority
+  if(t.actualRR!=null && typeof t.actualRR==='number') return t.actualRR;
   if(t.rr!=null && typeof t.rr==='number') return t.rr;
   // fallback: estimate from result
   if(t.result==='W') return t.maxRR||1;

@@ -83,6 +83,8 @@ function transform(page, source) {
     model:       prop(page, 'Model'),
     swingType:   prop(page, 'Swing Type'),
     keyLevelTF:  prop(page, 'Key Level TF'),
+    exitStrategy: prop(page, 'Exit Strategy'),
+    actualRR:    prop(page, 'Actual RR'),
     mmxmNarr:    prop(page, 'if MMXM narrative'),
     sl:  isCrypto ? prop(page, 'Ticks SL')     : prop(page, 'Pips SL'),
     tp:  isCrypto ? prop(page, 'Ticks to TP')  : prop(page, 'Pips to TP'),
