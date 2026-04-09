@@ -1,5 +1,5 @@
 {
-  "lastSync": "2026-04-08T22:34:17.928Z",
+  "lastSync": "2026-04-09T22:36:14.876Z",
   "crypto": [
     {
       "id": "32d0081c-521f-809f-87b3-fb13172e272b",
@@ -567,6 +567,52 @@
       "hourlyChart": "https://www.tradingview.com/x/BtuMOiXc/",
       "entryChart": "https://www.tradingview.com/x/RmUimsSm/",
       "notes": "오버나이트 세션에서 이미 과도한 확장이 나오면서 NY continuation 거래를 노리는건 리스크가 컸음. 그래서 ERL > IRL 움직임이라도 노리려고 역추세 매매인 숏을 진행함. (추가적으로 2-stage SMT를 더 잘 봐야할듯함)"
+    },
+    {
+      "id": "33d0081c-521f-80e2-bdf6-cc6f61f70994",
+      "source": "futures",
+      "num": "7",
+      "date": "2026-04-09",
+      "result": "L",
+      "dayOfWeek": "Thursday",
+      "asset": "MGC",
+      "htfBias": "Bearish",
+      "oneRPct": null,
+      "rr": -1,
+      "maxRR": 0.19,
+      "drawdown": "100%",
+      "direction": "Sell",
+      "session": "NY",
+      "setup": "Positional Entry",
+      "deliveryNarrative": [],
+      "entryModel": "1-Stage",
+      "entryPDA": [
+        "CSD"
+      ],
+      "entryType": "Limit",
+      "tradeType": "Intraday",
+      "emotions": [
+        "Rule Breaking"
+      ],
+      "entryTF": [
+        "m3"
+      ],
+      "model": "GxT",
+      "swingType": "C2 Reversal",
+      "keyLevelTF": "M15",
+      "exitStrategy": "Full SL",
+      "actualRR": null,
+      "mmxmNarr": null,
+      "sl": 83,
+      "tp": 208,
+      "dd": 83,
+      "slUnit": "pips",
+      "dailyOF": "Bullish",
+      "h1OF": "Bullish",
+      "dailyChart": null,
+      "hourlyChart": null,
+      "entryChart": null,
+      "notes": "시원한 V-Shape이 아니었음. 그리고 반전을 보려면 2-stage를 필수로 확인해야하는데 그러지 않았음. 그리고 내가 한 거래는 Continuation으로 2번째 CSD를 찾았어야함."
     }
   ]
 }
