@@ -454,7 +454,7 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
               <th>#</th><th>날짜</th><th>종목</th><th>방향</th>
               <th>결과</th><th>RR</th><th>Max RR</th><th>Exit</th>
               <th>Setup</th><th>Swing</th><th>Condition</th>
-              <th>Entry PDA</th><th>SMT</th><th>감정</th>
+              <th>Universal</th><th>SMT</th>
               <th>Charts</th><th>노트</th>
             </tr></thead>
             <tbody id="tbl-body"></tbody>
@@ -481,16 +481,8 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
           <div class="ch-wrap-sm"><canvas id="ch-swing"></canvas></div>
         </div>
         <div class="card">
-          <div class="card-hd"><div class="card-ttl">Entry PDA Win Rate</div></div>
-          <div class="ch-wrap-sm"><canvas id="ch-pda"></canvas></div>
-        </div>
-        <div class="card">
           <div class="card-hd"><div class="card-ttl">SMT Stage Win Rate</div></div>
           <div class="ch-wrap-sm"><canvas id="ch-smt-stage"></canvas></div>
-        </div>
-        <div class="card">
-          <div class="card-hd"><div class="card-ttl">SMT Type Win Rate</div></div>
-          <div class="ch-wrap-sm"><canvas id="ch-smt-type"></canvas></div>
         </div>
         <div class="card">
           <div class="card-hd"><div class="card-ttl">Universal Model Win Rate</div></div>
@@ -505,20 +497,12 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
           <div class="ch-wrap-sm"><canvas id="ch-exit"></canvas></div>
         </div>
         <div class="card">
-          <div class="card-hd"><div class="card-ttl">Entry TF Win Rate</div></div>
-          <div class="ch-wrap-sm"><canvas id="ch-entry-tf"></canvas></div>
-        </div>
-        <div class="card">
           <div class="card-hd"><div class="card-ttl">Direction Win Rate</div></div>
           <div class="ch-wrap-sm"><canvas id="ch-direction"></canvas></div>
         </div>
         <div class="card">
           <div class="card-hd"><div class="card-ttl">Day of Week Win Rate</div></div>
           <div class="ch-wrap-sm"><canvas id="ch-dow"></canvas></div>
-        </div>
-        <div class="card">
-          <div class="card-hd"><div class="card-ttl">Emotion Impact (Avg R)</div></div>
-          <div class="ch-wrap-sm"><canvas id="ch-emo"></canvas></div>
         </div>
       </div>
       <!-- CAPTURE RATE & DD ANALYSIS -->
@@ -859,8 +843,6 @@ function renderTbl(){
     const r=getR(t);const rc=r>0?'rp':r<0?'rn':'';
     const resBadge=t.result==='W'?'bw':t.result==='L'?'bl':'bbe';
     const dirBadge=t.direction==='Buy'?'blong':'bshort';
-    const pdas=(t.entryPDA||[]).map(x=>`<span class="tag-chip">${x}</span>`).join(' ');
-    const emos=(t.emotions||[]).map(x=>{const m=x.match(/^([^(]+)\(([^)]+)\)$/);if(m)return`<span class="tag-chip" title="${m[2]}">${m[1]}</span>`;return`<span class="tag-chip">${x}</span>`}).join(' ');
     const smtInfo=[t.smtStage&&t.smtStage!=='none'?t.smtStage:null,...(t.smtType||[])].filter(Boolean);
     const smtTags=smtInfo.map(x=>`<span class="tag-chip">${x}</span>`).join(' ');
     const links=[t.htfChart?`<a class="chart-link" href="${t.htfChart}" target="_blank">HTF</a>`:null,
@@ -882,12 +864,11 @@ function renderTbl(){
       <td style="font-size:11px">${t.setup||'—'}</td>
       <td style="font-size:11px">${t.swingType||'—'}</td>
       <td style="font-size:11px">${t.condition||'—'}</td>
-      <td>${pdas||'—'}</td>
+      <td style="font-size:11px">${t.universalModel||'—'}</td>
       <td>${smtTags||'—'}</td>
-      <td>${emos||''}</td>
       <td style="white-space:nowrap">${links||'—'}</td>
       <td>${note}</td>
-    </tr>${t.notes?`<tr class="note-row" id="${noteId}" style="display:none"><td colspan="16"><div class="note-cell">${t.notes}</div></td></tr>`:''}`;
+    </tr>${t.notes?`<tr class="note-row" id="${noteId}" style="display:none"><td colspan="14"><div class="note-cell">${t.notes}</div></td></tr>`:''}`;
   }).join('');
 }
 
@@ -919,16 +900,12 @@ function renderAnalytics(){
 
   renderBarChart('ch-setup',groupAvgR(T,'setup'),'Avg R',true);
   renderBarChart('ch-swing',groupWinRate(T,'swingType'),'Win Rate %');
-  renderBarChart('ch-pda',groupWinRateMulti(T,'entryPDA'),'Win Rate %');
   renderBarChart('ch-smt-stage',groupWinRate(T,'smtStage'),'Win Rate %');
-  renderBarChart('ch-smt-type',groupWinRateMulti(T,'smtType'),'Win Rate %');
   renderBarChart('ch-universal',groupWinRate(T,'universalModel'),'Win Rate %');
   renderBarChart('ch-condition',groupWinRate(T,'condition'),'Win Rate %');
   renderBarChart('ch-exit',groupAvgR(T,'exitStrategy'),'Avg R',true);
-  renderBarChart('ch-entry-tf',groupWinRateMulti(T,'entryTF'),'Win Rate %');
   renderBarChart('ch-direction',groupWinRate(T,'direction'),'Win Rate %');
   renderBarChart('ch-dow',groupWinRate(T,'dayOfWeek'),'Win Rate %');
-  renderBarChart('ch-emo',groupAvgRMulti(T,'emotions'),'Avg R',true);
   renderCaptureRate(T);
   renderDDAnalysis(T);
   renderMonthlyReport(T);
