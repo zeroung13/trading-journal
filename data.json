@@ -1,11 +1,11 @@
 {
-  "lastSync": "2026-04-11T09:09:02.686Z",
+  "lastSync": "2026-04-11T10:37:55.049Z",
   "crypto": [],
   "futures": [
     {
       "id": "33b0081c-521f-809a-b83b-dc5f5136519f",
       "source": "futures",
-      "num": "5",
+      "num": "1",
       "date": "2026-04-08",
       "result": "W",
       "dayOfWeek": "TuesDay",
@@ -53,7 +53,7 @@
     {
       "id": "33c0081c-521f-80e6-a8eb-e8590e05f4c2",
       "source": "futures",
-      "num": "6",
+      "num": "2",
       "date": "2026-04-08",
       "result": "W",
       "dayOfWeek": "Wednesday",
@@ -98,7 +98,7 @@
     {
       "id": "33d0081c-521f-80e2-bdf6-cc6f61f70994",
       "source": "futures",
-      "num": "7",
+      "num": "3",
       "date": "2026-04-09",
       "result": "L",
       "dayOfWeek": "Thursday",
@@ -143,7 +143,7 @@
     {
       "id": "33f0081c-521f-8010-bb46-d6bed8c76ce1",
       "source": "futures",
-      "num": "8",
+      "num": "4",
       "date": "2026-04-10",
       "result": "L",
       "dayOfWeek": "Friday",
