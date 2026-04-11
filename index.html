@@ -103,6 +103,13 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--mbg
 .card-ttl{font-size:11px;color:var(--t1);font-weight:500;text-transform:uppercase;letter-spacing:.4px}
 .ch-wrap{position:relative;height:215px}
 .ch-wrap-sm{position:relative;height:180px}
+.ch-wrap-line{position:relative;height:220px}
+.ch-wrap-hist{position:relative;height:180px}
+.perf-curves{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.r-dist-section{margin-bottom:14px}
+.card-badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;line-height:1.4}
+.rolling-window-label{font-size:9px;color:var(--t2);font-weight:400;letter-spacing:0}
+@media(max-width:900px){.perf-curves{grid-template-columns:1fr}}
 .model-summary{display:flex;flex-direction:column;gap:10px;padding:8px 0}
 .model-row{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--cbg);border-radius:6px;border:1px solid var(--b1)}
 .model-name{font-weight:600;font-size:13px;min-width:80px}
@@ -471,6 +478,36 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
     <!-- ANALYTICS -->
     <div id="view-analytics" class="view">
       <div class="stat-row" id="ana-stat-row"></div>
+
+      <!-- PERFORMANCE CURVES (full-width line charts) -->
+      <div class="perf-curves">
+        <div class="card">
+          <div class="card-hd">
+            <div class="card-ttl">Cumulative R Curve</div>
+            <div class="card-badge" id="cum-r-badge"></div>
+          </div>
+          <div class="ch-wrap-line"><canvas id="ch-cum-r"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-hd">
+            <div class="card-ttl">Rolling Win Rate <span class="rolling-window-label">(last 10)</span></div>
+            <div class="card-badge" id="roll-wr-badge"></div>
+          </div>
+          <div class="ch-wrap-line"><canvas id="ch-roll-wr"></canvas></div>
+        </div>
+      </div>
+
+      <!-- R DISTRIBUTION (full-width histogram) -->
+      <div class="r-dist-section">
+        <div class="card">
+          <div class="card-hd">
+            <div class="card-ttl">R Distribution</div>
+            <div class="card-badge" id="r-dist-badge"></div>
+          </div>
+          <div class="ch-wrap-hist"><canvas id="ch-r-dist"></canvas></div>
+        </div>
+      </div>
+
       <div class="dash-analytics">
         <div class="card">
           <div class="card-hd"><div class="card-ttl">Setup Performance (Avg R)</div></div>
@@ -898,6 +935,9 @@ function renderAnalytics(){
     <div class="sc"><div class="sc-lbl">Worst Streak (L)</div><div class="sc-val neg">${maxStreak.loss}</div></div>
     <div class="sc"><div class="sc-lbl">Avg R / Trade</div><div class="sc-val ${s.aR>=0?'pos':'neg'}">${fR(s.aR)}</div></div>`;
 
+  renderCumulativeR(T);
+  renderRollingWinRate(T);
+  renderRDistribution(T);
   renderBarChart('ch-setup',groupAvgR(T,'setup'),'Avg R',true);
   renderBarChart('ch-swing',groupWinRate(T,'swingType'),'Win Rate %');
   renderBarChart('ch-smt-stage',groupWinRate(T,'smtStage'),'Win Rate %');
@@ -961,6 +1001,169 @@ function renderBarChart(id,data,label,isR=false){
         y:{ticks:{color:'#d0d6e0',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}}}}});
 }
 
+
+// ══════════════════════════════════════════════════
+// PERFORMANCE CURVES & R DISTRIBUTION
+// ══════════════════════════════════════════════════
+function renderCumulativeR(T){
+  const ctx=document.getElementById('ch-cum-r');
+  if(!ctx)return;
+  if(charts['ch-cum-r']){charts['ch-cum-r'].destroy()}
+  if(T.length<1)return;
+  let cum=0;
+  const cumData=T.map(t=>{cum+=getR(t);return parseFloat(cum.toFixed(2))});
+  const labels=T.map((_,i)=>'#'+(i+1));
+  const pointColors=T.map(t=>t.result==='W'?'#10b981':'#f43f5e');
+  // Badge
+  const badge=document.getElementById('cum-r-badge');
+  if(badge){
+    badge.textContent=fR(cum);
+    badge.style.color=cum>=0?'#10b981':'#f43f5e';
+    badge.style.background=cum>=0?'rgba(16,185,129,.12)':'rgba(244,63,94,.12)';
+  }
+  charts['ch-cum-r']=new Chart(ctx,{
+    type:'line',
+    data:{labels,datasets:[{
+      data:cumData,
+      borderColor:'#5e6ad2',
+      backgroundColor:'rgba(94,106,210,.08)',
+      fill:true,
+      tension:.3,
+      pointRadius:T.length>50?1.5:3.5,
+      pointBackgroundColor:pointColors,
+      pointBorderWidth:0,
+      pointHoverRadius:6,
+      borderWidth:2
+    }]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{
+          title:c=>`Trade ${c[0].label}`,
+          label:c=>`Cumulative: ${fR(c.raw)}`,
+          afterLabel:(c)=>{const t=T[c.dataIndex];return t?`${t.result} | ${t.setup||'—'}`:''}
+        }}
+      },
+      scales:{
+        x:{display:true,ticks:{font:{size:9},color:'#62666d',maxRotation:0,autoSkip:true,maxTicksLimit:12},grid:{display:false}},
+        y:{ticks:{font:{size:9},color:'#62666d',callback:v=>fR(v)},grid:{color:'rgba(255,255,255,.04)'},
+          afterDataLimits:s=>{if(s.min>0)s.min=0;if(s.max<0)s.max=0}}
+      },
+      interaction:{intersect:false,mode:'index'}
+    }
+  });
+}
+
+function renderRollingWinRate(T){
+  const ctx=document.getElementById('ch-roll-wr');
+  if(!ctx)return;
+  if(charts['ch-roll-wr']){charts['ch-roll-wr'].destroy()}
+  const W=Math.min(10,T.length);
+  if(T.length<3)return;
+  // Update window label
+  const wLabel=document.querySelector('.rolling-window-label');
+  if(wLabel)wLabel.textContent=`(last ${W})`;
+  const labels=[];const data=[];
+  for(let i=W-1;i<T.length;i++){
+    let wins=0;
+    for(let j=i-W+1;j<=i;j++){if(T[j].result==='W')wins++}
+    labels.push('#'+(i+1));
+    data.push(Math.round(wins/W*100));
+  }
+  // Badge = current rolling WR
+  const badge=document.getElementById('roll-wr-badge');
+  if(badge&&data.length>0){
+    const cur=data[data.length-1];
+    badge.textContent=cur+'%';
+    badge.style.color=cur>=50?'#10b981':cur>=35?'#f59e0b':'#f43f5e';
+    badge.style.background=cur>=50?'rgba(16,185,129,.12)':cur>=35?'rgba(245,158,11,.12)':'rgba(244,63,94,.12)';
+  }
+  charts['ch-roll-wr']=new Chart(ctx,{
+    type:'line',
+    data:{labels,datasets:[{
+      data,
+      borderColor:'#f59e0b',
+      backgroundColor:'rgba(245,158,11,.06)',
+      fill:true,
+      tension:.3,
+      pointRadius:T.length>50?1:3,
+      pointBackgroundColor:data.map(v=>v>=50?'#10b981':v>=35?'#f59e0b':'#f43f5e'),
+      pointBorderWidth:0,
+      pointHoverRadius:5,
+      borderWidth:2
+    }]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:c=>c.raw+'%'}},
+        annotation:undefined
+      },
+      scales:{
+        x:{display:true,ticks:{font:{size:9},color:'#62666d',maxRotation:0,autoSkip:true,maxTicksLimit:12},grid:{display:false}},
+        y:{min:0,max:100,ticks:{font:{size:9},color:'#62666d',callback:v=>v+'%',stepSize:25},
+          grid:{color:(c)=>c.tick.value===50?'rgba(245,158,11,.3)':'rgba(255,255,255,.04)',lineWidth:(c)=>c.tick.value===50?1.5:1}}
+      },
+      interaction:{intersect:false,mode:'index'}
+    }
+  });
+}
+
+function renderRDistribution(T){
+  const ctx=document.getElementById('ch-r-dist');
+  if(!ctx)return;
+  if(charts['ch-r-dist']){charts['ch-r-dist'].destroy()}
+  if(T.length<1)return;
+  // Build bins: ..., -2R, -1.5R, -1R, -0.5R, 0R, +0.5R, +1R, +1.5R, +2R, +2.5R, +3R, ...
+  const rValues=T.map(t=>getR(t));
+  const minR=Math.floor(Math.min(...rValues)*2)/2;
+  const maxR=Math.ceil(Math.max(...rValues)*2)/2;
+  const bins=[];
+  for(let r=minR;r<=maxR;r+=0.5){bins.push(parseFloat(r.toFixed(1)))}
+  if(bins.length===0)bins.push(0);
+  const counts=bins.map(()=>0);
+  rValues.forEach(r=>{
+    let idx=0;
+    for(let i=0;i<bins.length;i++){
+      if(r>=bins[i]-0.25&&r<bins[i]+0.25){idx=i;break}
+      if(i===bins.length-1)idx=i;
+    }
+    counts[idx]++;
+  });
+  const labels=bins.map(b=>(b>=0?'+':'')+b.toFixed(1)+'R');
+  const colors=bins.map(b=>b>=0?'#10b981':'#f43f5e');
+  // Badge = median R
+  const sorted=[...rValues].sort((a,b)=>a-b);
+  const median=sorted.length%2===0?(sorted[sorted.length/2-1]+sorted[sorted.length/2])/2:sorted[Math.floor(sorted.length/2)];
+  const badge=document.getElementById('r-dist-badge');
+  if(badge){
+    badge.textContent='Median: '+fR(median);
+    badge.style.color=median>=0?'#10b981':'#f43f5e';
+    badge.style.background=median>=0?'rgba(16,185,129,.12)':'rgba(244,63,94,.12)';
+  }
+  charts['ch-r-dist']=new Chart(ctx,{
+    type:'bar',
+    data:{labels,datasets:[{
+      data:counts,
+      backgroundColor:colors.map(c=>c+'40'),
+      borderColor:colors,
+      borderWidth:1,
+      borderRadius:3
+    }]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:c=>c.raw+' trade'+(c.raw!==1?'s':'')}}
+      },
+      scales:{
+        x:{ticks:{font:{size:10},color:'#d0d6e0'},grid:{display:false}},
+        y:{ticks:{font:{size:9},color:'#62666d',stepSize:1,precision:0},grid:{color:'rgba(255,255,255,.04)'},beginAtZero:true}
+      }
+    }
+  });
+}
 
 // ══════════════════════════════════════════════════
 // CAPTURE RATE & DD ANALYSIS
