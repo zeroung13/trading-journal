@@ -110,6 +110,12 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--mbg
 .card-badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;line-height:1.4}
 .rolling-window-label{font-size:9px;color:var(--t2);font-weight:400;letter-spacing:0}
 @media(max-width:900px){.perf-curves{grid-template-columns:1fr}}
+.sortable{cursor:pointer;user-select:none;white-space:nowrap;transition:color .15s}
+.sortable:hover{color:var(--ac2)}
+.sort-arrow{font-size:9px;opacity:.3;margin-left:2px}
+.sortable.asc .sort-arrow::after{content:'▲';opacity:1}
+.sortable.desc .sort-arrow::after{content:'▼';opacity:1}
+.sortable.asc .sort-arrow,.sortable.desc .sort-arrow{opacity:1;color:var(--ac)}
 .model-summary{display:flex;flex-direction:column;gap:10px;padding:8px 0}
 .model-row{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--cbg);border-radius:6px;border:1px solid var(--b1)}
 .model-name{font-weight:600;font-size:13px;min-width:80px}
@@ -458,9 +464,16 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
         <div class="tbl-wrap">
           <table>
             <thead><tr>
-              <th>#</th><th>날짜</th><th>종목</th><th>방향</th>
-              <th>결과</th><th>RR</th><th>Max RR</th><th>Exit</th>
-              <th>Setup</th><th>Swing</th><th>Condition</th>
+              <th class="sortable" data-sort="num"># <span class="sort-arrow"></span></th>
+              <th class="sortable" data-sort="date">날짜 <span class="sort-arrow"></span></th>
+              <th class="sortable" data-sort="asset">종목 <span class="sort-arrow"></span></th>
+              <th class="sortable" data-sort="direction">방향 <span class="sort-arrow"></span></th>
+              <th class="sortable" data-sort="result">결과 <span class="sort-arrow"></span></th>
+              <th class="sortable" data-sort="rr">RR <span class="sort-arrow"></span></th>
+              <th class="sortable" data-sort="maxRR">Max RR <span class="sort-arrow"></span></th>
+              <th>Exit</th>
+              <th class="sortable" data-sort="setup">Setup <span class="sort-arrow"></span></th>
+              <th>Swing</th><th>Condition</th>
               <th>Universal</th><th>SMT</th>
               <th>Charts</th><th>노트</th>
             </tr></thead>
@@ -667,6 +680,7 @@ let ALL={crypto:[],futures:[],lastSync:''};
 let curSrc='all'; // 'all','crypto','futures'
 let charts={};
 let cY,cM;
+let tblSort={key:'date',dir:'desc'}; // default: newest first
 
 function getTrades(){
   if(curSrc==='all') return [...ALL.crypto,...ALL.futures].sort((a,b)=>(a.date||'').localeCompare(b.date||''));
@@ -716,6 +730,10 @@ async function loadData(){
   }
   const n=new Date();cY=n.getFullYear();cM=n.getMonth();
   chkMob();window.addEventListener('resize',chkMob);
+  // Attach sort handler to table header
+  document.querySelector('thead')?.addEventListener('click',handleSort);
+  // Set initial sort indicator
+  document.querySelector(`.sortable[data-sort="${tblSort.key}"]`)?.classList.add(tblSort.dir);
   renderDash();
 }
 
@@ -869,7 +887,33 @@ function getFiltered(){
     if(fr&&d<fr)return false;
     if(to&&d>to)return false;
     return true;
-  }).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  }).sort((a,b)=>{
+    const k=tblSort.key;
+    const m=tblSort.dir==='asc'?1:-1;
+    let va,vb;
+    if(k==='num'){va=a.num||0;vb=b.num||0;return(va-vb)*m}
+    if(k==='rr'){va=getR(a);vb=getR(b);return(va-vb)*m}
+    if(k==='maxRR'){va=a.maxRR||0;vb=b.maxRR||0;return(va-vb)*m}
+    if(k==='date'){
+      const c=(a.date||'').localeCompare(b.date||'');
+      if(c!==0)return c*m;
+      return((a.num||0)-(b.num||0))*m;
+    }
+    va=(a[k]||'').toString().toLowerCase();
+    vb=(b[k]||'').toString().toLowerCase();
+    return va.localeCompare(vb)*m;
+  });
+}
+
+function handleSort(e){
+  const th=e.target.closest('.sortable');
+  if(!th)return;
+  const key=th.dataset.sort;
+  if(tblSort.key===key){tblSort.dir=tblSort.dir==='asc'?'desc':'asc'}
+  else{tblSort.key=key;tblSort.dir=key==='num'||key==='rr'||key==='maxRR'?'desc':'asc'}
+  document.querySelectorAll('.sortable').forEach(el=>{el.classList.remove('asc','desc')});
+  th.classList.add(tblSort.dir);
+  renderTbl();
 }
 
 function renderTbl(){
