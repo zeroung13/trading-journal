@@ -1,5 +1,5 @@
 {
-  "lastSync": "2026-04-11T07:51:32.723Z",
+  "lastSync": "2026-04-11T09:09:02.686Z",
   "crypto": [],
   "futures": [
     {
@@ -15,24 +15,32 @@
       "maxRR": 2,
       "drawdown": "77.1%",
       "direction": "Sell",
-      "setup": null,
+      "setup": "10 a.m. NY Continuation",
       "entryPDA": [
         "V-shape",
         "CSD"
       ],
       "entryType": "Market",
-      "emotions": [],
+      "emotions": [
+        "Uncertainty"
+      ],
       "entryTF": [
         "m1"
       ],
       "swingType": "C2 DIrect (small wick)",
       "exitStrategy": "Full TP",
       "actualRR": null,
-      "smtStage": "1-stage",
-      "smtType": [],
-      "universalModel": null,
-      "candleProfiling": [],
-      "condition": null,
+      "smtStage": "2-stage",
+      "smtType": [
+        "PSP",
+        "SMT Fill",
+        "Double Sweep SMT"
+      ],
+      "universalModel": "Manipulation Range",
+      "candleProfiling": [
+        "H4"
+      ],
+      "condition": "Seek & Destroy",
       "sl": 214,
       "tp": 428,
       "dd": 165,
@@ -55,7 +63,7 @@
       "maxRR": 3.81,
       "drawdown": "27.08%",
       "direction": "Sell",
-      "setup": null,
+      "setup": "10 a.m. NY Reversal",
       "entryPDA": [
         "V-shape + Gap"
       ],
@@ -69,11 +77,15 @@
       "swingType": "C2 DIrect (small wick)",
       "exitStrategy": "Full TP",
       "actualRR": null,
-      "smtStage": "2-stage",
-      "smtType": [],
-      "universalModel": null,
-      "candleProfiling": [],
-      "condition": null,
+      "smtStage": "1-stage",
+      "smtType": [
+        "SMT Fill"
+      ],
+      "universalModel": "ERL -> IRL",
+      "candleProfiling": [
+        "H1"
+      ],
+      "condition": "Consolidation",
       "sl": 48,
       "tp": 183,
       "dd": 13,
@@ -96,7 +108,7 @@
       "maxRR": 0.19,
       "drawdown": "100%",
       "direction": "Sell",
-      "setup": null,
+      "setup": "London Reversal",
       "entryPDA": [
         "CSD"
       ],
@@ -111,53 +123,67 @@
       "exitStrategy": "Full SL",
       "actualRR": null,
       "smtStage": "1-stage",
-      "smtType": [],
-      "universalModel": null,
-      "candleProfiling": [],
-      "condition": null,
+      "smtType": [
+        "SMT Fill"
+      ],
+      "universalModel": "IRL -> ERL",
+      "candleProfiling": [
+        "H1"
+      ],
+      "condition": "Consolidation",
       "sl": 83,
       "tp": 208,
       "dd": 83,
       "slUnit": "pips",
-      "htfChart": null,
-      "mtfChart": null,
+      "htfChart": "https://www.tradingview.com/x/HPK7JC9o/",
+      "mtfChart": "https://www.tradingview.com/x/AkN5y7m6/",
       "entryChart": null,
-      "notes": "시원한 V-Shape이 아니었음. 그리고 반전을 보려면 2-stage를 필수로 확인해야하는데 그러지 않았음. 그리고 내가 한 거래는 Continuation으로 2번째 CSD를 찾았어야함."
+      "notes": "기본적으로 key level을 생각을 안했음. TDA를 하면서 key level을 체크했다면 매매를 하지 않았을 구간이었음."
     },
     {
       "id": "33f0081c-521f-8010-bb46-d6bed8c76ce1",
       "source": "futures",
       "num": "8",
       "date": "2026-04-10",
-      "result": null,
+      "result": "L",
       "dayOfWeek": "Friday",
       "asset": "MES",
       "oneRPct": null,
-      "rr": 0,
-      "maxRR": null,
-      "drawdown": "N/A",
+      "rr": -1,
+      "maxRR": 1.63,
+      "drawdown": "100%",
       "direction": "Sell",
-      "setup": null,
-      "entryPDA": [],
-      "entryType": null,
-      "emotions": [],
-      "entryTF": [],
-      "swingType": null,
-      "exitStrategy": null,
+      "setup": "10 a.m. NY Reversal",
+      "entryPDA": [
+        "CSD"
+      ],
+      "entryType": "Market",
+      "emotions": [
+        "Impatience"
+      ],
+      "entryTF": [
+        "m3"
+      ],
+      "swingType": "C2 DIrect (small wick)",
+      "exitStrategy": "Full SL",
       "actualRR": null,
-      "smtStage": null,
-      "smtType": [],
-      "universalModel": null,
-      "candleProfiling": [],
-      "condition": null,
-      "sl": null,
-      "tp": null,
-      "dd": null,
+      "smtStage": "2-stage",
+      "smtType": [
+        "PSP"
+      ],
+      "universalModel": "ERL -> IRL",
+      "candleProfiling": [
+        "M30"
+      ],
+      "condition": "Consolidation",
+      "sl": 24,
+      "tp": 110,
+      "dd": 24,
       "slUnit": "pips",
-      "htfChart": null,
-      "mtfChart": null,
-      "entryChart": null,
-      "notes": null
+      "htfChart": "https://www.tradingview.com/x/alU35Mnj/",
+      "mtfChart": "https://www.tradingview.com/x/h0rQzzRk/",
+      "entryChart": "https://www.tradingview.com/x/bvgZVv0R/",
+      "notes": "2-stage PSP를 본 것 까지는 좋았지만, LTF entry를 들어갈 때 CISD가 아니었는데 대충 보고 진입을 함. 만약 진지하게 캔들을 추적했다면 더 좋은 자리에서 깔끔한 셋업이 나와서 무조건 먹고 가는 거래였음. (5RR 이상)"
     }
   ]
 }
