@@ -395,9 +395,6 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
         <div class="card">
           <div class="card-hd">
             <div class="card-ttl">Cumulative R Curve</div>
-            <label style="font-size:11px;color:var(--t2);display:flex;align-items:center;gap:5px;cursor:pointer">
-              <input type="checkbox" id="eq-ap-toggle" onchange="renderDash()" style="accent-color:var(--ac)"> A+ Only 비교
-            </label>
           </div>
           <div class="ch-wrap"><canvas id="eq-ch"></canvas></div>
         </div>
@@ -423,21 +420,26 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
     <!-- TRADE LOG -->
     <div id="view-log" class="view">
       <div class="fbar">
-        <select class="fi" id="ff-session" onchange="renderTbl()">
-          <option value="">전체 세션</option>
-          <option>Asia</option><option>LO</option><option>NY</option><option>LC</option><option>out of session</option>
-        </select>
         <select class="fi" id="ff-result" onchange="renderTbl()">
           <option value="">전체 결과</option><option>W</option><option>L</option><option>BE</option><option>PL</option>
         </select>
         <select class="fi" id="ff-dir" onchange="renderTbl()">
           <option value="">전체 방향</option><option>Buy</option><option>Sell</option>
         </select>
-        <select class="fi" id="ff-grade" onchange="renderTbl()">
-          <option value="">전체 등급</option><option value="A+">A+</option><option value="A">A</option><option value="B">B</option><option value="C">C</option>
+        <select class="fi" id="ff-setup" onchange="renderTbl()">
+          <option value="">전체 Setup</option>
+          <option>Asia Reversal</option><option>Asai Continuation</option>
+          <option>London Reversal</option><option>London Continuation</option>
+          <option>10 a.m. NY Continuation</option><option>10 a.m. NY Reversal</option>
+          <option>PM Trade</option><option>Overnight Positional</option>
         </select>
-        <select class="fi" id="ff-model" onchange="renderTbl()">
-          <option value="">전체 모델</option><option>Jokerszn</option><option>GxT</option>
+        <select class="fi" id="ff-swing" onchange="renderTbl()">
+          <option value="">전체 Swing</option>
+          <option>C2 DIrect (small wick)</option><option>C3 Closure → C4</option><option>C2 Large Wick → C3</option>
+        </select>
+        <select class="fi" id="ff-condition" onchange="renderTbl()">
+          <option value="">전체 Condition</option>
+          <option>Expansion</option><option>Consolidation</option><option>Seek & Destroy</option>
         </select>
         <input class="fi" id="ff-asset" type="text" placeholder="종목..." oninput="renderTbl()" style="width:80px">
         <input class="fi" id="ff-from" type="date" onchange="renderTbl()">
@@ -450,9 +452,9 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
           <table>
             <thead><tr>
               <th>#</th><th>날짜</th><th>종목</th><th>방향</th>
-              <th>D</th><th>H1</th><th>Grade</th>
-              <th>결과</th><th>RR</th><th>Max RR</th>
-              <th>세션</th><th>Setup</th><th>Entry PDA</th><th>감정</th>
+              <th>결과</th><th>RR</th><th>Max RR</th><th>Exit</th>
+              <th>Setup</th><th>Swing</th><th>Condition</th>
+              <th>Entry PDA</th><th>SMT</th><th>감정</th>
               <th>Charts</th><th>노트</th>
             </tr></thead>
             <tbody id="tbl-body"></tbody>
@@ -471,55 +473,53 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
       <div class="stat-row" id="ana-stat-row"></div>
       <div class="dash-analytics">
         <div class="card">
-          <div class="card-hd"><div class="card-ttl">Session Win Rate</div></div>
-          <div class="ch-wrap-sm"><canvas id="ch-session"></canvas></div>
-        </div>
-        <div class="card">
-          <div class="card-hd"><div class="card-ttl">Day of Week Win Rate</div></div>
-          <div class="ch-wrap-sm"><canvas id="ch-dow"></canvas></div>
-        </div>
-        <div class="card">
           <div class="card-hd"><div class="card-ttl">Setup Performance (Avg R)</div></div>
           <div class="ch-wrap-sm"><canvas id="ch-setup"></canvas></div>
         </div>
         <div class="card">
-          <div class="card-hd"><div class="card-ttl">Grade Performance (Avg R)</div></div>
-          <div class="ch-wrap-sm"><canvas id="ch-grade"></canvas></div>
+          <div class="card-hd"><div class="card-ttl">Swing Type Win Rate</div></div>
+          <div class="ch-wrap-sm"><canvas id="ch-swing"></canvas></div>
         </div>
         <div class="card">
           <div class="card-hd"><div class="card-ttl">Entry PDA Win Rate</div></div>
           <div class="ch-wrap-sm"><canvas id="ch-pda"></canvas></div>
         </div>
         <div class="card">
+          <div class="card-hd"><div class="card-ttl">SMT Stage Win Rate</div></div>
+          <div class="ch-wrap-sm"><canvas id="ch-smt-stage"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><div class="card-ttl">SMT Type Win Rate</div></div>
+          <div class="ch-wrap-sm"><canvas id="ch-smt-type"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><div class="card-ttl">Universal Model Win Rate</div></div>
+          <div class="ch-wrap-sm"><canvas id="ch-universal"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><div class="card-ttl">Condition Win Rate</div></div>
+          <div class="ch-wrap-sm"><canvas id="ch-condition"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><div class="card-ttl">Exit Strategy (Avg R)</div></div>
+          <div class="ch-wrap-sm"><canvas id="ch-exit"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><div class="card-ttl">Entry TF Win Rate</div></div>
+          <div class="ch-wrap-sm"><canvas id="ch-entry-tf"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><div class="card-ttl">Direction Win Rate</div></div>
+          <div class="ch-wrap-sm"><canvas id="ch-direction"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><div class="card-ttl">Day of Week Win Rate</div></div>
+          <div class="ch-wrap-sm"><canvas id="ch-dow"></canvas></div>
+        </div>
+        <div class="card">
           <div class="card-hd"><div class="card-ttl">Emotion Impact (Avg R)</div></div>
           <div class="ch-wrap-sm"><canvas id="ch-emo"></canvas></div>
         </div>
-        <div class="card">
-          <div class="card-hd"><div class="card-ttl">HTF Bias Accuracy</div></div>
-          <div class="ch-wrap-sm"><canvas id="ch-bias"></canvas></div>
-        </div>
-        <div class="card">
-          <div class="card-hd"><div class="card-ttl">OF Alignment (Daily + H1)</div></div>
-          <div class="ch-wrap-sm"><canvas id="ch-of"></canvas></div>
-        </div>
-        <div class="card">
-          <div class="card-hd"><div class="card-ttl">Model Performance (Avg R)</div></div>
-          <div class="ch-wrap-sm"><canvas id="ch-model"></canvas></div>
-        </div>
-        <div class="card">
-          <div class="card-hd"><div class="card-ttl">Model Win Rate</div></div>
-          <div class="model-summary" id="model-summary"></div>
-        </div>
-        <div class="card">
-          <div class="card-hd"><div class="card-ttl">Swing Type Win Rate</div></div>
-          <div class="ch-wrap-sm"><canvas id="ch-swing"></canvas></div>
-        </div>
-      </div>
-      <!-- OF ALIGNMENT DETAIL -->
-      <div class="insight-card" style="margin-top:16px" id="of-section">
-        <div class="insight-title">🔄 Order Flow Alignment Analysis</div>
-        <div class="insight-grid" id="of-grid"></div>
-        <div class="cap-feedback" id="of-feedback"></div>
       </div>
       <!-- CAPTURE RATE & DD ANALYSIS -->
       <div class="cap-section">
@@ -555,8 +555,8 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
             <div class="cap-feedback" id="sb-feedback"></div>
           </div>
           <div class="cap-card">
-            <div class="cap-title">🔀 Session × Setup Matrix</div>
-            <div class="cap-sub">어떤 세션에서 어떤 셋업이 잘 작동하는지</div>
+            <div class="cap-title">🔀 Setup × Condition Matrix</div>
+            <div class="cap-sub">어떤 시장 환경에서 어떤 셋업이 잘 작동하는지</div>
             <div class="mx-wrap" id="mx-wrap"></div>
           </div>
         </div>
@@ -799,26 +799,15 @@ function calToday(){const n=new Date();cY=n.getFullYear();cM=n.getMonth();render
 // ── EQUITY CHART
 function renderEqCh(T){
   const ctx=document.getElementById('eq-ch').getContext('2d');
-  const showAP=document.getElementById('eq-ap-toggle')?.checked;
   let cum=0;const lb=[],dt=[];
   T.forEach(t=>{cum+=getR(t);lb.push(t.date?.slice(0,10)||'');dt.push(parseFloat(cum.toFixed(3)))});
   if(charts.eq){charts.eq.destroy()}
   const col=cum>=0?'#10b981':'#f43f5e';
   const datasets=[{label:'All Trades',data:dt,borderColor:col,backgroundColor:col+'14',fill:true,tension:.3,pointRadius:dt.length>80?0:3,pointHoverRadius:5,borderWidth:2}];
 
-  if(showAP){
-    let cumAP=0;const dtAP=[];
-    T.forEach(t=>{
-      const g=gradeSetup(t).grade;
-      if(g==='A+'||g==='A') cumAP+=getR(t);
-      dtAP.push(parseFloat(cumAP.toFixed(3)));
-    });
-    datasets.push({label:'A/A+ Only',data:dtAP,borderColor:'#828fff',backgroundColor:'rgba(130,143,255,.08)',fill:true,tension:.3,pointRadius:0,pointHoverRadius:4,borderWidth:2,borderDash:[5,3]});
-  }
-
   charts.eq=new Chart(ctx,{type:'line',data:{labels:lb,datasets},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:showAP,labels:{color:'#d0d6e0',font:{size:10},boxWidth:12,padding:10}},tooltip:{callbacks:{label:c=>c.dataset.label+': '+fR(c.parsed.y)}}},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.dataset.label+': '+fR(c.parsed.y)}}},
       scales:{x:{ticks:{color:'#62666d',maxTicksLimit:8,font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}},y:{ticks:{color:'#62666d',font:{size:10},callback:v=>v+'R'},grid:{color:'rgba(255,255,255,0.04)'}}}}});
 }
 
@@ -840,49 +829,26 @@ function renderDonut(s){
 // TRADE LOG
 // ══════════════════════════════════════════════════
 function getFiltered(){
-  const se=document.getElementById('ff-session')?.value||'';
   const re=document.getElementById('ff-result')?.value||'';
   const di=document.getElementById('ff-dir')?.value||'';
-  const gr=document.getElementById('ff-grade')?.value||'';
-  const mo=document.getElementById('ff-model')?.value||'';
+  const su=document.getElementById('ff-setup')?.value||'';
+  const sw=document.getElementById('ff-swing')?.value||'';
+  const co=document.getElementById('ff-condition')?.value||'';
   const as=(document.getElementById('ff-asset')?.value||'').toLowerCase();
   const fr=document.getElementById('ff-from')?.value||'';
   const to=document.getElementById('ff-to')?.value||'';
   return getTrades().filter(t=>{
-    if(se&&t.session!==se)return false;
     if(re&&t.result!==re)return false;
     if(di&&t.direction!==di)return false;
-    if(gr&&gradeSetup(t).grade!==gr)return false;
-    if(mo&&t.model!==mo)return false;
+    if(su&&t.setup!==su)return false;
+    if(sw&&t.swingType!==sw)return false;
+    if(co&&t.condition!==co)return false;
     if(as&&!(t.asset||'').toLowerCase().includes(as))return false;
     const d=t.date?.slice(0,10)||'';
     if(fr&&d<fr)return false;
     if(to&&d>to)return false;
     return true;
   }).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
-}
-
-function gradeSetup(t){
-  const dof=t.dailyOF;
-  const h1=t.h1OF;
-  const dir=t.direction;
-  const narr=t.deliveryNarrative;
-  const hasNarr=narr&&Array.isArray(narr)?narr.filter(n=>n&&n!=='no model').length>0:(narr&&narr!=='no model'?true:false);
-
-  // C: Daily OF or H1 OF missing/Ranging
-  if(!dof||dof==='Ranging'||!h1) return{grade:'C',cls:'grade-c',tip:'Daily OF 불명확 또는 H1 미입력'};
-
-  // Check direction matches Daily OF
-  const dirMatch=(dof==='Bullish'&&dir==='Buy')||(dof==='Bearish'&&dir==='Sell');
-  // Check H1 aligned with Daily
-  const aligned=dof===h1;
-
-  if(!dirMatch) return{grade:'B',cls:'grade-b',tip:'방향이 Daily OF와 불일치'};
-  if(!aligned) return{grade:'B',cls:'grade-b',tip:'H1 OF가 Daily와 미정렬'};
-
-  // Aligned + direction match
-  if(hasNarr) return{grade:'A+',cls:'grade-ap',tip:'Daily+H1 정렬 + 방향일치 + Narrative ✅'};
-  return{grade:'A',cls:'grade-a',tip:'Daily+H1 정렬 + 방향일치 (Narrative 없음)'};
 }
 
 function renderTbl(){
@@ -895,29 +861,29 @@ function renderTbl(){
     const dirBadge=t.direction==='Buy'?'blong':'bshort';
     const pdas=(t.entryPDA||[]).map(x=>`<span class="tag-chip">${x}</span>`).join(' ');
     const emos=(t.emotions||[]).map(x=>{const m=x.match(/^([^(]+)\(([^)]+)\)$/);if(m)return`<span class="tag-chip" title="${m[2]}">${m[1]}</span>`;return`<span class="tag-chip">${x}</span>`}).join(' ');
-    const links=[t.dailyChart?`<a class="chart-link" href="${t.dailyChart}" target="_blank">D</a>`:null,
-      t.hourlyChart?`<a class="chart-link" href="${t.hourlyChart}" target="_blank">H</a>`:null,
+    const smtInfo=[t.smtStage&&t.smtStage!=='none'?t.smtStage:null,...(t.smtType||[])].filter(Boolean);
+    const smtTags=smtInfo.map(x=>`<span class="tag-chip">${x}</span>`).join(' ');
+    const links=[t.htfChart?`<a class="chart-link" href="${t.htfChart}" target="_blank">HTF</a>`:null,
+      t.mtfChart?`<a class="chart-link" href="${t.mtfChart}" target="_blank">MTF</a>`:null,
       t.entryChart?`<a class="chart-link" href="${t.entryChart}" target="_blank">E</a>`:null].filter(Boolean).join(' ');
     const noteId='note-'+Math.random().toString(36).slice(2,8);
     const note=t.notes?`<span class="note-toggle" onclick="toggleNote('${noteId}')">📝 펼치기</span>`:'';
     const srcDot=t.source==='crypto'?'🟡':'🔵';
-    const ofCls=v=>v==='Bullish'?'of-bull':v==='Bearish'?'of-bear':v==='Ranging'?'of-range':'of-none';
-    const ofIcon=v=>v==='Bullish'?'▲':v==='Bearish'?'▼':v==='Ranging'?'—':'·';
-    const g=gradeSetup(t);
+    const exitBadge=t.exitStrategy?`<span class="tag-chip">${t.exitStrategy}</span>`:'—';
     return`<tr>
       <td>${srcDot} ${t.num||''}</td>
       <td style="white-space:nowrap;font-variant-numeric:tabular-nums">${t.date?.slice(0,10)||''}<br><span style="font-size:10px;color:var(--t2)">${t.dayOfWeek||''}</span></td>
       <td><strong>${t.asset||''}</strong></td>
       <td><span class="badge ${dirBadge}">${t.direction||''}</span></td>
-      <td><span class="of-dot ${ofCls(t.dailyOF)}" title="Daily: ${t.dailyOF||'N/A'}">${ofIcon(t.dailyOF)}</span></td>
-      <td><span class="of-dot ${ofCls(t.h1OF)}" title="H1: ${t.h1OF||'N/A'}">${ofIcon(t.h1OF)}</span></td>
-      <td><span class="grade ${g.cls}" title="${g.tip}">${g.grade}</span></td>
       <td><span class="badge ${resBadge}">${t.result||''}</span></td>
       <td class="${rc}" style="font-variant-numeric:tabular-nums">${fR(r)}</td>
       <td style="font-variant-numeric:tabular-nums">${t.maxRR!=null?t.maxRR.toFixed(1)+'R':'—'}</td>
-      <td>${t.session||'—'}</td>
+      <td>${exitBadge}</td>
       <td style="font-size:11px">${t.setup||'—'}</td>
+      <td style="font-size:11px">${t.swingType||'—'}</td>
+      <td style="font-size:11px">${t.condition||'—'}</td>
       <td>${pdas||'—'}</td>
+      <td>${smtTags||'—'}</td>
       <td>${emos||''}</td>
       <td style="white-space:nowrap">${links||'—'}</td>
       <td>${note}</td>
@@ -925,7 +891,7 @@ function renderTbl(){
   }).join('');
 }
 
-function clrF(){['ff-session','ff-result','ff-dir','ff-grade','ff-model','ff-asset','ff-from','ff-to'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});renderTbl()}
+function clrF(){['ff-result','ff-dir','ff-setup','ff-swing','ff-condition','ff-asset','ff-from','ff-to'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});renderTbl()}
 
 function toggleNote(id){
   const row=document.getElementById(id);
@@ -951,22 +917,23 @@ function renderAnalytics(){
     <div class="sc"><div class="sc-lbl">Worst Streak (L)</div><div class="sc-val neg">${maxStreak.loss}</div></div>
     <div class="sc"><div class="sc-lbl">Avg R / Trade</div><div class="sc-val ${s.aR>=0?'pos':'neg'}">${fR(s.aR)}</div></div>`;
 
-  renderBarChart('ch-session',groupWinRate(T,'session'),'Win Rate %');
-  renderBarChart('ch-dow',groupWinRate(T,'dayOfWeek'),'Win Rate %');
   renderBarChart('ch-setup',groupAvgR(T,'setup'),'Avg R',true);
-  renderGradeChart(T);
-  renderBarChart('ch-pda',groupWinRateMulti(T,'entryPDA'),'Win Rate %');
-  renderBarChart('ch-emo',groupAvgRMulti(T,'emotions'),'Avg R',true);
-  renderBarChart('ch-bias',groupWinRate(T,'htfBias'),'Win Rate %');
-  renderBarChart('ch-model',groupAvgR(T,'model'),'Avg R',true);
-  renderModelSummary(T);
   renderBarChart('ch-swing',groupWinRate(T,'swingType'),'Win Rate %');
-  renderOFAlignment(T);
+  renderBarChart('ch-pda',groupWinRateMulti(T,'entryPDA'),'Win Rate %');
+  renderBarChart('ch-smt-stage',groupWinRate(T,'smtStage'),'Win Rate %');
+  renderBarChart('ch-smt-type',groupWinRateMulti(T,'smtType'),'Win Rate %');
+  renderBarChart('ch-universal',groupWinRate(T,'universalModel'),'Win Rate %');
+  renderBarChart('ch-condition',groupWinRate(T,'condition'),'Win Rate %');
+  renderBarChart('ch-exit',groupAvgR(T,'exitStrategy'),'Avg R',true);
+  renderBarChart('ch-entry-tf',groupWinRateMulti(T,'entryTF'),'Win Rate %');
+  renderBarChart('ch-direction',groupWinRate(T,'direction'),'Win Rate %');
+  renderBarChart('ch-dow',groupWinRate(T,'dayOfWeek'),'Win Rate %');
+  renderBarChart('ch-emo',groupAvgRMulti(T,'emotions'),'Avg R',true);
   renderCaptureRate(T);
   renderDDAnalysis(T);
   renderMonthlyReport(T);
   renderStreakBehavior(T);
-  renderSessionSetupMatrix(T);
+  renderSetupConditionMatrix(T);
   renderNotesInsight(T);
 }
 
@@ -1017,163 +984,6 @@ function renderBarChart(id,data,label,isR=false){
         y:{ticks:{color:'#d0d6e0',font:{size:10},callback:v=>isR?v+'R':v+'%'},grid:{color:'rgba(255,255,255,0.04)'}}}}});
 }
 
-// ══════════════════════════════════════════════════
-// GRADE PERFORMANCE
-// ══════════════════════════════════════════════════
-function renderGradeChart(T){
-  const grades={'A+':{sum:0,n:0,w:0},'A':{sum:0,n:0,w:0},'B':{sum:0,n:0,w:0},'C':{sum:0,n:0,w:0}};
-  T.forEach(t=>{
-    const g=gradeSetup(t).grade;
-    if(grades[g]){grades[g].n++;grades[g].sum+=getR(t);if(t.result==='W')grades[g].w++}
-  });
-  const data=Object.entries(grades).filter(([,d])=>d.n>0).map(([label,d])=>({
-    label:label+' ('+d.n+')',value:parseFloat((d.sum/d.n).toFixed(2)),count:d.n
-  }));
-  renderBarChart('ch-grade',data,'Avg R',true);
-}
-
-// ══════════════════════════════════════════════════
-// MODEL SUMMARY
-// ══════════════════════════════════════════════════
-function renderModelSummary(T){
-  const wrap=document.getElementById('model-summary');
-  const models={};
-  T.forEach(t=>{
-    const m=t.model;if(!m)return;
-    if(!models[m])models[m]={w:0,l:0,n:0,sum:0};
-    models[m].n++;models[m].sum+=getR(t);
-    if(t.result==='W')models[m].w++;
-    if(t.result==='L')models[m].l++;
-  });
-  const entries=Object.entries(models).sort((a,b)=>b[1].sum/b[1].n-a[1].sum/a[1].n);
-  if(!entries.length){wrap.innerHTML='<div style="color:var(--t2);font-size:13px;padding:10px">Model 데이터 없음</div>';return}
-  wrap.innerHTML=entries.map(([name,d])=>{
-    const wr=Math.round(d.w/d.n*100);
-    const avgR=(d.sum/d.n).toFixed(2);
-    const pf=d.l>0?((d.w>0?d.sum:0)/Math.abs(T.filter(t=>t.model===name&&t.result==='L').reduce((s,t)=>s+getR(t),0))).toFixed(2):'∞';
-    const barColor=parseFloat(avgR)>=0?'var(--g)':'var(--r)';
-    return`<div class="model-row">
-      <div class="model-name">${name}</div>
-      <div class="model-stats">
-        <span>📊 ${d.n}건</span>
-        <span>🎯 ${wr}%</span>
-        <span>📈 PF ${pf}</span>
-      </div>
-      <div class="model-bar"><div class="model-bar-fill" style="width:${wr}%;background:${barColor}"></div></div>
-      <div class="model-val" style="color:${barColor}">${avgR}R</div>
-    </div>`;
-  }).join('');
-}
-
-// ══════════════════════════════════════════════════
-// OF ALIGNMENT ANALYSIS
-// ══════════════════════════════════════════════════
-function renderOFAlignment(T){
-  const valid=T.filter(t=>t.dailyOF&&t.h1OF);
-  const ofGrid=document.getElementById('of-grid');
-  const ofFb=document.getElementById('of-feedback');
-  const section=document.getElementById('of-section');
-
-  if(!valid.length){
-    // still render empty chart
-    renderBarChart('ch-of',[],'Avg R',true);
-    ofGrid.innerHTML='<div style="color:var(--t2);font-size:13px;padding:10px">Daily OF / H1 OF 데이터가 있는 거래가 없습니다. 노션에서 기록해주세요.</div>';
-    ofFb.style.display='none';
-    return;
-  }
-
-  // classify alignment
-  const combos={};
-  valid.forEach(t=>{
-    const daily=t.dailyOF;
-    const h1=t.h1OF;
-    let label, grade;
-    if(daily===h1&&daily!=='Ranging'){
-      label=daily+' Aligned';
-      grade='A';
-    }else if(daily==='Ranging'||h1==='Ranging'){
-      label=(daily==='Ranging'?'D:Ranging':'D:'+daily)+' + '+(h1==='Ranging'?'H1:Ranging':'H1:'+h1);
-      grade='C';
-    }else{
-      // opposite: daily bull + h1 bear or vice versa
-      label='D:'+daily+' / H1:'+h1;
-      grade='B';
-    }
-    if(!combos[label])combos[label]={count:0,wins:0,totalR:0,grade,trades:[]};
-    combos[label].count++;
-    if(t.result==='W')combos[label].wins++;
-    combos[label].totalR+=getR(t);
-    combos[label].trades.push(t);
-  });
-
-  // bar chart
-  const chartData=Object.entries(combos)
-    .sort((a,b)=>b[1].totalR/b[1].count - a[1].totalR/a[1].count)
-    .map(([label,d])=>({label:label+' ('+d.count+')',value:parseFloat((d.totalR/d.count).toFixed(2)),count:d.count}));
-  renderBarChart('ch-of',chartData,'Avg R',true);
-
-  // detail cards
-  const gradeColors={A:'var(--g)',B:'var(--y)',C:'var(--t2)'};
-  const gradeLabels={A:'A급 (정렬)',B:'B급 (비정렬)',C:'C급 (불확실)'};
-  const sorted=Object.entries(combos).sort((a,b)=>{
-    const go={A:0,B:1,C:2};return(go[a[1].grade]||9)-(go[b[1].grade]||9);
-  });
-
-  ofGrid.innerHTML=sorted.map(([label,d])=>{
-    const avgR=d.totalR/d.count;
-    const wr=Math.round(d.wins/d.count*100);
-    const rc=avgR>=0?'var(--g)':'var(--r)';
-    const gc=gradeColors[d.grade];
-    return`<div class="kw-item">
-      <div>
-        <div class="kw-label" style="font-size:12px">${label}</div>
-        <div style="font-size:10px;color:${gc};margin-top:3px;font-weight:600">${gradeLabels[d.grade]}</div>
-      </div>
-      <div class="kw-stats">
-        <div class="kw-r" style="color:${rc}">${fR(avgR)}</div>
-        <div class="kw-count">${d.count}건 · 승률 ${wr}%</div>
-      </div>
-    </div>`;
-  }).join('');
-
-  // feedback
-  ofFb.style.display='';
-  const aligned=Object.entries(combos).filter(([,d])=>d.grade==='A');
-  const misaligned=Object.entries(combos).filter(([,d])=>d.grade==='B');
-
-  let fb='';
-  if(aligned.length&&misaligned.length){
-    const aTotal=aligned.reduce((s,[,d])=>s+d.totalR,0);
-    const aCount=aligned.reduce((s,[,d])=>s+d.count,0);
-    const aWins=aligned.reduce((s,[,d])=>s+d.wins,0);
-    const mTotal=misaligned.reduce((s,[,d])=>s+d.totalR,0);
-    const mCount=misaligned.reduce((s,[,d])=>s+d.count,0);
-    const mWins=misaligned.reduce((s,[,d])=>s+d.wins,0);
-    const aAvg=aCount?aTotal/aCount:0;
-    const mAvg=mCount?mTotal/mCount:0;
-    const aWr=aCount?Math.round(aWins/aCount*100):0;
-    const mWr=mCount?Math.round(mWins/mCount*100):0;
-
-    fb+=`📊 <strong>정렬(A급)</strong> ${aCount}건: 승률 <strong style="color:${aWr>=50?'var(--g)':'var(--r)'}">${aWr}%</strong>, 평균 <strong style="color:${aAvg>=0?'var(--g)':'var(--r)'}">${fR(aAvg)}</strong>`;
-    fb+=`<br>📊 <strong>비정렬(B급)</strong> ${mCount}건: 승률 <strong style="color:${mWr>=50?'var(--g)':'var(--r)'}">${mWr}%</strong>, 평균 <strong style="color:${mAvg>=0?'var(--g)':'var(--r)'}">${fR(mAvg)}</strong>`;
-
-    if(aAvg>mAvg+0.3){
-      fb+=`<br><br>✅ Daily + H1 정렬 시 성과가 확실히 좋습니다. 정렬된 경우에만 진입하면 수익성이 개선됩니다.`;
-    }else if(mAvg>aAvg){
-      fb+=`<br><br>⚠️ 비정렬 거래가 오히려 성과가 좋습니다. 데이터가 쌓이면 재확인해보세요.`;
-    }
-  }else if(aligned.length){
-    fb+='현재 모든 거래가 정렬(A급)입니다. 비정렬 데이터가 쌓이면 비교 분석이 가능합니다.';
-  }else if(misaligned.length){
-    fb+='⚠️ 정렬된 거래가 없습니다. Daily + H1 Order Flow가 같은 방향일 때만 진입하는 것을 권장합니다.';
-  }
-
-  const noOFCount=T.length-valid.length;
-  if(noOFCount>0){
-    fb+=`<br><br>📝 전체 ${T.length}건 중 ${noOFCount}건에 OF 데이터가 없습니다. 기록률을 높이면 분석 정확도가 올라갑니다.`;
-  }
-  ofFb.innerHTML=fb;
-}
 
 // ══════════════════════════════════════════════════
 // CAPTURE RATE & DD ANALYSIS
@@ -1349,8 +1159,6 @@ function renderMonthlyReport(T){
   grid.innerHTML=months.map((m,idx)=>{
     const trades=byMonth[m];
     const s=stats(trades);
-    const apCount=trades.filter(t=>{const g=gradeSetup(t).grade;return g==='A+'||g==='A'}).length;
-    const apPct=trades.length?Math.round(apCount/trades.length*100):0;
     const avgR=s.aR;
 
     let trendCls='mr-flat',trendIcon='→',trendTxt='—';
@@ -1377,7 +1185,6 @@ function renderMonthlyReport(T){
       <div class="mr-row"><span>거래 수</span><strong>${s.n}건</strong></div>
       <div class="mr-row"><span>승률</span><strong style="color:${wrColor}">${(s.wr*100).toFixed(0)}%</strong></div>
       <div class="mr-row"><span>평균 R</span><strong style="color:${rc}">${fR(s.aR)}</strong></div>
-      <div class="mr-row"><span>A/A+ 비율</span><strong style="color:${apPct>=50?'var(--g)':'var(--t1)'}">${apPct}%</strong></div>
       <div class="mr-row"><span>이익계수</span><strong>${isFinite(s.pf)?s.pf.toFixed(2):'∞'}</strong></div>
       <div class="mr-expand">클릭하여 상세 분석 보기</div>
     </div>`;
@@ -1411,13 +1218,13 @@ function toggleMonthDetail(m,cardEl){
   const shorts=trades.filter(t=>t.direction==='Sell');
   const sL=stats(longs),sS=stats(shorts);
 
-  // ── Session split
-  const bySess={};
-  trades.forEach(t=>{const ss=t.session||'Unknown';if(!bySess[ss])bySess[ss]=[];bySess[ss].push(t)});
+  // ── Setup split
+  const bySetup={};
+  trades.forEach(t=>{const ss=t.setup||'Unknown';if(!bySetup[ss])bySetup[ss]=[];bySetup[ss].push(t)});
 
-  // ── Grade distribution
-  const gradeCounts={'A+':0,'A':0,'B':0,'C':0};
-  trades.forEach(t=>{const g=gradeSetup(t).grade;gradeCounts[g]=(gradeCounts[g]||0)+1});
+  // ── Condition distribution
+  const condCounts={};
+  trades.forEach(t=>{const c=t.condition||'N/A';condCounts[c]=(condCounts[c]||0)+1});
 
   // ── Weekly breakdown
   const byWeek={};
@@ -1451,7 +1258,7 @@ function toggleMonthDetail(m,cardEl){
   panel.className='mr-detail mr-show';
   panel.dataset.month=m;
 
-  const sessRows=Object.entries(bySess).map(([ss,arr])=>{
+  const setupRows=Object.entries(bySetup).map(([ss,arr])=>{
     const st=stats(arr);
     const c=st.tR>=0?'var(--g)':'var(--r)';
     return`<div class="mrd-row"><span>${ss}</span><strong>${st.n}건 · <span style="color:${c}">${fR(st.tR)}</span> · 승률 ${(st.wr*100).toFixed(0)}%</strong></div>`;
@@ -1463,12 +1270,12 @@ function toggleMonthDetail(m,cardEl){
     return`<div class="mrd-row"><span>${wk}</span><strong>${st.n}건 · <span style="color:${c}">${fR(st.tR)}</span></strong></div>`;
   }).join('');
 
-  const gradeColors={'A+':'var(--ac2)','A':'var(--ac)','B':'var(--y)','C':'var(--t2)'};
-  const gradeBars=Object.entries(gradeCounts).map(([g,cnt])=>{
+  const condColors={'Expansion':'var(--g)','Consolidation':'var(--y)','Seek & Destroy':'var(--r)','N/A':'var(--t2)'};
+  const condBars=Object.entries(condCounts).map(([c,cnt])=>{
     const pct=trades.length?Math.round(cnt/trades.length*100):0;
     return`<div class="mrd-bar-wrap">
-      <span class="mrd-bar-label">${g}</span>
-      <div class="mrd-bar-track"><div class="mrd-bar-fill" style="width:${pct}%;background:${gradeColors[g]}"></div></div>
+      <span class="mrd-bar-label" style="width:auto;min-width:36px">${c}</span>
+      <div class="mrd-bar-track"><div class="mrd-bar-fill" style="width:${pct}%;background:${condColors[c]||'var(--t2)'}"></div></div>
       <span class="mrd-bar-val">${cnt}건</span>
     </div>`;
   }).join('');
@@ -1512,13 +1319,13 @@ function toggleMonthDetail(m,cardEl){
       </div>
 
       <div class="mrd-section">
-        <div class="mrd-section-title">Grade 분포</div>
-        ${gradeBars}
+        <div class="mrd-section-title">Condition 분포</div>
+        ${condBars}
       </div>
 
       <div class="mrd-section">
-        <div class="mrd-section-title">Session 성과</div>
-        ${sessRows||'<div style="color:var(--t2);font-size:11px">세션 데이터 없음</div>'}
+        <div class="mrd-section-title">Setup 성과</div>
+        ${setupRows||'<div style="color:var(--t2);font-size:11px">Setup 데이터 없음</div>'}
       </div>
 
       <div class="mrd-section">
@@ -1609,14 +1416,6 @@ function renderStreakBehavior(T){
     else loseStreak=0;
   }
 
-  // stats for after-streak trades
-  const asGrades={};
-  afterStreak.forEach(t=>{
-    const g=gradeSetup(t).grade;
-    if(!asGrades[g])asGrades[g]=0;
-    asGrades[g]++;
-  });
-
   const asStats=stats(afterStreak);
   const anStats=stats(afterNormal);
 
@@ -1625,22 +1424,12 @@ function renderStreakBehavior(T){
   const asRColor=asStats.aR>=0?'var(--g)':'var(--r)';
   const anRColor=anStats.aR>=0?'var(--g)':'var(--r)';
 
-  // grade distribution bar
-  const gradeOrder=['A+','A','B','C'];
-  const gradeColors={'A+':'#828fff','A':'#10b981','B':'#f59e0b','C':'#f43f5e'};
-  const totalAS=afterStreak.length||1;
-  const gradeBars=gradeOrder.map(g=>{
-    const pct=Math.round((asGrades[g]||0)/totalAS*100);
-    return pct>0?`<span style="width:${pct}%;background:${gradeColors[g]};height:100%;display:inline-block;border-radius:2px" title="${g}: ${pct}%"></span>`:'';
-  }).join('');
-
   streakDiv.innerHTML=`
     <div class="sb-card">
       <div class="sb-label">2연패 후 거래</div>
       <div class="sb-val" style="color:${asRColor}">${afterStreak.length?fR(asStats.aR):'—'}</div>
       <div class="sb-desc">
         ${afterStreak.length}건 · 승률 <strong style="color:${asWrColor}">${afterStreak.length?(asStats.wr*100).toFixed(0)+'%':'—'}</strong>
-        ${afterStreak.length?'<div style="margin-top:6px;font-size:10px;color:var(--t2)">Grade 분포</div><div style="height:6px;display:flex;gap:1px;border-radius:3px;overflow:hidden;margin-top:3px">'+gradeBars+'</div>':''}
       </div>
     </div>
     <div class="sb-card">
@@ -1661,11 +1450,6 @@ function renderStreakBehavior(T){
     }else{
       fb='📊 연패 후 약간의 성과 저하가 있습니다. 데이터가 더 쌓이면 패턴이 명확해질 수 있습니다.';
     }
-    // check grade quality after streak
-    const bcPct=Math.round(((asGrades['B']||0)+(asGrades['C']||0))/totalAS*100);
-    if(bcPct>=60&&afterStreak.length>=3){
-      fb+=`<br>📌 연패 후 B/C급 거래 비율이 ${bcPct}%입니다. 틸트 매매의 징후일 수 있습니다.`;
-    }
   }else if(afterStreak.length>0){
     fb='데이터가 부족합니다. 더 많은 거래가 쌓이면 정확한 분석이 가능합니다.';
   }else{
@@ -1677,38 +1461,38 @@ function renderStreakBehavior(T){
 // ══════════════════════════════════════════════════
 // SESSION × SETUP MATRIX
 // ══════════════════════════════════════════════════
-function renderSessionSetupMatrix(T){
+function renderSetupConditionMatrix(T){
   const wrap=document.getElementById('mx-wrap');
-  const sessions=['LO','NY','LC','Asia'];
+  const conditions=['Expansion','Consolidation','Seek & Destroy'];
   const setupSet=new Set();
-  T.forEach(t=>{if(t.setup&&t.session)setupSet.add(t.setup)});
+  T.forEach(t=>{if(t.setup&&t.condition)setupSet.add(t.setup)});
   const setups=[...setupSet].sort();
 
-  if(!setups.length||!T.filter(t=>t.setup&&t.session).length){
-    wrap.innerHTML='<div style="color:var(--t2);font-size:13px;padding:10px">Setup + Session 데이터가 필요합니다</div>';
+  if(!setups.length||!T.filter(t=>t.setup&&t.condition).length){
+    wrap.innerHTML='<div style="color:var(--t2);font-size:13px;padding:10px">Setup + Condition 데이터가 필요합니다</div>';
     return;
   }
 
   // build matrix
   const mx={};
-  sessions.forEach(se=>{mx[se]={};setups.forEach(su=>{mx[se][su]={w:0,n:0,sum:0}})});
+  conditions.forEach(co=>{mx[co]={};setups.forEach(su=>{mx[co][su]={w:0,n:0,sum:0}})});
   T.forEach(t=>{
-    if(!t.setup||!t.session)return;
-    if(!mx[t.session])return;
-    if(!mx[t.session][t.setup])mx[t.session][t.setup]={w:0,n:0,sum:0};
-    mx[t.session][t.setup].n++;
-    mx[t.session][t.setup].sum+=getR(t);
-    if(t.result==='W')mx[t.session][t.setup].w++;
+    if(!t.setup||!t.condition)return;
+    if(!mx[t.condition])return;
+    if(!mx[t.condition][t.setup])mx[t.condition][t.setup]={w:0,n:0,sum:0};
+    mx[t.condition][t.setup].n++;
+    mx[t.condition][t.setup].sum+=getR(t);
+    if(t.result==='W')mx[t.condition][t.setup].w++;
   });
 
   let html='<table class="mx-table"><thead><tr><th>Setup</th>';
-  sessions.forEach(s=>{html+=`<th>${s}</th>`});
+  conditions.forEach(c=>{html+=`<th>${c}</th>`});
   html+='</tr></thead><tbody>';
 
   setups.forEach(su=>{
     html+=`<tr><td>${su}</td>`;
-    sessions.forEach(se=>{
-      const d=mx[se][su];
+    conditions.forEach(co=>{
+      const d=mx[co][su];
       if(!d||!d.n){
         html+='<td style="color:var(--t2)">—</td>';
       }else{
@@ -1867,9 +1651,9 @@ function renderNotesInsight(T){
 function exportCSV(){
   const T=getTrades();
   if(!T.length){toast('데이터 없음');return}
-  const h=['Source','#','Date','DayOfWeek','Asset','Model','Direction','HTFBias','Result','RR','MaxRR','Session','Setup','EntryPDA','EntryModel','Emotions','TradeType','Notes'];
-  const rows=T.map(t=>[t.source,t.num||'',t.date?.slice(0,10)||'',t.dayOfWeek||'',t.asset||'',t.model||'',t.direction||'',t.htfBias||'',t.result||'',
-    getR(t).toFixed(2),t.maxRR||'',(t.session||''),(t.setup||''),(t.entryPDA||[]).join('|'),(t.entryModel||''),(t.emotions||[]).join('|'),(t.tradeType||''),(t.notes||'').replace(/[\r\n,]/g,' ')]);
+  const h=['Source','#','Date','DayOfWeek','Asset','Direction','Result','RR','MaxRR','ActualRR','ExitStrategy','Setup','SwingType','Condition','EntryPDA','EntryTF','SMTStage','SMTType','UniversalModel','Emotions','Notes'];
+  const rows=T.map(t=>[t.source,t.num||'',t.date?.slice(0,10)||'',t.dayOfWeek||'',t.asset||'',t.direction||'',t.result||'',
+    getR(t).toFixed(2),t.maxRR||'',t.actualRR||'',(t.exitStrategy||''),(t.setup||''),(t.swingType||''),(t.condition||''),(t.entryPDA||[]).join('|'),(t.entryTF||[]).join('|'),(t.smtStage||''),(t.smtType||[]).join('|'),(t.universalModel||''),(t.emotions||[]).join('|'),(t.notes||'').replace(/[\r\n,]/g,' ')]);
   const csv=[h,...rows].map(r=>r.join(',')).join('\r\n');
   const b=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
   const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=`tj_${curSrc}_${new Date().toISOString().slice(0,10)}.csv`;a.click();URL.revokeObjectURL(u);
