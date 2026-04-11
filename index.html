@@ -955,10 +955,10 @@ function renderBarChart(id,data,label,isR=false){
   const values=data.map(d=>d.value);
   const colors=values.map(v=>isR?(v>=0?'#10b981':'#f43f5e'):(v>=50?'#10b981':v>=35?'#f59e0b':'#f43f5e'));
   charts[id]=new Chart(ctx,{type:'bar',data:{labels,datasets:[{data:values,backgroundColor:colors.map(c=>c+'40'),borderColor:colors,borderWidth:1}]},
-    options:{indexAxis:'horizontal',responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>isR?fR(c.parsed.y):c.parsed.y+'%'}}},
-      scales:{x:{ticks:{color:'#62666d',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}},
-        y:{ticks:{color:'#d0d6e0',font:{size:10},callback:v=>isR?v+'R':v+'%'},grid:{color:'rgba(255,255,255,0.04)'}}}}});
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>isR?fR(c.parsed.x):c.parsed.x+'%'}}},
+      scales:{x:{ticks:{color:'#62666d',font:{size:10},callback:v=>isR?v+'R':v+'%'},grid:{color:'rgba(255,255,255,0.04)'}},
+        y:{ticks:{color:'#d0d6e0',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}}}}});
 }
 
 
