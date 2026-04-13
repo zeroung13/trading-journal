@@ -1,5 +1,5 @@
 {
-  "lastSync": "2026-04-12T22:28:26.262Z",
+  "lastSync": "2026-04-13T22:38:35.679Z",
   "crypto": [],
   "futures": [
     {
@@ -184,6 +184,53 @@
       "mtfChart": "https://www.tradingview.com/x/h0rQzzRk/",
       "entryChart": "https://www.tradingview.com/x/bvgZVv0R/",
       "notes": "2-stage PSP를 본 것 까지는 좋았지만, LTF entry를 들어갈 때 CISD가 아니었는데 대충 보고 진입을 함. 만약 진지하게 캔들을 추적했다면 더 좋은 자리에서 깔끔한 셋업이 나와서 무조건 먹고 가는 거래였음. (5RR 이상)"
+    },
+    {
+      "id": "3410081c-521f-801c-93b7-d694f94b0b4e",
+      "source": "futures",
+      "num": "5",
+      "date": "2026-04-13",
+      "result": "BE",
+      "dayOfWeek": "Monday",
+      "asset": "MGC",
+      "oneRPct": null,
+      "rr": 0,
+      "maxRR": 2.63,
+      "drawdown": "0%",
+      "direction": "Sell",
+      "setup": "10 a.m. NY Reversal",
+      "entryPDA": [
+        "V-shape + Gap"
+      ],
+      "entryType": "Limit",
+      "emotions": [
+        "Rule Breaking",
+        "Impatience"
+      ],
+      "entryTF": [
+        "m3"
+      ],
+      "swingType": "C3 Closure → C4",
+      "exitStrategy": "SL Adjusted",
+      "actualRR": null,
+      "smtStage": "2-stage",
+      "smtType": [
+        "PSP",
+        "S.S"
+      ],
+      "universalModel": "ERL -> IRL",
+      "candleProfiling": [
+        "M30"
+      ],
+      "condition": "Consolidation",
+      "sl": 73,
+      "tp": 192,
+      "dd": 0,
+      "slUnit": "pips",
+      "htfChart": "https://www.tradingview.com/x/EWsSPOkt/",
+      "mtfChart": "https://www.tradingview.com/x/1thVFlgn/",
+      "entryChart": "https://www.tradingview.com/x/mRPQPxTg/",
+      "notes": "SL을 BE로 옮기는 타이밍이 아니었는데 조기에 BE로 옮김. 결과는 알다시피 목표가에 도착을 했음. "
     }
   ]
 }
