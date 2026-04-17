@@ -98,6 +98,58 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--mbg
 .dash-mid{display:grid;grid-template-columns:minmax(0,1fr) 195px;gap:14px;margin-bottom:16px}
 .dash-bot{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:14px;margin-bottom:16px}
 .dash-analytics{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* ── DASHBOARD 2.0 — KPI row ── */
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:14px}
+.kpi-card{background:var(--cbg);border:1px solid var(--b1);border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;min-height:120px}
+.kpi-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.kpi-lbl{font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;font-weight:500}
+.kpi-badge{font-size:10px;color:var(--t1);background:var(--cbg2);border:1px solid var(--b1);padding:2px 7px;border-radius:10px;font-weight:500}
+.kpi-val{font-size:24px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.1}
+.kpi-sub{font-size:11px;color:var(--t2);margin-top:4px}
+.kpi-body-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex:1}
+.kpi-legend{display:flex;gap:10px;font-size:11px;margin-top:8px;color:var(--t1)}
+.kpi-legend .lg-w::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--g);margin-right:4px;vertical-align:middle}
+.kpi-legend .lg-be::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--y);margin-right:4px;vertical-align:middle}
+.kpi-legend .lg-l::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--r);margin-right:4px;vertical-align:middle}
+.kpi-legend-small{font-size:10px;color:var(--t2);margin-top:6px}
+.gauge-half{width:70px;height:45px;position:relative}
+.mini-donut{width:50px;height:50px;position:relative}
+.avg-bar-wrap{display:flex;height:7px;border-radius:4px;overflow:hidden;background:var(--cbg2);margin-top:10px}
+.avg-bar-win{background:var(--g);transition:width .4s}
+.avg-bar-loss{background:var(--r);transition:width .4s}
+.avg-bar-nums{display:flex;justify-content:space-between;font-size:11px;margin-top:5px;font-variant-numeric:tabular-nums}
+.avg-bar-nums .pos{color:var(--g);font-weight:600}
+.avg-bar-nums .neg{color:var(--r);font-weight:600}
+
+/* ── DASH ROW 2: 3-chart row ── */
+.dash-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
+.dash-row3 .ch-wrap{height:210px}
+.gxt-card{display:flex;flex-direction:column}
+.gxt-wrap{display:flex;flex-direction:column;flex:1}
+.gxt-radar{position:relative;height:170px;flex:1}
+.gxt-gauge{margin-top:10px}
+.gxt-gauge-bar{height:6px;background:linear-gradient(90deg,#f43f5e 0%,#f59e0b 35%,#f59e0b 65%,#10b981 100%);border-radius:3px;position:relative;overflow:visible}
+.gxt-gauge-fill{position:absolute;top:-3px;width:4px;height:12px;background:var(--t0);border-radius:2px;transform:translateX(-50%);transition:left .4s;box-shadow:0 0 6px rgba(255,255,255,.4)}
+.gxt-gauge-scale{display:flex;justify-content:space-between;margin-top:4px;font-size:9px;color:var(--t2);font-variant-numeric:tabular-nums}
+
+/* ── DASH ROW 3: Recent + Calendar + Weekly ── */
+.dash-row3b{display:grid;grid-template-columns:minmax(0,280px) minmax(0,1fr) minmax(0,195px);gap:14px;margin-bottom:16px}
+.rt-list{display:flex;flex-direction:column;gap:6px;max-height:420px;overflow-y:auto}
+.rt-item{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:9px 11px;background:var(--cbg2);border:1px solid var(--b1);border-radius:6px;font-size:12px}
+.rt-item:hover{border-color:var(--b2)}
+.rt-res{width:22px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+.rt-res.rw{background:var(--gbg);color:var(--g);border:1px solid var(--gbd)}
+.rt-res.rl{background:var(--rbg);color:var(--r);border:1px solid var(--rbd)}
+.rt-res.rbe{background:var(--ybg);color:var(--y);border:1px solid var(--ybd)}
+.rt-info{display:flex;flex-direction:column;min-width:0}
+.rt-asset{font-weight:600;color:var(--t0);font-size:12px}
+.rt-date{font-size:10px;color:var(--t2);margin-top:1px}
+.rt-r{font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
+.rt-empty{text-align:center;font-size:11px;color:var(--t2);padding:30px 10px}
+
+@media(max-width:1400px){.kpi-row{grid-template-columns:repeat(3,1fr)}.dash-row3{grid-template-columns:1fr 1fr}.dash-row3b{grid-template-columns:1fr 1fr}}
+@media(max-width:900px){.kpi-row{grid-template-columns:repeat(2,1fr)}.dash-row3,.dash-row3b{grid-template-columns:1fr}}
 .card{background:var(--cbg);border:1px solid var(--b1);border-radius:8px;padding:17px}
 .card-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}
 .card-ttl{font-size:11px;color:var(--t1);font-weight:500;text-transform:uppercase;letter-spacing:.4px}
@@ -388,8 +440,119 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 
     <!-- DASHBOARD -->
     <div id="view-dash" class="view on">
-      <div class="stat-row" id="stat-row"></div>
-      <div class="dash-mid">
+
+      <!-- ROW 1: 5 KPI Cards -->
+      <div class="kpi-row">
+        <!-- Net R -->
+        <div class="kpi-card">
+          <div class="kpi-hd">
+            <div class="kpi-lbl">Net R</div>
+            <div class="kpi-badge" id="kpi-ntrades">0</div>
+          </div>
+          <div class="kpi-val" id="kpi-netr">—</div>
+          <div class="kpi-sub" id="kpi-netr-sub">—</div>
+        </div>
+
+        <!-- Trade Win % with semi-circle gauge -->
+        <div class="kpi-card">
+          <div class="kpi-hd">
+            <div class="kpi-lbl">Trade Win %</div>
+          </div>
+          <div class="kpi-body-row">
+            <div class="kpi-val" id="kpi-wr">—</div>
+            <div class="gauge-half"><canvas id="gauge-wr"></canvas></div>
+          </div>
+          <div class="kpi-legend">
+            <span class="lg-w"><span id="kpi-wr-w">0</span></span>
+            <span class="lg-be"><span id="kpi-wr-be">0</span></span>
+            <span class="lg-l"><span id="kpi-wr-l">0</span></span>
+          </div>
+        </div>
+
+        <!-- Profit Factor -->
+        <div class="kpi-card">
+          <div class="kpi-hd">
+            <div class="kpi-lbl">Profit Factor</div>
+          </div>
+          <div class="kpi-body-row">
+            <div class="kpi-val" id="kpi-pf">—</div>
+            <div class="mini-donut"><canvas id="donut-pf"></canvas></div>
+          </div>
+          <div class="kpi-sub">Gross Profit / Gross Loss</div>
+        </div>
+
+        <!-- Day Win % -->
+        <div class="kpi-card">
+          <div class="kpi-hd">
+            <div class="kpi-lbl">Day Win %</div>
+          </div>
+          <div class="kpi-body-row">
+            <div class="kpi-val" id="kpi-dwr">—</div>
+            <div class="mini-donut"><canvas id="donut-dwr"></canvas></div>
+          </div>
+          <div class="kpi-legend-small">
+            <span id="kpi-dwr-wd">0 win</span> /
+            <span id="kpi-dwr-ld">0 loss</span> /
+            <span id="kpi-dwr-bd">0 be</span>
+          </div>
+        </div>
+
+        <!-- Avg Win/Loss R -->
+        <div class="kpi-card">
+          <div class="kpi-hd">
+            <div class="kpi-lbl">Avg Win / Avg Loss</div>
+          </div>
+          <div class="kpi-val" id="kpi-ratio">—</div>
+          <div class="avg-bar-wrap">
+            <div class="avg-bar-win" id="avg-bar-win" style="width:0"></div>
+            <div class="avg-bar-loss" id="avg-bar-loss" style="width:0"></div>
+          </div>
+          <div class="avg-bar-nums">
+            <span class="pos" id="avg-win-txt">—</span>
+            <span class="neg" id="avg-loss-txt">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROW 2: GxT Score + Cumulative R + Daily Net R -->
+      <div class="dash-row3">
+        <div class="card gxt-card">
+          <div class="card-hd">
+            <div class="card-ttl">GxT Score</div>
+            <div class="card-badge" id="gxt-score-badge">—</div>
+          </div>
+          <div class="gxt-wrap">
+            <div class="gxt-radar"><canvas id="gxt-radar"></canvas></div>
+            <div class="gxt-gauge">
+              <div class="gxt-gauge-bar"><div class="gxt-gauge-fill" id="gxt-gauge-fill"></div></div>
+              <div class="gxt-gauge-scale">
+                <span>0</span><span>25</span><span>50</span><span>75</span><span>100</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-hd">
+            <div class="card-ttl">Cumulative R Curve</div>
+          </div>
+          <div class="ch-wrap"><canvas id="eq-ch"></canvas></div>
+        </div>
+
+        <div class="card">
+          <div class="card-hd">
+            <div class="card-ttl">Daily Net R</div>
+          </div>
+          <div class="ch-wrap"><canvas id="daily-r-ch"></canvas></div>
+        </div>
+      </div>
+
+      <!-- ROW 3: Recent Trades + Calendar + Weekly -->
+      <div class="dash-row3b">
+        <div class="card">
+          <div class="card-hd"><div class="card-ttl">Recent Trades</div></div>
+          <div class="rt-list" id="rt-list"></div>
+        </div>
         <div class="card">
           <div class="cal-nav">
             <button class="btn-cn" onclick="calMv(-1)">◀</button>
@@ -404,30 +567,7 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
           <div class="wk-list" id="wk-list"></div>
         </div>
       </div>
-      <div class="dash-bot">
-        <div class="card">
-          <div class="card-hd">
-            <div class="card-ttl">Cumulative R Curve</div>
-          </div>
-          <div class="ch-wrap"><canvas id="eq-ch"></canvas></div>
-        </div>
-        <div class="card">
-          <div class="card-hd"><div class="card-ttl">Trade Win Rate</div></div>
-          <div class="donut-area">
-            <div class="donut-c"><canvas id="donut-ch"></canvas>
-              <div class="donut-mid">
-                <div class="donut-val" id="d-wr">—</div>
-                <div class="donut-sub">Win Rate</div>
-              </div>
-            </div>
-            <div class="donut-leg">
-              <span><span class="dl-dot" style="background:var(--g)"></span><span id="d-wins">0</span></span>
-              <span><span class="dl-dot" style="background:var(--r)"></span><span id="d-loss">0</span></span>
-              <span><span class="dl-dot" style="background:var(--y)"></span><span id="d-be">0</span></span>
-            </div>
-          </div>
-        </div>
-      </div>
+
     </div>
 
     <!-- TRADE LOG -->
@@ -784,17 +924,238 @@ function toggleMob(){document.getElementById('sb').classList.toggle('mob')}
 // ══════════════════════════════════════════════════
 function renderDash(){
   const T=getTrades(),s=stats(T);
-  const pf=isFinite(s.pf)?s.pf.toFixed(2):'∞';
-  document.getElementById('stat-row').innerHTML=`
-    <div class="sc"><div class="sc-top"><div class="sc-lbl">Total Trades</div><div class="sc-badge">${curSrc==='all'?'All':curSrc}</div></div>
-      <div class="sc-val neu">${s.n}</div><div class="sc-sub">W:${s.nW} L:${s.nL} BE:${s.nBE}</div></div>
-    <div class="sc"><div class="sc-top"><div class="sc-lbl">Win Rate</div></div>
-      <div class="sc-val ${s.wr>=.5?'pos':'neu'}">${(s.wr*100).toFixed(1)}%</div><div class="sc-sub">Profit Factor: ${pf}</div></div>
-    <div class="sc"><div class="sc-top"><div class="sc-lbl">Total R</div></div>
-      <div class="sc-val ${s.tR>=0?'pos':'neg'}">${fR(s.tR)}</div><div class="sc-sub">Avg R: ${fR(s.aR)}</div></div>
-    <div class="sc"><div class="sc-top"><div class="sc-lbl">Expectancy</div></div>
-      <div class="sc-val ${s.exp>=0?'pos':'neg'}">${fR(s.exp)}</div><div class="sc-sub">Avg Win ${fR(s.aWR)} / Avg Loss ${fR(s.aLR)}</div></div>`;
-  renderCal();renderEqCh(T);renderDonut(s);
+  renderKPIs(T,s);
+  renderGxTScore(T,s);
+  renderCal();
+  renderEqCh(T);
+  renderDailyR(T);
+  renderRecentTrades(T);
+}
+
+// ── KPI Row (5 cards)
+function renderKPIs(T,s){
+  const pf=isFinite(s.pf)?s.pf.toFixed(2):(s.pf>0?'∞':'0.00');
+  // Net R
+  document.getElementById('kpi-ntrades').textContent=s.n+' trades';
+  const netR=document.getElementById('kpi-netr');
+  netR.textContent=s.n?fR(s.tR):'—';
+  netR.className='kpi-val '+(s.tR>0?'pos':s.tR<0?'neg':'neu');
+  document.getElementById('kpi-netr-sub').textContent=s.n?`Avg ${fR(s.aR)} / trade`:'—';
+
+  // Trade Win %
+  const wrEl=document.getElementById('kpi-wr');
+  wrEl.textContent=s.n?(s.wr*100).toFixed(1)+'%':'—';
+  wrEl.className='kpi-val '+(s.wr>=.5?'pos':s.n?'neu':'');
+  document.getElementById('kpi-wr-w').textContent=s.nW+'W';
+  document.getElementById('kpi-wr-be').textContent=s.nBE+'BE';
+  document.getElementById('kpi-wr-l').textContent=s.nL+'L';
+  renderGaugeHalf('gauge-wr',s);
+
+  // Profit Factor
+  const pfEl=document.getElementById('kpi-pf');
+  pfEl.textContent=s.n?pf:'—';
+  pfEl.className='kpi-val '+(s.pf>=1.5?'pos':s.pf>=1?'neu':s.n?'neg':'');
+  renderDonutMini('donut-pf',s.pf,'pf');
+
+  // Day Win %
+  const dayStats=calcDayStats(T);
+  const dwrEl=document.getElementById('kpi-dwr');
+  dwrEl.textContent=dayStats.n?(dayStats.wr*100).toFixed(1)+'%':'—';
+  dwrEl.className='kpi-val '+(dayStats.wr>=.5?'pos':dayStats.n?'neu':'');
+  document.getElementById('kpi-dwr-wd').textContent=dayStats.w+' win';
+  document.getElementById('kpi-dwr-ld').textContent=dayStats.l+' loss';
+  document.getElementById('kpi-dwr-bd').textContent=dayStats.be+' be';
+  renderDonutMini('donut-dwr',dayStats.wr,'dwr',dayStats);
+
+  // Avg Win/Loss Ratio
+  const ratio=s.aLR>0?(s.aWR/s.aLR):(s.aWR>0?Infinity:0);
+  const ratioEl=document.getElementById('kpi-ratio');
+  ratioEl.textContent=s.n?(isFinite(ratio)?ratio.toFixed(2):'∞'):'—';
+  ratioEl.className='kpi-val '+(ratio>=1.5?'pos':ratio>=1?'neu':s.n?'neg':'');
+  const total=s.aWR+s.aLR;
+  const winPct=total>0?(s.aWR/total*100):0;
+  const lossPct=total>0?(s.aLR/total*100):0;
+  document.getElementById('avg-bar-win').style.width=winPct+'%';
+  document.getElementById('avg-bar-loss').style.width=lossPct+'%';
+  document.getElementById('avg-win-txt').textContent=s.n?'+'+s.aWR.toFixed(2)+'R':'—';
+  document.getElementById('avg-loss-txt').textContent=s.n?'-'+s.aLR.toFixed(2)+'R':'—';
+}
+
+// Day-level stats (how many days are profitable)
+function calcDayStats(T){
+  const byD={};
+  T.forEach(t=>{if(!t.date)return;const d=t.date.slice(0,10);if(!byD[d])byD[d]=0;byD[d]+=getR(t)});
+  const days=Object.values(byD);
+  const n=days.length;
+  const w=days.filter(r=>r>0.01).length;
+  const l=days.filter(r=>r<-0.01).length;
+  const be=n-w-l;
+  return{n,w,l,be,wr:n?w/n:0};
+}
+
+// Semi-circle gauge for Trade Win %
+function renderGaugeHalf(id,s){
+  const ctx=document.getElementById(id);
+  if(!ctx)return;
+  if(charts[id]){charts[id].destroy()}
+  const has=s.n>0;
+  charts[id]=new Chart(ctx,{
+    type:'doughnut',
+    data:{datasets:[{
+      data:has?[s.nW,s.nBE,s.nL]:[1,0,0],
+      backgroundColor:has?['#10b981','#f59e0b','#f43f5e']:['#1e1f20','#1e1f20','#1e1f20'],
+      borderWidth:0,
+      circumference:180,
+      rotation:270
+    }]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'72%',plugins:{legend:{display:false},tooltip:{enabled:false}}}
+  });
+}
+
+// Mini donut (for Profit Factor or Day Win %)
+function renderDonutMini(id,val,kind,extra){
+  const ctx=document.getElementById(id);
+  if(!ctx)return;
+  if(charts[id]){charts[id].destroy()}
+  let data,colors;
+  if(kind==='pf'){
+    // Profit factor: fill ring based on 0-3 range
+    const pct=isFinite(val)?Math.min(val/3,1):(val>0?1:0);
+    data=[pct,1-pct];
+    const col=val>=1.5?'#10b981':val>=1?'#f59e0b':'#f43f5e';
+    colors=[col,'#1e1f20'];
+  } else {
+    // Day Win %: ratio based
+    const n=extra&&extra.n?extra.n:0;
+    if(!n){data=[1,0];colors=['#1e1f20','#1e1f20']}
+    else{
+      data=[extra.w,extra.be,extra.l];
+      colors=['#10b981','#f59e0b','#f43f5e'];
+    }
+  }
+  charts[id]=new Chart(ctx,{
+    type:'doughnut',
+    data:{datasets:[{data,backgroundColor:colors,borderWidth:0}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'70%',plugins:{legend:{display:false},tooltip:{enabled:false}}}
+  });
+}
+
+// ── GxT Score (Radar + gauge)
+function renderGxTScore(T,s){
+  const ctx=document.getElementById('gxt-radar');
+  if(!ctx)return;
+  if(charts.gxtRadar){charts.gxtRadar.destroy()}
+  // 5 axes (0-100 each)
+  const winPct=Math.max(0,Math.min(100,s.wr*100));
+  const pfScore=isFinite(s.pf)?Math.min(100,s.pf*33):(s.pf>0?100:0);
+  const wlRatio=s.aLR>0?Math.min(100,(s.aWR/s.aLR)*33):(s.aWR>0?100:0);
+  // Capture rate = avg actualR / avg maxRR
+  const capT=T.filter(t=>t.maxRR>0);
+  const capRate=capT.length?(capT.reduce((a,t)=>a+Math.max(0,getR(t))/t.maxRR,0)/capT.length)*100:0;
+  const cap=Math.max(0,Math.min(100,capRate));
+  // Consistency = 1 - (stddev of monthly R / |mean of monthly R|)
+  const byMonth={};
+  T.forEach(t=>{if(!t.date)return;const m=t.date.slice(0,7);if(!byMonth[m])byMonth[m]=0;byMonth[m]+=getR(t)});
+  const monthR=Object.values(byMonth);
+  let consistency=0;
+  if(monthR.length>=2){
+    const mean=monthR.reduce((a,b)=>a+b,0)/monthR.length;
+    const variance=monthR.reduce((a,b)=>a+(b-mean)*(b-mean),0)/monthR.length;
+    const sd=Math.sqrt(variance);
+    const cv=Math.abs(mean)>0.01?sd/Math.abs(mean):sd;
+    consistency=Math.max(0,Math.min(100,(1-Math.min(cv,1))*100));
+  } else if(monthR.length===1){
+    consistency=monthR[0]>0?60:30;
+  }
+
+  const axes=[winPct,pfScore,wlRatio,cap,consistency];
+  const labels=['Win %','Profit Factor','Avg W/L','Capture','Consistency'];
+  const total=axes.reduce((a,b)=>a+b,0)/axes.length;
+
+  charts.gxtRadar=new Chart(ctx,{
+    type:'radar',
+    data:{labels,datasets:[{
+      data:axes,
+      backgroundColor:'rgba(94,106,210,.18)',
+      borderColor:'#5e6ad2',
+      borderWidth:2,
+      pointBackgroundColor:'#5e6ad2',
+      pointRadius:3,
+      pointHoverRadius:5
+    }]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>labels[c.dataIndex]+': '+c.raw.toFixed(0)}}},
+      scales:{r:{
+        min:0,max:100,
+        ticks:{display:false,stepSize:25},
+        grid:{color:'rgba(255,255,255,.08)'},
+        angleLines:{color:'rgba(255,255,255,.08)'},
+        pointLabels:{color:'#d0d6e0',font:{size:10}}
+      }}
+    }
+  });
+
+  // Gauge marker
+  const score=Math.round(total);
+  const fill=document.getElementById('gxt-gauge-fill');
+  if(fill)fill.style.left=score+'%';
+  const badge=document.getElementById('gxt-score-badge');
+  if(badge){
+    badge.textContent=score;
+    const col=score>=70?'#10b981':score>=40?'#f59e0b':'#f43f5e';
+    badge.style.color=col;
+    badge.style.background=col.replace('#','').length===6?col+'20':col;
+    badge.style.padding='3px 10px';
+    badge.style.borderRadius='6px';
+    badge.style.fontWeight='700';
+  }
+}
+
+// ── Daily Net R (bar chart)
+function renderDailyR(T){
+  const ctx=document.getElementById('daily-r-ch');
+  if(!ctx)return;
+  if(charts.dailyR){charts.dailyR.destroy()}
+  const byD={};
+  T.forEach(t=>{if(!t.date)return;const d=t.date.slice(0,10);if(!byD[d])byD[d]=0;byD[d]+=getR(t)});
+  const days=Object.keys(byD).sort();
+  const data=days.map(d=>parseFloat(byD[d].toFixed(2)));
+  const colors=data.map(v=>v>=0?'#10b981':'#f43f5e');
+  charts.dailyR=new Chart(ctx,{
+    type:'bar',
+    data:{labels:days,datasets:[{data,backgroundColor:colors.map(c=>c+'60'),borderColor:colors,borderWidth:1,borderRadius:3}]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fR(c.parsed.y)}}},
+      scales:{
+        x:{ticks:{color:'#62666d',maxTicksLimit:8,font:{size:9}},grid:{display:false}},
+        y:{ticks:{color:'#62666d',font:{size:9},callback:v=>v+'R'},grid:{color:'rgba(255,255,255,.04)'}}
+      }
+    }
+  });
+}
+
+// ── Recent Trades List
+function renderRecentTrades(T){
+  const el=document.getElementById('rt-list');
+  if(!el)return;
+  if(!T.length){el.innerHTML='<div class="rt-empty">거래 내역이 없습니다</div>';return}
+  const recent=[...T].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,12);
+  el.innerHTML=recent.map(t=>{
+    const r=getR(t);
+    const rCls=r>0?'pos':r<0?'neg':'neu';
+    const resCls=t.result==='W'?'rw':t.result==='L'?'rl':'rbe';
+    const dateStr=t.date?.slice(5,10)||'';
+    return`<div class="rt-item">
+      <div class="rt-res ${resCls}">${t.result||'—'}</div>
+      <div class="rt-info">
+        <div class="rt-asset">${t.asset||'—'} <span style="font-size:10px;color:var(--t2);font-weight:normal">${t.direction==='Buy'?'↑':'↓'}</span></div>
+        <div class="rt-date">${dateStr} · ${t.setup||'—'}</div>
+      </div>
+      <div class="rt-r ${rCls}">${fR(r)}</div>
+    </div>`;
+  }).join('');
 }
 
 // ── CALENDAR
@@ -848,20 +1209,6 @@ function renderEqCh(T){
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.dataset.label+': '+fR(c.parsed.y)}}},
       scales:{x:{ticks:{color:'#62666d',maxTicksLimit:8,font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}},y:{ticks:{color:'#62666d',font:{size:10},callback:v=>v+'R'},grid:{color:'rgba(255,255,255,0.04)'}}}}});
-}
-
-// ── DONUT
-function renderDonut(s){
-  const ctx=document.getElementById('donut-ch').getContext('2d');
-  document.getElementById('d-wr').textContent=s.n?(s.wr*100).toFixed(1)+'%':'—';
-  document.getElementById('d-wr').style.color=s.wr>=.5?'var(--g)':'var(--t0)';
-  document.getElementById('d-wins').textContent=s.nW+' W';
-  document.getElementById('d-loss').textContent=s.nL+' L';
-  document.getElementById('d-be').textContent=s.nBE+' BE';
-  if(charts.donut){charts.donut.destroy()}
-  const has=s.n>0;
-  charts.donut=new Chart(ctx,{type:'doughnut',data:{labels:['Win','Loss','BE'],datasets:[{data:has?[s.nW,s.nL,s.nBE]:[1,0,0],backgroundColor:has?['#10b981','#f43f5e','#f59e0b']:['#1e1f20','#1e1f20','#1e1f20'],borderWidth:0}]},
-    options:{responsive:true,maintainAspectRatio:false,cutout:'76%',plugins:{legend:{display:false},tooltip:{enabled:has}}}});
 }
 
 // ══════════════════════════════════════════════════
