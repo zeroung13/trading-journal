@@ -214,7 +214,59 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--mbg
 .dl-dot{width:8px;height:8px;border-radius:50%}
 
 /* ── TABLE ── */
-.fbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:13px}
+.fbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+
+/* Quick Filter Chips */
+.qchips{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:10px}
+.qchip{background:var(--cbg2);border:1px solid var(--b1);color:var(--t1);padding:5px 11px;border-radius:14px;font-size:12px;cursor:pointer;transition:all .15s;user-select:none}
+.qchip:hover{border-color:var(--ac);color:var(--t0)}
+.qchip.on{background:var(--acbg);border-color:var(--ac);color:var(--ac2);font-weight:600}
+.qchip-sep{width:1px;height:16px;background:var(--b1);margin:0 4px}
+
+/* Filter Summary Bar */
+.fsum{display:flex;gap:14px;align-items:center;padding:10px 14px;background:var(--cbg);border:1px solid var(--b1);border-radius:8px;margin-bottom:10px;font-size:12px;flex-wrap:wrap}
+.fsum-item{display:flex;align-items:center;gap:6px}
+.fsum-lbl{color:var(--t2);font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+.fsum-val{font-weight:700;font-variant-numeric:tabular-nums;font-size:13px}
+.fsum-sep{width:1px;height:14px;background:var(--b1)}
+
+/* Period Selector (Analytics) */
+.pd-bar{display:flex;gap:14px;align-items:center;padding:10px 14px;background:var(--cbg);border:1px solid var(--b1);border-radius:8px;margin-bottom:14px;flex-wrap:wrap}
+.pd-lbl{font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.pd-tabs{display:flex;gap:4px;background:var(--cbg2);padding:3px;border-radius:6px}
+.pd-tab{padding:5px 12px;border-radius:4px;font-size:12px;color:var(--t1);cursor:pointer;transition:all .15s;user-select:none}
+.pd-tab:hover{color:var(--t0)}
+.pd-tab.on{background:var(--ac);color:#fff;font-weight:600}
+.pd-custom{display:flex;gap:6px;align-items:center}
+.pd-custom .fi{padding:5px 8px;font-size:12px}
+.pd-info{margin-left:auto;font-size:11px;color:var(--t2)}
+.pd-info strong{color:var(--t0);font-weight:600}
+
+/* Insight Cards Row */
+.insight-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:16px}
+.ins-card{background:var(--cbg);border:1px solid var(--b1);border-radius:8px;padding:13px 16px;position:relative;overflow:hidden}
+.ins-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
+.ins-card.good::before{background:var(--g)}
+.ins-card.bad::before{background:var(--r)}
+.ins-card.neutral::before{background:var(--ac)}
+.ins-hd{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.ins-ic{font-size:16px}
+.ins-lbl{font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.4px;font-weight:600}
+.ins-name{font-size:14px;font-weight:700;color:var(--t0);line-height:1.3;margin-bottom:3px}
+.ins-metric{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.1}
+.ins-metric.pos{color:var(--g)}.ins-metric.neg{color:var(--r)}.ins-metric.neu{color:var(--t0)}
+.ins-sub{font-size:11px;color:var(--t2);margin-top:3px}
+
+/* Row color stripe */
+.row-stripe-w{box-shadow:inset 3px 0 0 0 var(--g)}
+.row-stripe-l{box-shadow:inset 3px 0 0 0 var(--r)}
+.row-stripe-be{box-shadow:inset 3px 0 0 0 var(--y)}
+
+/* RR vs Max RR mini-bar */
+.rr-bar-wrap{display:inline-flex;flex-direction:column;gap:2px;min-width:60px}
+.rr-bar-val{font-variant-numeric:tabular-nums;font-weight:600}
+.rr-bar{height:3px;background:var(--b1);border-radius:2px;overflow:hidden;position:relative}
+.rr-bar-fill{height:100%;border-radius:2px}
 .fi{background:var(--cbg2);border:1px solid var(--b1);color:var(--t0);padding:6px 10px;border-radius:6px;font-size:13px;outline:none}
 .fi:focus{border-color:var(--ac)}
 input[type=date].fi{color-scheme:dark}
@@ -600,6 +652,24 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
         <input class="fi" id="ff-to" type="date" onchange="renderTbl()">
         <button class="btn btn-g btn-sm" onclick="clrF()">초기화</button>
       </div>
+
+      <!-- Quick Filter Chips -->
+      <div class="qchips" id="qchips">
+        <div class="qchip" data-qf="today" onclick="applyQuickFilter('today')">오늘</div>
+        <div class="qchip" data-qf="week" onclick="applyQuickFilter('week')">이번 주</div>
+        <div class="qchip" data-qf="month" onclick="applyQuickFilter('month')">이번 달</div>
+        <div class="qchip-sep"></div>
+        <div class="qchip" data-qf="win" onclick="applyQuickFilter('win')">✓ 승리만</div>
+        <div class="qchip" data-qf="loss" onclick="applyQuickFilter('loss')">✗ 손실만</div>
+        <div class="qchip" data-qf="be" onclick="applyQuickFilter('be')">= BE</div>
+        <div class="qchip-sep"></div>
+        <div class="qchip" data-qf="bigwin" onclick="applyQuickFilter('bigwin')">⭐ +2R 이상</div>
+        <div class="qchip" data-qf="fullsl" onclick="applyQuickFilter('fullsl')">🔴 Full SL</div>
+      </div>
+
+      <!-- Filter Summary Bar -->
+      <div class="fsum" id="fsum"></div>
+
       <div class="tbl-card">
         <div class="tbl-wrap">
           <table>
@@ -630,7 +700,32 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 
     <!-- ANALYTICS -->
     <div id="view-analytics" class="view">
-      <div class="stat-row" id="ana-stat-row"></div>
+
+      <!-- Period Selector -->
+      <div class="pd-bar">
+        <div class="pd-lbl">기간</div>
+        <div class="pd-tabs" id="pd-tabs">
+          <div class="pd-tab" data-pd="7" onclick="applyPeriod('7')">7D</div>
+          <div class="pd-tab" data-pd="30" onclick="applyPeriod('30')">30D</div>
+          <div class="pd-tab" data-pd="90" onclick="applyPeriod('90')">90D</div>
+          <div class="pd-tab" data-pd="ytd" onclick="applyPeriod('ytd')">YTD</div>
+          <div class="pd-tab on" data-pd="all" onclick="applyPeriod('all')">전체</div>
+        </div>
+        <div class="pd-custom">
+          <input class="fi" id="pd-from" type="date" onchange="applyPeriod('custom')">
+          <span style="color:var(--t2);font-size:11px">~</span>
+          <input class="fi" id="pd-to" type="date" onchange="applyPeriod('custom')">
+        </div>
+        <div class="pd-info" id="pd-info"></div>
+      </div>
+
+      <!-- Top 5 KPI Row (Analytics) -->
+      <div class="kpi-row" id="ana-kpi-row"></div>
+
+      <!-- Insight Cards -->
+      <div class="insight-row" id="ana-insights"></div>
+
+      <div class="stat-row" id="ana-stat-row" style="display:none"></div>
 
       <!-- PERFORMANCE CURVES (full-width line charts) -->
       <div class="perf-curves">
@@ -821,6 +916,8 @@ let curSrc='all'; // 'all','crypto','futures'
 let charts={};
 let cY,cM;
 let tblSort={key:'date',dir:'desc'}; // default: newest first
+let activeQF=null; // active quick filter: null | 'today' | 'week' | 'month' | 'win' | 'loss' | 'be' | 'bigwin' | 'fullsl'
+let anaPeriod='all'; // analytics period: '7' | '30' | '90' | 'ytd' | 'all' | 'custom'
 
 function getTrades(){
   if(curSrc==='all') return [...ALL.crypto,...ALL.futures].sort((a,b)=>(a.date||'').localeCompare(b.date||''));
@@ -1233,6 +1330,14 @@ function getFiltered(){
     const d=t.date?.slice(0,10)||'';
     if(fr&&d<fr)return false;
     if(to&&d>to)return false;
+    // Quick filter overlay
+    if(activeQF){
+      if(activeQF==='win'&&t.result!=='W')return false;
+      if(activeQF==='loss'&&t.result!=='L')return false;
+      if(activeQF==='be'&&t.result!=='BE'&&t.result!=='PL')return false;
+      if(activeQF==='bigwin'&&getR(t)<2)return false;
+      if(activeQF==='fullsl'&&t.exitStrategy!=='Full SL')return false;
+    }
     return true;
   }).sort((a,b)=>{
     const k=tblSort.key;
@@ -1265,12 +1370,15 @@ function handleSort(e){
 
 function renderTbl(){
   const arr=getFiltered(),tb=document.getElementById('tbl-body'),em=document.getElementById('tbl-empty');
+  renderFsum(arr);
+  syncQFChips();
   if(!arr.length){tb.innerHTML='';em.style.display='block';return}
   em.style.display='none';
   tb.innerHTML=arr.map(t=>{
     const r=getR(t);const rc=r>0?'rp':r<0?'rn':'';
     const resBadge=t.result==='W'?'bw':t.result==='L'?'bl':'bbe';
     const dirBadge=t.direction==='Buy'?'blong':'bshort';
+    const stripeCls=t.result==='W'?'row-stripe-w':t.result==='L'?'row-stripe-l':(t.result==='BE'||t.result==='PL')?'row-stripe-be':'';
     const smtInfo=[t.smtStage&&t.smtStage!=='none'?t.smtStage:null,...(t.smtType||[])].filter(Boolean);
     const smtTags=smtInfo.map(x=>`<span class="tag-chip">${x}</span>`).join(' ');
     const links=[t.htfChart?`<a class="chart-link" href="${t.htfChart}" target="_blank">HTF</a>`:null,
@@ -1280,13 +1388,29 @@ function renderTbl(){
     const note=t.notes?`<span class="note-toggle" onclick="toggleNote('${noteId}')">📝 펼치기</span>`:'';
     const srcDot=t.source==='crypto'?'🟡':'🔵';
     const exitBadge=t.exitStrategy?`<span class="tag-chip">${t.exitStrategy}</span>`:'—';
-    return`<tr>
+    // RR mini-bar: show actual R vs maxRR as capture ratio
+    let rrCell;
+    if(t.maxRR&&t.maxRR>0&&r>0){
+      const capPct=Math.min(100,(r/t.maxRR)*100);
+      rrCell=`<div class="rr-bar-wrap">
+        <div class="rr-bar-val ${rc}">${fR(r)}</div>
+        <div class="rr-bar"><div class="rr-bar-fill" style="width:${capPct}%;background:var(--g)"></div></div>
+      </div>`;
+    } else if(r<0){
+      rrCell=`<div class="rr-bar-wrap">
+        <div class="rr-bar-val ${rc}">${fR(r)}</div>
+        <div class="rr-bar"><div class="rr-bar-fill" style="width:100%;background:var(--r)"></div></div>
+      </div>`;
+    } else {
+      rrCell=`<span class="${rc}" style="font-variant-numeric:tabular-nums">${fR(r)}</span>`;
+    }
+    return`<tr class="${stripeCls}">
       <td>${srcDot} ${t.num||''}</td>
       <td style="white-space:nowrap;font-variant-numeric:tabular-nums">${t.date?.slice(0,10)||''}<br><span style="font-size:10px;color:var(--t2)">${t.dayOfWeek||''}</span></td>
       <td><strong>${t.asset||''}</strong></td>
       <td><span class="badge ${dirBadge}">${t.direction||''}</span></td>
       <td><span class="badge ${resBadge}">${t.result||''}</span></td>
-      <td class="${rc}" style="font-variant-numeric:tabular-nums">${fR(r)}</td>
+      <td>${rrCell}</td>
       <td style="font-variant-numeric:tabular-nums">${t.maxRR!=null?t.maxRR.toFixed(1)+'R':'—'}</td>
       <td>${exitBadge}</td>
       <td style="font-size:11px">${t.setup||'—'}</td>
@@ -1300,7 +1424,70 @@ function renderTbl(){
   }).join('');
 }
 
-function clrF(){['ff-result','ff-dir','ff-setup','ff-swing','ff-condition','ff-asset','ff-from','ff-to'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});renderTbl()}
+// ── Filter summary bar
+function renderFsum(arr){
+  const el=document.getElementById('fsum');
+  if(!el)return;
+  if(!arr.length){
+    el.innerHTML='<div class="fsum-item" style="color:var(--t2)">필터 결과 없음</div>';
+    return;
+  }
+  const s=stats(arr);
+  const rs=arr.map(getR);
+  const best=Math.max(...rs);
+  const worst=Math.min(...rs);
+  const tRcls=s.tR>=0?'pos':'neg';
+  const wrCls=s.wr>=.5?'pos':'neu';
+  const bestCls=best>=0?'pos':'neg';
+  const worstCls=worst>=0?'pos':'neg';
+  el.innerHTML=`
+    <div class="fsum-item"><span class="fsum-lbl">필터 결과</span><span class="fsum-val neu">${s.n}건</span></div>
+    <div class="fsum-sep"></div>
+    <div class="fsum-item"><span class="fsum-lbl">Net R</span><span class="fsum-val ${tRcls}">${fR(s.tR)}</span></div>
+    <div class="fsum-sep"></div>
+    <div class="fsum-item"><span class="fsum-lbl">Win Rate</span><span class="fsum-val ${wrCls}">${(s.wr*100).toFixed(1)}%</span><span style="font-size:11px;color:var(--t2)">(${s.nW}W ${s.nL}L ${s.nBE}BE)</span></div>
+    <div class="fsum-sep"></div>
+    <div class="fsum-item"><span class="fsum-lbl">Avg R</span><span class="fsum-val ${s.aR>=0?'pos':'neg'}">${fR(s.aR)}</span></div>
+    <div class="fsum-sep"></div>
+    <div class="fsum-item"><span class="fsum-lbl">Best</span><span class="fsum-val ${bestCls}">${fR(best)}</span></div>
+    <div class="fsum-item"><span class="fsum-lbl">Worst</span><span class="fsum-val ${worstCls}">${fR(worst)}</span></div>`;
+}
+
+// ── Quick Filter Chips
+function applyQuickFilter(qf){
+  // Date-based chips fill from/to inputs; result/RR-based chips set activeQF flag
+  const today=new Date();
+  const fromEl=document.getElementById('ff-from');
+  const toEl=document.getElementById('ff-to');
+  // Toggle off if same chip clicked
+  if(activeQF===qf){activeQF=null;if(['today','week','month'].includes(qf)){fromEl.value='';toEl.value=''}renderTbl();return}
+  // Clear date inputs when switching
+  fromEl.value='';toEl.value='';
+  activeQF=qf;
+  if(qf==='today'){
+    const d=today.toISOString().slice(0,10);
+    fromEl.value=d;toEl.value=d;
+  } else if(qf==='week'){
+    const day=today.getDay();
+    const monday=new Date(today);monday.setDate(today.getDate()-(day===0?6:day-1));
+    const sunday=new Date(monday);sunday.setDate(monday.getDate()+6);
+    fromEl.value=monday.toISOString().slice(0,10);
+    toEl.value=sunday.toISOString().slice(0,10);
+  } else if(qf==='month'){
+    const y=today.getFullYear(),m=today.getMonth();
+    fromEl.value=new Date(y,m,1).toISOString().slice(0,10);
+    toEl.value=new Date(y,m+1,0).toISOString().slice(0,10);
+  }
+  renderTbl();
+}
+
+function syncQFChips(){
+  document.querySelectorAll('.qchip').forEach(c=>{
+    c.classList.toggle('on',c.dataset.qf===activeQF);
+  });
+}
+
+function clrF(){['ff-result','ff-dir','ff-setup','ff-swing','ff-condition','ff-asset','ff-from','ff-to'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});activeQF=null;renderTbl()}
 
 function toggleNote(id){
   const row=document.getElementById(id);
@@ -1315,16 +1502,192 @@ function toggleNote(id){
 // ══════════════════════════════════════════════════
 // ANALYTICS
 // ══════════════════════════════════════════════════
-function renderAnalytics(){
-  const T=getTrades(),s=stats(T);
+function filterByPeriod(T,pd){
+  if(!pd||pd==='all')return T.slice();
+  const now=new Date();now.setHours(23,59,59,999);
+  let from=null;
+  if(pd==='7'){from=new Date(now);from.setDate(from.getDate()-6);from.setHours(0,0,0,0)}
+  else if(pd==='30'){from=new Date(now);from.setDate(from.getDate()-29);from.setHours(0,0,0,0)}
+  else if(pd==='90'){from=new Date(now);from.setDate(from.getDate()-89);from.setHours(0,0,0,0)}
+  else if(pd==='ytd'){from=new Date(now.getFullYear(),0,1)}
+  else if(pd==='custom'){
+    const f=document.getElementById('pd-from').value;
+    const t=document.getElementById('pd-to').value;
+    return T.filter(x=>{if(!x.date)return false;const d=x.date.slice(0,10);if(f&&d<f)return false;if(t&&d>t)return false;return true});
+  }
+  if(!from)return T.slice();
+  const fromStr=from.toISOString().slice(0,10);
+  const toStr=now.toISOString().slice(0,10);
+  return T.filter(x=>x.date&&x.date.slice(0,10)>=fromStr&&x.date.slice(0,10)<=toStr);
+}
 
-  // top stats for analytics
+function applyPeriod(pd){
+  anaPeriod=pd;
+  // sync tab UI
+  document.querySelectorAll('.pd-tab').forEach(el=>el.classList.toggle('on',el.dataset.pd===pd));
+  // clear custom inputs when a preset tab is chosen
+  if(pd!=='custom'){
+    const f=document.getElementById('pd-from'),t=document.getElementById('pd-to');
+    if(f)f.value='';if(t)t.value='';
+  }
+  renderAnalytics();
+}
+
+function renderAnaKPIs(T){
+  const host=document.getElementById('ana-kpi-row');
+  if(!host)return;
+  const s=stats(T);
+  const dStats=calcDayStats(T);
+  // Best / Worst day
+  const byD={};
+  T.forEach(t=>{if(!t.date)return;const d=t.date.slice(0,10);if(!byD[d])byD[d]=0;byD[d]+=getR(t)});
+  const dayEntries=Object.entries(byD).sort((a,b)=>b[1]-a[1]);
+  const best=dayEntries[0];const worst=dayEntries[dayEntries.length-1];
+  const bestR=best?best[1]:0,worstR=worst?worst[1]:0;
+  const fmtDay=(d)=>{if(!d)return'';const dd=new Date(d+'T00:00:00');return(dd.getMonth()+1)+'/'+dd.getDate()};
+  // Expectancy
+  const exp=s.exp;
+  host.innerHTML=`
+    <div class="kpi-card">
+      <div class="kpi-hd"><div class="kpi-lbl">Total Trades</div><div class="kpi-badge">${dStats.n} days</div></div>
+      <div class="kpi-val neu">${s.n}</div>
+      <div class="kpi-sub">${s.nW}W / ${s.nBE}BE / ${s.nL}L</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-hd"><div class="kpi-lbl">Win Rate</div></div>
+      <div class="kpi-val ${s.wr>=.5?'pos':s.n?'neu':''}">${s.n?(s.wr*100).toFixed(1)+'%':'—'}</div>
+      <div class="kpi-sub">Day Win ${dStats.n?(dStats.wr*100).toFixed(0)+'%':'—'}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-hd"><div class="kpi-lbl">Net R</div></div>
+      <div class="kpi-val ${s.tR>0?'pos':s.tR<0?'neg':'neu'}">${s.n?fR(s.tR):'—'}</div>
+      <div class="kpi-sub">Avg ${s.n?fR(s.aR):'—'} / trade</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-hd"><div class="kpi-lbl">Best Day</div><div class="kpi-badge">${best?fmtDay(best[0]):'—'}</div></div>
+      <div class="kpi-val pos">${best?fR(bestR):'—'}</div>
+      <div class="kpi-sub">Expectancy ${s.n?fR(exp):'—'}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-hd"><div class="kpi-lbl">Worst Day</div><div class="kpi-badge">${worst?fmtDay(worst[0]):'—'}</div></div>
+      <div class="kpi-val neg">${worst?fR(worstR):'—'}</div>
+      <div class="kpi-sub">MDD ${dayEntries.length?fR(calcMDD(T)):'—'}</div>
+    </div>`;
+}
+
+function calcMDD(T){
+  let cum=0,peak=0,mdd=0;
+  T.forEach(t=>{cum+=getR(t);peak=Math.max(peak,cum);mdd=Math.min(mdd,cum-peak)});
+  return mdd;
+}
+
+function renderInsightCards(T){
+  const host=document.getElementById('ana-insights');
+  if(!host)return;
+  if(!T.length){host.innerHTML='<div class="ins-card neutral"><div class="ins-hd"><span class="ins-ic">📭</span><div class="ins-lbl">No data</div></div><div class="ins-name">거래 기록 없음</div></div>';return}
+
+  const cards=[];
+
+  // Best Setup by Avg R (min 2 trades)
+  const setupR=groupAvgR(T,'setup').filter(x=>x.count>=2);
+  if(setupR.length){
+    const b=setupR[0];
+    cards.push({kind:b.value>=0?'good':'bad',ic:'🎯',lbl:'Best Setup',name:b.label,metric:fR(b.value),metricCls:b.value>=0?'pos':'neg',sub:`${b.count} trades · Avg R`});
+  }
+
+  // Worst Setup
+  if(setupR.length>1){
+    const w=setupR[setupR.length-1];
+    if(w.value<0){
+      cards.push({kind:'bad',ic:'⚠️',lbl:'Worst Setup',name:w.label,metric:fR(w.value),metricCls:'neg',sub:`${w.count} trades · 제거 검토`});
+    }
+  }
+
+  // Best Condition
+  const condR=groupAvgR(T,'condition').filter(x=>x.count>=2);
+  if(condR.length){
+    const b=condR[0];
+    cards.push({kind:b.value>=0?'good':'bad',ic:'🧭',lbl:'Best Condition',name:b.label,metric:fR(b.value),metricCls:b.value>=0?'pos':'neg',sub:`${b.count} trades · Avg R`});
+  }
+
+  // Best Day of Week (by Avg R)
+  const dowR=groupAvgR(T,'dayOfWeek').filter(x=>x.count>=2);
+  if(dowR.length){
+    const b=dowR[0];
+    cards.push({kind:b.value>=0?'good':'bad',ic:'📅',lbl:'Best Day of Week',name:b.label,metric:fR(b.value),metricCls:b.value>=0?'pos':'neg',sub:`${b.count} trades · Avg R`});
+  }
+
+  // Current streak
+  const streak=calcCurrentStreak(T);
+  if(streak.len>0){
+    const isW=streak.kind==='W';
+    cards.push({kind:isW?'good':'bad',ic:isW?'🔥':'❄️',lbl:'Current Streak',name:`${streak.len}${isW?' Wins':' Losses'} in a row`,metric:`${streak.len}`,metricCls:isW?'pos':'neg',sub:isW?'Let your edge play out':'Review risk & bias'});
+  }
+
+  // Best Direction
+  const dirR=groupAvgR(T,'direction').filter(x=>x.count>=2);
+  if(dirR.length){
+    const b=dirR[0];
+    cards.push({kind:b.value>=0?'good':'bad',ic:b.label==='Long'?'📈':'📉',lbl:'Best Direction',name:b.label,metric:fR(b.value),metricCls:b.value>=0?'pos':'neg',sub:`${b.count} trades · Avg R`});
+  }
+
+  // Capture Rate
+  const capT=T.filter(t=>t.maxRR>0);
+  if(capT.length){
+    const cap=capT.reduce((a,t)=>a+Math.max(0,getR(t))/t.maxRR,0)/capT.length;
+    cards.push({kind:cap>=.5?'good':cap>=.3?'neutral':'bad',ic:'🎣',lbl:'Capture Rate',name:'평균 목표 달성도',metric:(cap*100).toFixed(1)+'%',metricCls:cap>=.5?'pos':cap>=.3?'neu':'neg',sub:`${capT.length} trades w/ max RR`});
+  }
+
+  host.innerHTML=cards.map(c=>`
+    <div class="ins-card ${c.kind}">
+      <div class="ins-hd"><span class="ins-ic">${c.ic}</span><div class="ins-lbl">${c.lbl}</div></div>
+      <div class="ins-name">${c.name}</div>
+      <div class="ins-metric ${c.metricCls}">${c.metric}</div>
+      <div class="ins-sub">${c.sub}</div>
+    </div>`).join('');
+}
+
+function calcCurrentStreak(T){
+  // Iterate backwards (T is date-asc), skip BE
+  let kind=null,len=0;
+  for(let i=T.length-1;i>=0;i--){
+    const r=T[i].result;
+    if(r==='BE'||r==='PL')continue;
+    if(kind===null){kind=r;len=1}
+    else if(r===kind)len++;
+    else break;
+  }
+  return{kind,len};
+}
+
+function updatePdInfo(T){
+  const el=document.getElementById('pd-info');
+  if(!el)return;
+  if(!T.length){el.innerHTML='<strong>0</strong> trades';return}
+  const first=T.reduce((a,b)=>(a.date||'')<(b.date||'')?a:b);
+  const last=T.reduce((a,b)=>(a.date||'')>(b.date||'')?a:b);
+  const f=(first.date||'').slice(0,10),l=(last.date||'').slice(0,10);
+  el.innerHTML=`<strong>${T.length}</strong> trades · ${f} → ${l}`;
+}
+
+function renderAnalytics(){
+  const T0=getTrades();
+  const T=filterByPeriod(T0,anaPeriod);
+  const s=stats(T);
+
+  // Top KPI cards + Insight cards + period info
+  renderAnaKPIs(T);
+  renderInsightCards(T);
+  updatePdInfo(T);
+
+  // legacy hidden stat row (still populated in case anyone unhides it)
   const maxStreak=calcMaxStreak(T);
-  document.getElementById('ana-stat-row').innerHTML=`
+  const legacy=document.getElementById('ana-stat-row');
+  if(legacy){legacy.innerHTML=`
     <div class="sc"><div class="sc-lbl">Total Trades</div><div class="sc-val neu">${s.n}</div></div>
     <div class="sc"><div class="sc-lbl">Best Streak (W)</div><div class="sc-val pos">${maxStreak.win}</div></div>
     <div class="sc"><div class="sc-lbl">Worst Streak (L)</div><div class="sc-val neg">${maxStreak.loss}</div></div>
-    <div class="sc"><div class="sc-lbl">Avg R / Trade</div><div class="sc-val ${s.aR>=0?'pos':'neg'}">${fR(s.aR)}</div></div>`;
+    <div class="sc"><div class="sc-lbl">Avg R / Trade</div><div class="sc-val ${s.aR>=0?'pos':'neg'}">${fR(s.aR)}</div></div>`}
 
   renderCumulativeR(T);
   renderRollingWinRate(T);
