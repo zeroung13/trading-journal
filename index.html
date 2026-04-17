@@ -351,45 +351,61 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 .note-row td{padding:0 !important;border-bottom:1px solid var(--b1)}
 .note-cell{padding:14px 20px;background:var(--cbg2);border-left:3px solid var(--ac);margin:6px 14px;border-radius:6px;font-size:13px;line-height:1.65;color:var(--t1);white-space:pre-wrap}
 
-/* notes insight */
-.insight-card{background:var(--cbg);border:1px solid var(--b1);border-radius:8px;padding:20px}
-.insight-title{font-size:14px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
-.insight-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
-.kw-item{background:var(--cbg2);border:1px solid var(--b1);border-radius:8px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center}
-.kw-label{font-size:13px;font-weight:600;color:var(--t0)}
-.kw-stats{text-align:right;font-size:11px}
-.kw-r{font-weight:700;font-size:14px}
-.kw-count{color:var(--t2);margin-top:2px}
-.kw-bar{height:3px;background:var(--b1);border-radius:2px;margin-top:8px;overflow:hidden}
-.kw-bar-fill{height:100%;border-radius:2px;transition:width .3s}
-.insight-feedback{margin-top:16px;background:var(--cbg2);border:1px solid var(--b1);border-radius:8px;padding:18px 20px}
-.fb-item{padding:10px 0;border-bottom:1px solid var(--b1);font-size:13px;line-height:1.6;color:var(--t1);display:flex;gap:10px}
-.fb-item:last-child{border-bottom:none}
-.fb-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+/* ── Panel (new analysis wrapper) ── */
+.analysis-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+@media(max-width:1100px){.analysis-grid{grid-template-columns:1fr}}
+.panel{background:var(--cbg);border:1px solid var(--b1);border-radius:10px;padding:18px 20px;position:relative;overflow:hidden}
+.panel::before{content:'';position:absolute;left:0;top:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.06),transparent)}
+.panel-hd{margin-bottom:14px}
+.panel-ttl{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700;color:var(--t0);letter-spacing:-0.2px}
+.panel-ic{width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
+.panel-sub{font-size:11px;color:var(--t2);margin-top:4px;letter-spacing:.2px;margin-left:38px}
 
-/* capture rate / dd analysis */
-.cap-section{margin-top:16px}
-.cap-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-@media(max-width:900px){.cap-grid{grid-template-columns:1fr}}
-.cap-card{background:var(--cbg);border:1px solid var(--b1);border-radius:8px;padding:20px}
-.cap-title{font-size:14px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px}
-.cap-sub{font-size:11px;color:var(--t2);margin-bottom:16px}
-.cap-big{font-size:36px;font-weight:800;line-height:1;margin-bottom:4px}
-.cap-detail{font-size:12px;color:var(--t1);line-height:1.7}
-.cap-meter{height:8px;background:var(--b1);border-radius:4px;margin:12px 0;overflow:hidden}
-.cap-meter-fill{height:100%;border-radius:4px;transition:width .4s}
-.dd-bars{display:flex;flex-direction:column;gap:8px;margin-top:8px}
-.dd-row{display:flex;align-items:center;gap:10px}
-.dd-label{font-size:12px;color:var(--t1);width:70px;flex-shrink:0;text-align:right}
-.dd-bar-wrap{flex:1;height:24px;background:var(--b1);border-radius:4px;overflow:hidden;position:relative}
-.dd-bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:8px;font-size:11px;font-weight:600;color:#fff;min-width:fit-content;transition:width .4s}
-.dd-stat{font-size:11px;color:var(--t2);width:90px;flex-shrink:0;text-align:right}
-.cap-feedback{margin-top:14px;padding:12px 14px;background:var(--cbg2);border:1px solid var(--b1);border-radius:8px;font-size:13px;line-height:1.6;color:var(--t1)}
+/* ── DD Zone Analysis ── */
+.dd-stack{display:flex;flex-direction:column;gap:10px}
+.dd-zn{background:var(--cbg2);border:1px solid var(--b1);border-radius:8px;padding:11px 13px;transition:border-color .15s}
+.dd-zn:hover{border-color:var(--b2)}
+.dd-zn.empty{opacity:.45}
+.dd-zn-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;font-size:12px}
+.dd-zn-lbl{display:flex;align-items:center;gap:7px;font-weight:600;color:var(--t0)}
+.dd-zn-dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0;box-shadow:0 0 6px currentColor}
+.dd-zn-rng{color:var(--t2);font-weight:500;font-size:10.5px;margin-left:4px;font-family:'JetBrains Mono',monospace}
+.dd-zn-n{font-size:10.5px;color:var(--t2);font-family:'JetBrains Mono',monospace}
+.dd-zn-bar{height:6px;background:rgba(255,255,255,.04);border-radius:999px;overflow:hidden;margin-bottom:6px}
+.dd-zn-bar-fill{height:100%;border-radius:999px;transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.dd-zn-stats{display:flex;justify-content:space-between;font-size:10.5px;color:var(--t1);font-family:'JetBrains Mono',monospace;letter-spacing:.3px}
+.dd-zn-stats span{display:flex;gap:4px;align-items:center}
+.dd-zn-stats strong{color:var(--t0);font-weight:700}
+.dd-zn-stats strong.pos{color:var(--g)}
+.dd-zn-stats strong.neg{color:var(--r)}
+.dd-zn-stats strong.neu{color:var(--y)}
+.dd-summary{margin-top:12px}
+.dd-sum{padding:10px 12px;border-radius:7px;font-size:12px;line-height:1.55;color:var(--t1);border-left:3px solid var(--ac);background:var(--cbg2)}
+.dd-sum.good{border-left-color:var(--g);background:linear-gradient(90deg,rgba(16,185,129,.08),var(--cbg2))}
+.dd-sum.warn{border-left-color:var(--y);background:linear-gradient(90deg,rgba(245,158,11,.08),var(--cbg2))}
+.dd-sum strong{color:var(--t0);font-weight:700}
+.dd-sum strong.pos{color:var(--g)}
+.dd-sum strong.neg{color:var(--r)}
 
-/* monthly report */
-.mr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
-.mr-card{background:var(--cbg2);border:1px solid var(--b1);border-radius:8px;padding:14px;cursor:pointer;transition:border-color .15s,box-shadow .15s}
-.mr-card:hover{border-color:var(--b2);box-shadow:0 2px 8px rgba(0,0,0,.3)}
+/* ── Setup × Condition Heatmap ── */
+.mx-heat{overflow-x:auto;margin:-4px}
+.mxh-grid{display:grid;gap:6px;padding:4px;min-width:fit-content}
+.mxh-corner{}
+.mxh-col-lbl{font-size:10.5px;color:var(--t2);text-align:center;font-weight:600;padding:6px 4px;letter-spacing:.2px;text-transform:uppercase;align-self:end;word-break:keep-all}
+.mxh-row-lbl{font-size:11.5px;color:var(--t1);font-weight:600;padding:8px 10px;display:flex;align-items:center;background:var(--cbg2);border-radius:6px;border:1px solid var(--b1)}
+.mxh-cell{background:var(--cbg2);border:1px solid var(--b1);border-radius:6px;padding:10px 6px;text-align:center;transition:transform .15s,box-shadow .15s;cursor:default;min-height:54px;display:flex;flex-direction:column;justify-content:center;gap:2px}
+.mxh-cell:hover:not(.empty){transform:translateY(-1px);box-shadow:0 3px 10px rgba(0,0,0,.35);z-index:1}
+.mxh-cell.empty{color:var(--t2);font-size:13px;opacity:.35}
+.mxh-r{font-size:14px;font-weight:800;font-family:'JetBrains Mono',monospace;line-height:1;letter-spacing:-0.3px}
+.mxh-meta{font-size:9.5px;color:var(--t1);font-family:'JetBrains Mono',monospace;letter-spacing:.3px;opacity:.8}
+
+/* ── Monthly Report (upgraded) ── */
+.mr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.mr-card{background:var(--cbg2);border:1px solid var(--b1);border-radius:8px;padding:14px;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .15s;position:relative;overflow:hidden}
+.mr-card::after{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--b2);transition:background .15s}
+.mr-card:hover{border-color:var(--b2);box-shadow:0 2px 10px rgba(0,0,0,.35);transform:translateY(-1px)}
+.mr-card.mr-good::after{background:var(--g)}
+.mr-card.mr-bad::after{background:var(--r)}
 .mr-card.mr-active{border-color:var(--ac);box-shadow:0 0 0 1px var(--ac)}
 .mr-month{font-size:13px;font-weight:700;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
 .mr-r{font-size:18px;font-weight:800}
@@ -429,17 +445,6 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 .mrd-bw-label{color:var(--t2);margin-bottom:4px;font-weight:600}
 .mrd-bw-val{font-size:14px;font-weight:700}
 .mrd-week-chart{height:100px;margin-top:8px}
-
-/* streak behavior */
-.sb-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-@media(max-width:800px){.sb-grid{grid-template-columns:1fr}}
-.sb-card{background:var(--cbg2);border:1px solid var(--b1);border-radius:8px;padding:16px}
-.sb-label{font-size:12px;color:var(--t2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px}
-.sb-val{font-size:20px;font-weight:700;margin-bottom:4px}
-.sb-desc{font-size:11px;color:var(--t1);line-height:1.5}
-
-/* session x setup matrix */
-.mx-wrap{overflow-x:auto;margin-top:10px}
 
 /* ── Phase 2: Calendar Heatmap ── */
 .heatmap-card{background:var(--cbg);border:1px solid var(--b1);border-radius:8px;padding:14px 16px;margin-bottom:14px}
@@ -537,15 +542,6 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 .pb-link{color:var(--ac2);cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px}
 .pb-link:hover{color:var(--t0)}
 @media(max-width:640px){.pb-kpi-row{grid-template-columns:repeat(2,1fr)}.pb-trade-row{grid-template-columns:70px 50px 34px 1fr}.pb-trade-row .pb-r{grid-column:4;text-align:right}}
-.mx-table{width:100%;border-collapse:collapse;font-size:12px}
-.mx-table th{padding:8px 10px;text-align:center;color:var(--t2);font-size:10px;text-transform:uppercase;letter-spacing:.3px;border-bottom:1px solid var(--b1);background:var(--cbg2);font-weight:500}
-.mx-table td{padding:7px 10px;text-align:center;border-bottom:1px solid var(--b1)}
-.mx-table tr:last-child td{border-bottom:none}
-.mx-table td:first-child{text-align:left;font-weight:600;color:var(--t0);white-space:nowrap}
-.mx-cell{display:inline-flex;flex-direction:column;align-items:center;gap:1px}
-.mx-wr{font-weight:700;font-size:12px}
-.mx-n{font-size:9px;color:var(--t2)}
-
 /* buttons */
 .btn{border-radius:4px;border:none;cursor:pointer;font-size:13px;font-weight:510;transition:all .15s;white-space:nowrap;padding:8px 16px}
 .btn-p{background:var(--ac);color:#fff}.btn-p:hover{background:var(--ac2)}
@@ -583,6 +579,16 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
   .qchips{flex-wrap:wrap;gap:5px}
   .qchip{font-size:11px;padding:4px 9px}
   .fsum{flex-wrap:wrap;gap:8px}
+  .analysis-grid{gap:12px}
+  .panel{padding:14px 15px}
+  .panel-ttl{font-size:13px}
+  .panel-sub{font-size:10.5px;margin-left:0;margin-top:6px}
+  .mxh-cell{min-height:48px;padding:8px 4px}
+  .mxh-r{font-size:12.5px}
+  .mxh-meta{font-size:9px}
+  .mxh-col-lbl{font-size:9.5px;padding:4px 2px}
+  .mxh-row-lbl{font-size:10.5px;padding:6px 8px}
+  .mr-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
 }
 @media(max-width:480px){
   .content{padding:13px}
@@ -1026,52 +1032,35 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
           <div class="ch-wrap-sm"><canvas id="ch-dow"></canvas></div>
         </div>
       </div>
-      <!-- CAPTURE RATE & DD ANALYSIS -->
-      <div class="cap-section">
-        <div class="cap-grid">
-          <div class="cap-card">
-            <div class="cap-title">🎯 Capture Rate</div>
-            <div class="cap-sub">Max RR 대비 실제로 가져간 비율 — TP 전략 효율성</div>
-            <div class="cap-big" id="cap-rate">—</div>
-            <div class="cap-meter"><div class="cap-meter-fill" id="cap-meter-fill"></div></div>
-            <div class="cap-detail" id="cap-detail"></div>
-            <div class="cap-feedback" id="cap-feedback"></div>
+      <!-- DD ZONE + MONTHLY + MATRIX (Upgraded) -->
+      <div class="analysis-grid">
+        <div class="panel">
+          <div class="panel-hd">
+            <div class="panel-ttl"><span class="panel-ic" style="background:rgba(244,63,94,.15);color:var(--r)">⤵</span>DD Zone Analysis</div>
+            <div class="panel-sub">역행 깊이 구간별 승률 — 얼마나 반전에서 살아 돌아오는가</div>
           </div>
-          <div class="cap-card">
-            <div class="cap-title">📉 DD Zone Analysis</div>
-            <div class="cap-sub">DD% 구간별 승률 — 역행 깊이와 결과의 상관관계</div>
-            <div class="dd-bars" id="dd-bars"></div>
-            <div class="cap-feedback" id="dd-feedback"></div>
+          <div class="dd-stack" id="dd-stack"></div>
+          <div class="dd-summary" id="dd-summary"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-hd">
+            <div class="panel-ttl"><span class="panel-ic" style="background:rgba(94,106,210,.15);color:var(--ac2)">◈</span>Setup × Condition</div>
+            <div class="panel-sub">어떤 시장 환경에서 어떤 셋업이 유리한가</div>
           </div>
+          <div class="mx-heat" id="mx-heat"></div>
         </div>
       </div>
-      <!-- MONTHLY REPORT CARD -->
-      <div class="insight-card" style="margin-top:16px">
-        <div class="insight-title">📅 Monthly Report Card</div>
+
+      <!-- MONTHLY CARDS -->
+      <div class="panel" style="margin-top:16px">
+        <div class="panel-hd">
+          <div class="panel-ttl"><span class="panel-ic" style="background:rgba(16,185,129,.15);color:var(--g)">📆</span>Monthly Performance</div>
+          <div class="panel-sub">월별 성적 — 클릭하여 상세 분석 보기</div>
+        </div>
         <div class="mr-grid" id="mr-grid"></div>
       </div>
-      <!-- STREAK BEHAVIOR -->
-      <div class="cap-section" style="margin-top:16px">
-        <div class="cap-grid">
-          <div class="cap-card">
-            <div class="cap-title">🔥 Post-Streak Behavior</div>
-            <div class="cap-sub">2연패 후 다음 거래의 품질과 결과</div>
-            <div class="sb-grid" id="sb-streak"></div>
-            <div class="cap-feedback" id="sb-feedback"></div>
-          </div>
-          <div class="cap-card">
-            <div class="cap-title">🔀 Setup × Condition Matrix</div>
-            <div class="cap-sub">어떤 시장 환경에서 어떤 셋업이 잘 작동하는지</div>
-            <div class="mx-wrap" id="mx-wrap"></div>
-          </div>
-        </div>
-      </div>
-      <!-- NOTES INSIGHT -->
-      <div class="insight-card" style="margin-top:16px">
-        <div class="insight-title">📝 Notes Insight</div>
-        <div class="insight-grid" id="kw-grid"></div>
-        <div class="insight-feedback" id="note-feedback"></div>
-      </div>
+
     </div>
 
   </div>
@@ -1959,13 +1948,6 @@ function renderInsightCards(T){
     cards.push({kind:b.value>=0?'good':'bad',ic:b.label==='Long'?'📈':'📉',lbl:'Best Direction',name:b.label,metric:fR(b.value),metricCls:b.value>=0?'pos':'neg',sub:`${b.count} trades · Avg R`,click:`openPlaybook('direction','${esc(b.label)}')`});
   }
 
-  // Capture Rate
-  const capT=T.filter(t=>t.maxRR>0);
-  if(capT.length){
-    const cap=capT.reduce((a,t)=>a+Math.max(0,getR(t))/t.maxRR,0)/capT.length;
-    cards.push({kind:cap>=.5?'good':cap>=.3?'neutral':'bad',ic:'🎣',lbl:'Capture Rate',name:'평균 목표 달성도',metric:(cap*100).toFixed(1)+'%',metricCls:cap>=.5?'pos':cap>=.3?'neu':'neg',sub:`${capT.length} trades w/ max RR`});
-  }
-
   host.innerHTML=cards.map(c=>`
     <div class="ins-card ${c.kind}" ${c.click?`onclick="${c.click}" style="cursor:pointer"`:''}>
       <div class="ins-hd"><span class="ins-ic">${c.ic}</span><div class="ins-lbl">${c.lbl}${c.click?' <span style="font-size:9px;opacity:.6;margin-left:4px">▸</span>':''}</div></div>
@@ -2031,12 +2013,9 @@ function renderAnalytics(){
   renderBarChart('ch-exit',groupAvgR(T,'exitStrategy'),'Avg R',true);
   renderBarChart('ch-direction',groupWinRate(T,'direction'),'Win Rate %');
   renderBarChart('ch-dow',groupWinRate(T,'dayOfWeek'),'Win Rate %');
-  renderCaptureRate(T);
   renderDDAnalysis(T);
   renderMonthlyReport(T);
-  renderStreakBehavior(T);
   renderSetupConditionMatrix(T);
-  renderNotesInsight(T);
 }
 
 // ══════════════════════════════════════════════════
@@ -2492,154 +2471,71 @@ function renderRDistribution(T){
 }
 
 // ══════════════════════════════════════════════════
-// CAPTURE RATE & DD ANALYSIS
+// DD ZONE ANALYSIS (Upgraded)
 // ══════════════════════════════════════════════════
-function renderCaptureRate(T){
-  // only trades with both maxRR and rr
-  const valid=T.filter(t=>t.maxRR!=null&&t.maxRR>0&&t.rr!=null&&typeof t.rr==='number');
-  const capEl=document.getElementById('cap-rate');
-  const meterEl=document.getElementById('cap-meter-fill');
-  const detailEl=document.getElementById('cap-detail');
-  const fbEl=document.getElementById('cap-feedback');
-
-  if(valid.length<2){
-    capEl.textContent='—';capEl.style.color='var(--t2)';
-    meterEl.style.width='0%';
-    detailEl.innerHTML='<span style="color:var(--t2)">Max RR과 RR 데이터가 있는 거래가 2건 이상 필요합니다</span>';
-    fbEl.style.display='none';
-    return;
-  }
-
-  const rates=valid.map(t=>{
-    const actual=getR(t);
-    return{maxRR:t.maxRR,actual,capture:actual>0?(actual/t.maxRR*100):0,result:t.result,asset:t.asset||'',date:t.date||''};
-  });
-
-  // wins only for capture rate (losses are -1R by definition)
-  const wins=rates.filter(r=>r.result==='W');
-  const avgCapture=wins.length?wins.reduce((s,r)=>s+r.capture,0)/wins.length:0;
-  const avgLeftOnTable=wins.length?wins.reduce((s,r)=>s+(r.maxRR-r.actual),0)/wins.length:0;
-  const totalLeft=wins.reduce((s,r)=>s+(r.maxRR-r.actual),0);
-
-  // color based on capture rate
-  const capColor=avgCapture>=75?'var(--g)':avgCapture>=50?'var(--y)':'var(--r)';
-  capEl.textContent=(avgCapture>=100?Math.round(avgCapture):avgCapture.toFixed(1))+'%';
-  capEl.style.color=capColor;
-  meterEl.style.width=Math.min(100,avgCapture).toFixed(1)+'%';
-  meterEl.style.background=capColor;
-
-  detailEl.innerHTML=`
-    승리 거래 ${wins.length}건 기준<br>
-    평균 Max RR: <strong>${(wins.reduce((s,r)=>s+r.maxRR,0)/wins.length).toFixed(2)}R</strong> → 실제 평균: <strong>${(wins.reduce((s,r)=>s+r.actual,0)/wins.length).toFixed(2)}R</strong><br>
-    거래당 평균 <strong style="color:var(--r)">${avgLeftOnTable.toFixed(2)}R</strong> 놓침 · 총 <strong style="color:var(--r)">${totalLeft.toFixed(2)}R</strong> 미확보
-  `;
-
-  // feedback
-  fbEl.style.display='';
-  let fb='';
-  if(avgCapture>=75){
-    fb='✅ TP 전략이 효율적입니다. 수익의 대부분을 가져가고 있습니다.';
-  }else if(avgCapture>=50){
-    fb='⚠️ Max RR의 절반 정도만 캡처하고 있습니다. TP를 조금 더 늘리거나, 부분 청산 전략을 고려해보세요.';
-  }else{
-    fb='🔴 수익의 상당 부분을 놓치고 있습니다. 조기 청산 습관이 있는지 점검해보세요. Trail Stop이나 부분 청산으로 개선할 수 있습니다.';
-  }
-  // worst capture trade
-  if(wins.length){
-    const worst=wins.reduce((a,b)=>a.capture<b.capture?a:b);
-    if(worst.capture<50){
-      fb+=`<br><br>📌 최악의 캡처: ${worst.date.slice(0,10)} ${worst.asset} — Max ${worst.maxRR.toFixed(1)}R 중 ${worst.actual.toFixed(2)}R만 확보 (${worst.capture.toFixed(0)}%)`;
-    }
-  }
-  fbEl.innerHTML=fb;
-}
-
 function renderDDAnalysis(T){
-  // DD% = dd/sl * 100 (or use drawdown field directly)
+  const stackEl=document.getElementById('dd-stack');
+  const sumEl=document.getElementById('dd-summary');
+  if(!stackEl)return;
   const valid=T.filter(t=>{
-    // try drawdown field first (already percentage)
-    if(t.drawdown!=null&&typeof t.drawdown==='string'){
-      const pct=parseFloat(t.drawdown);
-      if(!isNaN(pct))return true;
-    }
-    // calculate from dd and sl
+    if(t.drawdown!=null&&typeof t.drawdown==='string'){if(!isNaN(parseFloat(t.drawdown)))return true}
     if(t.dd!=null&&t.sl!=null&&t.sl>0)return true;
     return false;
   });
-
-  const barsEl=document.getElementById('dd-bars');
-  const fbEl=document.getElementById('dd-feedback');
-
   if(valid.length<3){
-    barsEl.innerHTML='<div style="color:var(--t2);font-size:13px;padding:10px">DD 데이터가 있는 거래가 3건 이상 필요합니다</div>';
-    fbEl.style.display='none';
-    return;
+    stackEl.innerHTML='<div style="color:var(--t2);font-size:12px;padding:20px;text-align:center">DD 데이터가 있는 거래 3건 이상 필요</div>';
+    sumEl.innerHTML='';return;
   }
-
-  // get DD percentage for each trade
   const trades=valid.map(t=>{
-    let ddPct;
-    if(t.drawdown!=null&&typeof t.drawdown==='string'){
-      ddPct=parseFloat(t.drawdown);
-    }
-    if((ddPct==null||isNaN(ddPct))&&t.dd!=null&&t.sl!=null&&t.sl>0){
-      ddPct=(t.dd/t.sl)*100;
-    }
-    return{ddPct,result:t.result,r:getR(t)};
-  }).filter(t=>!isNaN(t.ddPct));
-
-  // group into zones
+    let dd;
+    if(t.drawdown!=null&&typeof t.drawdown==='string')dd=parseFloat(t.drawdown);
+    if((dd==null||isNaN(dd))&&t.dd!=null&&t.sl>0)dd=(t.dd/t.sl)*100;
+    return{dd,result:t.result,r:getR(t)};
+  }).filter(t=>!isNaN(t.dd));
   const zones=[
-    {label:'0-25%',min:0,max:25,color:'var(--g)'},
-    {label:'25-50%',min:25,max:50,color:'var(--y)'},
-    {label:'50-75%',min:50,max:75,color:'#f97316'},
-    {label:'75-100%',min:75,max:100,color:'var(--r)'},
-    {label:'100%',min:100,max:Infinity,color:'#991b1b'}
+    {label:'Shallow',range:'0–25%',min:0,max:25,accent:'#10b981'},
+    {label:'Moderate',range:'25–50%',min:25,max:50,accent:'#f59e0b'},
+    {label:'Deep',range:'50–75%',min:50,max:75,accent:'#f97316'},
+    {label:'Critical',range:'75–100%',min:75,max:100,accent:'#f43f5e'},
+    {label:'Full SL',range:'100%',min:100,max:Infinity,accent:'#991b1b'}
   ];
-
-  const zoneData=zones.map(z=>{
-    const inZone=trades.filter(t=>t.ddPct>=z.min&&t.ddPct<z.max);
-    const wins=inZone.filter(t=>t.result==='W').length;
-    const wr=inZone.length?Math.round(wins/inZone.length*100):0;
-    const avgR=inZone.length?(inZone.reduce((s,t)=>s+t.r,0)/inZone.length):0;
-    return{...z,count:inZone.length,wins,wr,avgR};
+  const zd=zones.map(z=>{
+    const inZ=trades.filter(t=>t.dd>=z.min&&t.dd<z.max);
+    const w=inZ.filter(t=>t.result==='W').length;
+    const wr=inZ.length?w/inZ.length*100:0;
+    const avgR=inZ.length?inZ.reduce((s,t)=>s+t.r,0)/inZ.length:0;
+    return{...z,n:inZ.length,w,wr,avgR};
   });
-
-  const maxCount=Math.max(...zoneData.map(z=>z.count),1);
-
-  barsEl.innerHTML=zoneData.map(z=>{
-    const barW=z.count?Math.max(z.count/maxCount*100,8):0;
-    const wrColor=z.wr>=50?'var(--g)':z.wr>=35?'var(--y)':'var(--r)';
-    return`<div class="dd-row">
-      <div class="dd-label">${z.label}</div>
-      <div class="dd-bar-wrap">
-        <div class="dd-bar-fill" style="width:${barW}%;background:${z.color}">${z.count}건</div>
+  const maxN=Math.max(...zd.map(z=>z.n),1);
+  stackEl.innerHTML=zd.map(z=>{
+    if(!z.n)return `<div class="dd-zn empty"><div class="dd-zn-hd"><div class="dd-zn-lbl">${z.label}<span class="dd-zn-rng">${z.range}</span></div><div class="dd-zn-n">0건</div></div></div>`;
+    const barW=(z.n/maxN)*100;
+    const wrCls=z.wr>=50?'pos':z.wr>=35?'neu':'neg';
+    return `<div class="dd-zn">
+      <div class="dd-zn-hd">
+        <div class="dd-zn-lbl"><span class="dd-zn-dot" style="background:${z.accent}"></span>${z.label}<span class="dd-zn-rng">${z.range}</span></div>
+        <div class="dd-zn-n">${z.n}건</div>
       </div>
-      <div class="dd-stat">승률 <strong style="color:${wrColor}">${z.wr}%</strong> · ${fR(z.avgR)}</div>
+      <div class="dd-zn-bar"><div class="dd-zn-bar-fill" style="width:${barW}%;background:linear-gradient(90deg,${z.accent}aa,${z.accent})"></div></div>
+      <div class="dd-zn-stats">
+        <span>승률 <strong class="${wrCls}">${z.wr.toFixed(0)}%</strong></span>
+        <span>Avg <strong style="color:${z.avgR>=0?'var(--g)':'var(--r)'}">${fR(z.avgR)}</strong></span>
+      </div>
     </div>`;
   }).join('');
-
-  // feedback
-  fbEl.style.display='';
-  const lowDD=zoneData[0].count+zoneData[1].count;
-  const highDD=zoneData[2].count+zoneData[3].count+zoneData[4].count;
-  const lowDDWr=lowDD?Math.round((zoneData[0].wins+zoneData[1].wins)/lowDD*100):0;
-  const highDDWr=highDD?Math.round((zoneData[2].wins+zoneData[3].wins+(zoneData[4]?.wins||0))/highDD*100):0;
-  const slHit=zoneData[4];
-
-  let fb='';
-  if(lowDD&&highDD){
-    fb=`DD 50% 미만(${lowDD}건) 승률: <strong style="color:${lowDDWr>=50?'var(--g)':'var(--r)'}">${lowDDWr}%</strong> vs DD 50% 이상(${highDD}건) 승률: <strong style="color:${highDDWr>=50?'var(--g)':'var(--r)'}">${highDDWr}%</strong>`;
-    if(lowDDWr>highDDWr+15){
-      fb+='<br>⚠️ 역행이 깊어질수록 승률이 크게 떨어집니다. 50% 이상 역행 시 조기 손절을 고려해보세요.';
-    }else if(highDDWr>=lowDDWr){
-      fb+='<br>✅ 역행이 깊어도 승률이 유지됩니다. SL 위치가 잘 잡혀있습니다.';
-    }
+  // summary
+  const low=zd[0].n+zd[1].n,high=zd[2].n+zd[3].n+zd[4].n;
+  const lowWr=low?((zd[0].w+zd[1].w)/low*100):0;
+  const highWr=high?((zd[2].w+zd[3].w+zd[4].w)/high*100):0;
+  const slPct=trades.length?(zd[4].n/trades.length*100):0;
+  let msg='',tone='neu';
+  if(low&&high){
+    if(lowWr>highWr+15){msg=`얕은 DD (< 50%) 승률 <strong class="pos">${lowWr.toFixed(0)}%</strong> vs 깊은 DD <strong class="neg">${highWr.toFixed(0)}%</strong> — 50% 이상 역행 시 조기 손절 검토`;tone='warn'}
+    else if(highWr>=lowWr){msg=`깊은 DD에서도 승률 <strong class="pos">${highWr.toFixed(0)}%</strong> 유지 — SL 위치 적절`;tone='good'}
+    else{msg=`DD 50% 미만 <strong>${lowWr.toFixed(0)}%</strong> · 이상 <strong>${highWr.toFixed(0)}%</strong>`}
   }
-  if(slHit&&slHit.count>0){
-    fb+=`<br>📌 SL 100% 도달(풀 손절): ${slHit.count}건 — 전체의 ${Math.round(slHit.count/trades.length*100)}%`;
-  }
-  fbEl.innerHTML=fb;
+  if(zd[4].n){msg+=` · Full SL <strong class="neg">${zd[4].n}건 (${slPct.toFixed(0)}%)</strong>`}
+  sumEl.innerHTML=msg?`<div class="dd-sum ${tone}">${msg}</div>`:'';
 }
 
 // ══════════════════════════════════════════════════
@@ -2682,7 +2578,8 @@ function renderMonthlyReport(T){
     const moNames=['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     const label=moNames[parseInt(mo)]+' '+yr;
 
-    return`<div class="mr-card" data-month="${m}" onclick="toggleMonthDetail('${m}',this)">
+    const accentCls=s.tR>0.5?'mr-good':s.tR<-0.5?'mr-bad':'';
+    return`<div class="mr-card ${accentCls}" data-month="${m}" onclick="toggleMonthDetail('${m}',this)">
       <div class="mr-month">
         <span>${label}</span>
         <span class="mr-trend ${trendCls}">${trendIcon} ${trendTxt}</span>
@@ -2893,262 +2790,55 @@ function closeMonthDetail(e){
 }
 
 // ══════════════════════════════════════════════════
-// STREAK BEHAVIOR ANALYSIS
-// ══════════════════════════════════════════════════
-function renderStreakBehavior(T){
-  const streakDiv=document.getElementById('sb-streak');
-  const fbDiv=document.getElementById('sb-feedback');
-
-  if(T.length<5){
-    streakDiv.innerHTML='<div style="color:var(--t2);font-size:13px;grid-column:1/-1">거래 5건 이상 필요합니다</div>';
-    fbDiv.style.display='none';
-    return;
-  }
-
-  // find trades after 2+ consecutive losses
-  const afterStreak=[];
-  const afterNormal=[];
-  let loseStreak=0;
-
-  for(let i=0;i<T.length;i++){
-    if(i>0){
-      if(loseStreak>=2){
-        afterStreak.push(T[i]);
-      }else{
-        afterNormal.push(T[i]);
-      }
-    }
-    if(T[i].result==='L')loseStreak++;
-    else loseStreak=0;
-  }
-
-  const asStats=stats(afterStreak);
-  const anStats=stats(afterNormal);
-
-  const asWrColor=asStats.wr>=0.5?'var(--g)':asStats.wr>=0.35?'var(--y)':'var(--r)';
-  const anWrColor=anStats.wr>=0.5?'var(--g)':anStats.wr>=0.35?'var(--y)':'var(--r)';
-  const asRColor=asStats.aR>=0?'var(--g)':'var(--r)';
-  const anRColor=anStats.aR>=0?'var(--g)':'var(--r)';
-
-  streakDiv.innerHTML=`
-    <div class="sb-card">
-      <div class="sb-label">2연패 후 거래</div>
-      <div class="sb-val" style="color:${asRColor}">${afterStreak.length?fR(asStats.aR):'—'}</div>
-      <div class="sb-desc">
-        ${afterStreak.length}건 · 승률 <strong style="color:${asWrColor}">${afterStreak.length?(asStats.wr*100).toFixed(0)+'%':'—'}</strong>
-      </div>
-    </div>
-    <div class="sb-card">
-      <div class="sb-label">일반 거래</div>
-      <div class="sb-val" style="color:${anRColor}">${afterNormal.length?fR(anStats.aR):'—'}</div>
-      <div class="sb-desc">
-        ${afterNormal.length}건 · 승률 <strong style="color:${anWrColor}">${afterNormal.length?(anStats.wr*100).toFixed(0)+'%':'—'}</strong>
-      </div>
-    </div>`;
-
-  fbDiv.style.display='';
-  let fb='';
-  if(afterStreak.length>=3){
-    if(asStats.aR<anStats.aR-0.3){
-      fb='⚠️ 2연패 후 거래 성과가 일반 거래보다 확실히 나쁩니다. 연패 후 당일 종료 규칙을 철저히 지키세요.';
-    }else if(asStats.aR>=anStats.aR){
-      fb='✅ 연패 후에도 안정적으로 거래하고 있습니다. 감정 관리가 잘 되고 있습니다.';
-    }else{
-      fb='📊 연패 후 약간의 성과 저하가 있습니다. 데이터가 더 쌓이면 패턴이 명확해질 수 있습니다.';
-    }
-  }else if(afterStreak.length>0){
-    fb='데이터가 부족합니다. 더 많은 거래가 쌓이면 정확한 분석이 가능합니다.';
-  }else{
-    fb='아직 2연패 이상의 기록이 없습니다.';
-  }
-  fbDiv.innerHTML=fb;
-}
-
-// ══════════════════════════════════════════════════
-// SESSION × SETUP MATRIX
+// SETUP × CONDITION HEATMAP (Upgraded)
 // ══════════════════════════════════════════════════
 function renderSetupConditionMatrix(T){
-  const wrap=document.getElementById('mx-wrap');
+  const wrap=document.getElementById('mx-heat');
+  if(!wrap)return;
   const conditions=['Expansion','Consolidation','Seek & Destroy'];
   const setupSet=new Set();
   T.forEach(t=>{if(t.setup&&t.condition)setupSet.add(t.setup)});
   const setups=[...setupSet].sort();
-
   if(!setups.length||!T.filter(t=>t.setup&&t.condition).length){
-    wrap.innerHTML='<div style="color:var(--t2);font-size:13px;padding:10px">Setup + Condition 데이터가 필요합니다</div>';
+    wrap.innerHTML='<div style="color:var(--t2);font-size:12px;padding:20px;text-align:center">Setup + Condition 데이터 필요</div>';
     return;
   }
-
   // build matrix
   const mx={};
-  conditions.forEach(co=>{mx[co]={};setups.forEach(su=>{mx[co][su]={w:0,n:0,sum:0}})});
+  setups.forEach(su=>{mx[su]={};conditions.forEach(co=>{mx[su][co]={w:0,n:0,sum:0}})});
   T.forEach(t=>{
-    if(!t.setup||!t.condition)return;
-    if(!mx[t.condition])return;
-    if(!mx[t.condition][t.setup])mx[t.condition][t.setup]={w:0,n:0,sum:0};
-    mx[t.condition][t.setup].n++;
-    mx[t.condition][t.setup].sum+=getR(t);
-    if(t.result==='W')mx[t.condition][t.setup].w++;
+    if(!t.setup||!t.condition||!mx[t.setup]||!mx[t.setup][t.condition])return;
+    mx[t.setup][t.condition].n++;
+    mx[t.setup][t.condition].sum+=getR(t);
+    if(t.result==='W')mx[t.setup][t.condition].w++;
   });
-
-  let html='<table class="mx-table"><thead><tr><th>Setup</th>';
-  conditions.forEach(c=>{html+=`<th>${c}</th>`});
-  html+='</tr></thead><tbody>';
-
-  setups.forEach(su=>{
-    html+=`<tr><td>${su}</td>`;
-    conditions.forEach(co=>{
-      const d=mx[co][su];
-      if(!d||!d.n){
-        html+='<td style="color:var(--t2)">—</td>';
-      }else{
-        const wr=Math.round(d.w/d.n*100);
-        const avgR=d.sum/d.n;
-        const wrColor=wr>=50?'var(--g)':wr>=35?'var(--y)':'var(--r)';
-        html+=`<td><div class="mx-cell"><span class="mx-wr" style="color:${wrColor}">${wr}%</span><span class="mx-n">${d.n}건 · ${fR(avgR)}</span></div></td>`;
-      }
-    });
-    html+='</tr>';
-  });
-  html+='</tbody></table>';
-  wrap.innerHTML=html;
-}
-
-// ══════════════════════════════════════════════════
-// NOTES INSIGHT
-// ══════════════════════════════════════════════════
-const TRADING_KW=[
-  'FVG','OB','SMT','BOS','CHOCH','MSS','IDM','EQH','EQL','SSL','BSL',
-  'Liquidity','Sweep','Inducement','Displacement','Mitigation',
-  'Asia','LO','NY','LC','London',
-  'Daily','H4','H1','15M','5M','1M','HTF','LTF',
-  '역추세','추세','순방향','역방향',
-  '세션','확장','통합','레인지','박스','미들',
-  '타겟','타점','진입','손절','익절',
-  'Good Trade','Bad Trade',
-  'FOMO','오버트레이딩','감정','조급','인내',
-  'SMT Divergence','Premium','Discount'
-];
-
-function extractKeywords(text){
-  if(!text)return[];
-  const found=[];
-  const upper=text.toUpperCase();
-  TRADING_KW.forEach(kw=>{
-    const kwUp=kw.toUpperCase();
-    // word boundary check for short keywords
-    if(kw.length<=2){
-      const regex=new RegExp('\\b'+kwUp.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\b');
-      if(regex.test(upper))found.push(kw);
-    } else {
-      if(upper.includes(kwUp))found.push(kw);
-    }
-  });
-  return found;
-}
-
-function renderNotesInsight(T){
-  const withNotes=T.filter(t=>t.notes&&t.notes.trim());
-  const kwGrid=document.getElementById('kw-grid');
-  const fbDiv=document.getElementById('note-feedback');
-
-  if(!withNotes.length){
-    kwGrid.innerHTML='<div style="color:var(--t2);font-size:13px;padding:10px">노트가 있는 거래가 없습니다</div>';
-    fbDiv.innerHTML='';
-    return;
-  }
-
-  // keyword frequency + R mapping
-  const kwMap={};
-  withNotes.forEach(t=>{
-    const kws=extractKeywords(t.notes);
-    kws.forEach(kw=>{
-      if(!kwMap[kw])kwMap[kw]={count:0,totalR:0,wins:0,losses:0,trades:[]};
-      kwMap[kw].count++;
-      kwMap[kw].totalR+=getR(t);
-      if(t.result==='W')kwMap[kw].wins++;
-      if(t.result==='L')kwMap[kw].losses++;
-      kwMap[kw].trades.push(t);
-    });
-  });
-
-  // sort by frequency
-  const sorted=Object.entries(kwMap).sort((a,b)=>b[1].count-a[1].count);
-  const maxCount=sorted.length?sorted[0][1].count:1;
-
-  if(!sorted.length){
-    kwGrid.innerHTML='<div style="color:var(--t2);font-size:13px;padding:10px">인식된 트레이딩 키워드가 없습니다</div>';
-    fbDiv.innerHTML='';
-    return;
-  }
-
-  // render keyword cards
-  kwGrid.innerHTML=sorted.map(([kw,d])=>{
-    const avgR=d.totalR/d.count;
-    const wr=d.count>0?Math.round(d.wins/d.count*100):0;
-    const rc=avgR>=0?'var(--g)':'var(--r)';
-    const pct=Math.round(d.count/maxCount*100);
-    return`<div class="kw-item">
-      <div>
-        <div class="kw-label">${kw}</div>
-        <div class="kw-bar"><div class="kw-bar-fill" style="width:${pct}%;background:${rc}"></div></div>
-      </div>
-      <div class="kw-stats">
-        <div class="kw-r" style="color:${rc}">${fR(avgR)}</div>
-        <div class="kw-count">${d.count}건 · 승률 ${wr}%</div>
-      </div>
+  // color helper — avg R → green intensity (>0), red intensity (<0)
+  const allR=[];
+  setups.forEach(su=>conditions.forEach(co=>{const d=mx[su][co];if(d.n)allR.push(d.sum/d.n)}));
+  const maxAbs=allR.length?Math.max(...allR.map(r=>Math.abs(r)),0.5):1;
+  const cell=(d)=>{
+    if(!d||!d.n)return `<div class="mxh-cell empty">—</div>`;
+    const avgR=d.sum/d.n;
+    const wr=d.w/d.n*100;
+    const intensity=Math.min(1,Math.abs(avgR)/maxAbs);
+    const base=avgR>=0?'16,185,129':'244,63,94';
+    const bg=`rgba(${base},${(0.12+intensity*0.58).toFixed(3)})`;
+    const border=`rgba(${base},${(0.3+intensity*0.5).toFixed(3)})`;
+    return `<div class="mxh-cell" style="background:${bg};border-color:${border}">
+      <div class="mxh-r" style="color:${avgR>=0?'#10b981':'#f43f5e'}">${fR(avgR)}</div>
+      <div class="mxh-meta">${wr.toFixed(0)}% · ${d.n}건</div>
     </div>`;
-  }).join('');
-
-  // generate auto-feedback
-  const feedbacks=[];
-  const allS=stats(T);
-
-  // 1. best/worst keywords (min 2 trades)
-  const qualified=sorted.filter(([,d])=>d.count>=2);
-  if(qualified.length){
-    const best=qualified.reduce((a,b)=>(b[1].totalR/b[1].count>a[1].totalR/a[1].count)?b:a);
-    const worst=qualified.reduce((a,b)=>(b[1].totalR/b[1].count<a[1].totalR/a[1].count)?b:a);
-    const bestAvg=(best[1].totalR/best[1].count);
-    const worstAvg=(worst[1].totalR/worst[1].count);
-    if(bestAvg>0)feedbacks.push({icon:'🟢',text:`<strong>${best[0]}</strong> 키워드가 언급된 거래의 평균 R이 <strong style="color:var(--g)">${fR(bestAvg)}</strong>로 가장 높습니다. (${best[1].count}건, 승률 ${Math.round(best[1].wins/best[1].count*100)}%)`});
-    if(worstAvg<0)feedbacks.push({icon:'🔴',text:`<strong>${worst[0]}</strong> 키워드가 언급된 거래의 평균 R이 <strong style="color:var(--r)">${fR(worstAvg)}</strong>로 가장 낮습니다. (${worst[1].count}건) — 이 패턴 사용 시 주의가 필요합니다.`});
-  }
-
-  // 2. emotional keywords impact
-  const emoKws=['FOMO','오버트레이딩','감정','조급'];
-  const emoData=emoKws.map(k=>kwMap[k]).filter(Boolean);
-  if(emoData.length){
-    const emoTotal=emoData.reduce((s,d)=>s+d.totalR,0);
-    const emoCount=emoData.reduce((s,d)=>s+d.count,0);
-    if(emoCount>=2){
-      const emoAvg=emoTotal/emoCount;
-      feedbacks.push({icon:'😰',text:`감정 관련 키워드(FOMO, 조급, 감정 등)가 언급된 ${emoCount}건의 평균 R은 <strong style="color:${emoAvg>=0?'var(--g)':'var(--r)'}">${fR(emoAvg)}</strong>입니다. ${emoAvg<0?'감정적 매매가 손실의 원인일 수 있습니다.':'감정을 인지하면서도 좋은 결과를 내고 있습니다.'}`});
-    }
-  }
-
-  // 3. "Good Trade" vs "Bad Trade"
-  if(kwMap['Good Trade']){
-    const gt=kwMap['Good Trade'];
-    const gtAvg=gt.totalR/gt.count;
-    feedbacks.push({icon:'⭐',text:`스스로 "Good Trade"로 평가한 거래 ${gt.count}건의 평균 R은 <strong style="color:${gtAvg>=0?'var(--g)':'var(--r)'}">${fR(gtAvg)}</strong>입니다. ${gtAvg>0?'좋은 매매를 정확히 인지하고 있습니다!':'좋은 매매라고 판단했지만 결과가 따라주지 않았습니다. 판단 기준을 재검토해보세요.'}`});
-  }
-
-  // 4. trend vs counter-trend
-  if(kwMap['역추세']&&kwMap['역추세'].count>=2){
-    const ct=kwMap['역추세'];
-    const ctAvg=ct.totalR/ct.count;
-    feedbacks.push({icon:'↩️',text:`역추세 매매 ${ct.count}건의 평균 R은 <strong style="color:${ctAvg>=0?'var(--g)':'var(--r)'}">${fR(ctAvg)}</strong>입니다. ${ctAvg<0?'역추세 매매를 줄이는 것을 고려해보세요.':'역추세에서도 수익을 내고 있습니다.'}`});
-  }
-
-  // 5. notes coverage
-  const coverage=Math.round(withNotes.length/T.length*100);
-  feedbacks.push({icon:'📊',text:`전체 ${T.length}건 중 ${withNotes.length}건(${coverage}%)에 노트가 있습니다. ${coverage<50?'더 많은 거래에 노트를 남기면 분석 정확도가 높아집니다.':'꾸준히 기록하고 있습니다!'}`});
-
-  fbDiv.innerHTML=feedbacks.length?
-    '<div style="font-size:12px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;font-weight:500">Auto Feedback</div>'+
-    feedbacks.map(f=>`<div class="fb-item"><span class="fb-icon">${f.icon}</span><span>${f.text}</span></div>`).join('')
-    :'';
+  };
+  // build grid
+  let html='<div class="mxh-grid" style="grid-template-columns:minmax(140px,1.5fr) repeat('+conditions.length+',1fr)">';
+  html+='<div class="mxh-corner"></div>';
+  conditions.forEach(co=>{html+=`<div class="mxh-col-lbl">${co}</div>`});
+  setups.forEach(su=>{
+    html+=`<div class="mxh-row-lbl" title="${su}">${su}</div>`;
+    conditions.forEach(co=>{html+=cell(mx[su][co])});
+  });
+  html+='</div>';
+  wrap.innerHTML=html;
 }
 
 // ══════════════════════════════════════════════════
