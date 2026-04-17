@@ -24,18 +24,67 @@
 body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--mbg);color:var(--t0);min-height:100vh;font-size:14px;font-feature-settings:'cv01','ss03';-webkit-font-smoothing:antialiased}
 
 /* ── PASSWORD SCREEN ── */
-#lock-screen{position:fixed;inset:0;background:var(--mbg);z-index:9999;display:flex;align-items:center;justify-content:center}
+/* ════ LOCK SCREEN (Trading Terminal) ════ */
+#lock-screen{position:fixed;inset:0;background:radial-gradient(ellipse at top,#0c0e1a 0%,#06070b 55%,#000 100%);z-index:9999;display:flex;align-items:center;justify-content:center;overflow:hidden}
 #lock-screen.hidden{display:none}
-.lock-box{background:var(--sbg);border:1px solid var(--b1);border-radius:12px;padding:40px;width:90%;max-width:380px;text-align:center}
-.lock-icon{font-size:40px;margin-bottom:16px}
-.lock-title{font-size:20px;font-weight:700;margin-bottom:6px}
-.lock-sub{font-size:13px;color:var(--t2);margin-bottom:24px}
-.lock-input{width:100%;background:var(--cbg2);border:1px solid var(--b1);color:var(--t0);padding:12px 16px;border-radius:6px;font-size:15px;outline:none;text-align:center;letter-spacing:2px;margin-bottom:14px;font-family:'Inter',system-ui,sans-serif}
-.lock-input:focus{border-color:var(--ac)}
-.lock-btn{width:100%;background:var(--ac);color:#fff;border:none;padding:12px;border-radius:4px;font-size:14px;font-weight:510;cursor:pointer;transition:background .15s;font-family:'Inter',system-ui,sans-serif}
-.lock-btn:hover{background:var(--ac2)}
-.lock-err{color:var(--r);font-size:12px;margin-top:10px;min-height:18px}
-.lock-hint{color:var(--t2);font-size:11px;margin-top:16px}
+#lock-screen.fadeout{animation:lockFade .45s ease-out forwards}
+@keyframes lockFade{from{opacity:1}to{opacity:0;transform:scale(1.02)}}
+/* animated grid background */
+#lock-screen::before{content:'';position:absolute;inset:-50%;background:
+  linear-gradient(rgba(94,106,210,.04) 1px,transparent 1px) 0 0/36px 36px,
+  linear-gradient(90deg,rgba(94,106,210,.04) 1px,transparent 1px) 0 0/36px 36px;
+  animation:gridDrift 20s linear infinite;pointer-events:none}
+@keyframes gridDrift{from{transform:translate(0,0)}to{transform:translate(36px,36px)}}
+/* scanlines */
+#lock-screen::after{content:'';position:absolute;inset:0;background:
+  repeating-linear-gradient(0deg,rgba(255,255,255,.015) 0 1px,transparent 1px 3px);
+  pointer-events:none;mix-blend-mode:overlay}
+/* glowing blobs */
+.lock-glow{position:absolute;width:520px;height:520px;border-radius:50%;filter:blur(120px);opacity:.35;pointer-events:none;animation:glowPulse 7s ease-in-out infinite}
+.lock-glow.a{background:#5e6ad2;top:-140px;left:-140px}
+.lock-glow.b{background:#10b981;bottom:-160px;right:-160px;animation-delay:-3.5s}
+@keyframes glowPulse{0%,100%{opacity:.28;transform:scale(1)}50%{opacity:.42;transform:scale(1.08)}}
+/* chart line svg background */
+.lock-chart{position:absolute;inset:0;width:100%;height:100%;opacity:.18;pointer-events:none}
+.lock-chart path{stroke:#5e6ad2;stroke-width:1.4;fill:none;stroke-dasharray:6 4;animation:dashShift 18s linear infinite}
+.lock-chart path.g2{stroke:#10b981;opacity:.6;animation-duration:26s;animation-direction:reverse}
+@keyframes dashShift{from{stroke-dashoffset:0}to{stroke-dashoffset:-240}}
+
+.lock-box{position:relative;background:linear-gradient(180deg,rgba(22,24,28,.85),rgba(12,13,16,.85));border:1px solid rgba(94,106,210,.22);border-radius:14px;padding:40px 36px 32px;width:92%;max-width:400px;text-align:center;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.03) inset,0 0 40px rgba(94,106,210,.08);animation:boxIn .55s cubic-bezier(.2,.8,.2,1) both}
+@keyframes boxIn{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+.lock-box.shake{animation:shake .38s cubic-bezier(.36,.07,.19,.97)}
+@keyframes shake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(3px)}30%,50%,70%{transform:translateX(-5px)}40%,60%{transform:translateX(5px)}}
+
+.lock-brand{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:18px}
+.lock-logo{width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,#5e6ad2,#828fff);display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 6px 22px rgba(94,106,210,.4),0 0 0 1px rgba(255,255,255,.08) inset}
+.lock-logo::after{content:'';position:absolute;inset:-4px;border-radius:12px;background:linear-gradient(135deg,#5e6ad2,#10b981);opacity:.5;filter:blur(10px);z-index:-1;animation:logoPulse 3s ease-in-out infinite}
+@keyframes logoPulse{0%,100%{opacity:.35}50%{opacity:.7}}
+.lock-logo svg{width:22px;height:22px;fill:#fff}
+.lock-title{font-family:'JetBrains Mono','Fira Code',monospace;font-size:22px;font-weight:700;letter-spacing:.5px;color:var(--t0);display:inline-flex;align-items:center}
+.lock-title .cursor{display:inline-block;width:10px;height:20px;background:#5e6ad2;margin-left:4px;animation:blink 1.05s steps(1) infinite;vertical-align:-3px}
+@keyframes blink{50%{opacity:0}}
+
+.lock-sub{font-family:'JetBrains Mono','Fira Code',monospace;font-size:12px;color:var(--t2);margin:0 0 22px;letter-spacing:.3px}
+.lock-sub .prompt{color:var(--g);margin-right:6px}
+
+.lock-field{position:relative;margin-bottom:12px}
+.lock-field .key-ico{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--t2);width:16px;height:16px;pointer-events:none;transition:color .15s}
+.lock-field:focus-within .key-ico{color:var(--ac2)}
+.lock-input{width:100%;background:rgba(10,12,16,.7);border:1px solid rgba(255,255,255,.07);color:var(--t0);padding:13px 42px 13px 40px;border-radius:8px;font-size:14px;outline:none;letter-spacing:3px;font-family:'JetBrains Mono',monospace;transition:border-color .2s,box-shadow .2s,background .2s;box-sizing:border-box}
+.lock-input::placeholder{letter-spacing:1px;font-family:'Inter',sans-serif;color:var(--t2);opacity:.7}
+.lock-input:focus{border-color:var(--ac);background:rgba(14,16,22,.85);box-shadow:0 0 0 3px rgba(94,106,210,.18),0 0 22px rgba(94,106,210,.15)}
+
+.lock-btn{width:100%;background:linear-gradient(135deg,#5e6ad2,#7b86ff);color:#fff;border:none;padding:13px;border-radius:8px;font-size:13px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;cursor:pointer;position:relative;overflow:hidden;transition:transform .12s,box-shadow .2s;font-family:'JetBrains Mono',monospace;box-shadow:0 4px 18px rgba(94,106,210,.35),0 0 0 1px rgba(255,255,255,.08) inset;margin-top:6px}
+.lock-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.25) 50%,transparent 70%);transform:translateX(-100%);transition:transform .6s}
+.lock-btn:hover::before{transform:translateX(100%)}
+.lock-btn:hover{box-shadow:0 6px 24px rgba(94,106,210,.5),0 0 0 1px rgba(255,255,255,.12) inset}
+.lock-btn:active{transform:translateY(1px)}
+
+.lock-err{color:var(--r);font-size:12px;margin-top:10px;min-height:18px;font-family:'JetBrains Mono',monospace;letter-spacing:.3px}
+.lock-err:not(:empty)::before{content:'✕ '}
+.lock-hint{color:var(--t2);font-size:10px;margin-top:20px;letter-spacing:.3px;font-family:'JetBrains Mono',monospace;opacity:.7}
+.lock-hint .dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--g);margin-right:6px;vertical-align:middle;box-shadow:0 0 8px rgba(16,185,129,.8);animation:statusDot 2s ease-in-out infinite}
+@keyframes statusDot{0%,100%{opacity:.6}50%{opacity:1}}
 
 /* ── APP LAYOUT ── */
 #app{display:none}
@@ -391,6 +440,103 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 
 /* session x setup matrix */
 .mx-wrap{overflow-x:auto;margin-top:10px}
+
+/* ── Phase 2: Calendar Heatmap ── */
+.heatmap-card{background:var(--cbg);border:1px solid var(--b1);border-radius:8px;padding:14px 16px;margin-bottom:14px}
+.heatmap-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.heatmap-hd .card-ttl{font-size:13px;font-weight:600;color:var(--t0)}
+.heatmap-sub{font-size:11px;color:var(--t2);margin-bottom:10px}
+.heatmap-wrap{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px}
+.heatmap-months{display:flex;flex-direction:column;gap:3px;font-size:10px;color:var(--t2);padding-top:16px;min-width:22px}
+.heatmap-months .hm-day{height:11px;line-height:11px}
+.heatmap-body{flex:1;min-width:0}
+.heatmap-mlabels{display:flex;gap:3px;font-size:10px;color:var(--t2);height:14px;margin-bottom:2px}
+.heatmap-grid{display:flex;gap:3px}
+.heatmap-col{display:flex;flex-direction:column;gap:3px}
+.hm-cell{width:11px;height:11px;border-radius:2px;background:rgba(255,255,255,.04);cursor:pointer;transition:transform .1s}
+.hm-cell:hover{transform:scale(1.35);outline:1px solid rgba(255,255,255,.3)}
+.hm-cell.empty{background:rgba(255,255,255,.03)}
+.hm-cell.w1{background:rgba(16,185,129,.25)}
+.hm-cell.w2{background:rgba(16,185,129,.5)}
+.hm-cell.w3{background:rgba(16,185,129,.75)}
+.hm-cell.w4{background:#10b981}
+.hm-cell.l1{background:rgba(244,63,94,.25)}
+.hm-cell.l2{background:rgba(244,63,94,.5)}
+.hm-cell.l3{background:rgba(244,63,94,.75)}
+.hm-cell.l4{background:#f43f5e}
+.heatmap-legend{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--t2);margin-top:10px;justify-content:flex-end}
+.heatmap-legend .hm-cell{cursor:default}
+
+/* ── Phase 2c: Goal Tracker ── */
+.goal-card{background:linear-gradient(135deg,var(--cbg),rgba(94,106,210,.06));border:1px solid var(--b1);border-radius:8px;padding:14px 16px;position:relative;overflow:hidden}
+.goal-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 80% 20%,rgba(94,106,210,.12),transparent 60%);pointer-events:none}
+.goal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;position:relative}
+.goal-title{font-size:12px;color:var(--t2);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.goal-month{font-size:11px;color:var(--t2)}
+.goal-main{display:flex;align-items:baseline;gap:8px;position:relative;margin-bottom:8px}
+.goal-cur{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums}
+.goal-sep{color:var(--t2);font-size:18px}
+.goal-tgt{font-size:14px;color:var(--t2);font-variant-numeric:tabular-nums}
+.goal-tgt-input{background:transparent;border:1px dashed var(--b2);color:var(--t1);font-size:13px;width:70px;padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;text-align:right}
+.goal-tgt-input:focus{border-color:var(--ac);outline:none;background:var(--cbg2)}
+.goal-bar{height:8px;background:rgba(255,255,255,.05);border-radius:999px;overflow:hidden;margin-bottom:8px;position:relative}
+.goal-bar-fill{height:100%;transition:width .4s cubic-bezier(.2,.8,.2,1);border-radius:999px}
+.goal-bar-fill.pos{background:linear-gradient(90deg,#10b981,#34d399);box-shadow:0 0 12px rgba(16,185,129,.35)}
+.goal-bar-fill.neg{background:linear-gradient(90deg,#f43f5e,#fb7185)}
+.goal-bar-fill.part{background:linear-gradient(90deg,#5e6ad2,#828fff);box-shadow:0 0 12px rgba(94,106,210,.35)}
+.goal-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--t2);position:relative}
+.goal-meta .pos{color:var(--g)}
+.goal-meta .neg{color:var(--r)}
+
+/* ── Phase 3a: Smart Insights ── */
+.si-card{background:var(--cbg);border:1px solid var(--b1);border-radius:8px;padding:14px 16px;margin-bottom:14px}
+.si-hd{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.si-hd .si-ttl{font-size:13px;font-weight:600;color:var(--t0)}
+.si-hd .si-ic{font-size:16px}
+.si-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px}
+.si-it{padding:10px 12px;background:var(--cbg2);border-radius:6px;border-left:3px solid var(--ac);font-size:12.5px;line-height:1.55;color:var(--t1)}
+.si-it.good{border-left-color:var(--g);background:linear-gradient(90deg,rgba(16,185,129,.08),var(--cbg2))}
+.si-it.bad{border-left-color:var(--r);background:linear-gradient(90deg,rgba(244,63,94,.08),var(--cbg2))}
+.si-it.warn{border-left-color:var(--y);background:linear-gradient(90deg,rgba(245,158,11,.08),var(--cbg2))}
+.si-it strong{color:var(--t0);font-weight:700}
+.si-it .si-metric{font-family:'JetBrains Mono',monospace;font-weight:700;font-variant-numeric:tabular-nums}
+.si-it .si-metric.pos{color:var(--g)}
+.si-it .si-metric.neg{color:var(--r)}
+
+/* ── Phase 3b: Setup Playbook Modal ── */
+.pb-overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:998;display:none;align-items:center;justify-content:center;padding:20px;animation:pbFade .2s ease-out}
+.pb-overlay.on{display:flex}
+@keyframes pbFade{from{opacity:0}to{opacity:1}}
+.pb-modal{background:var(--sbg);border:1px solid var(--b1);border-radius:12px;width:100%;max-width:720px;max-height:85vh;overflow-y:auto;animation:pbSlide .28s cubic-bezier(.2,.8,.2,1);box-shadow:0 20px 60px rgba(0,0,0,.6)}
+@keyframes pbSlide{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.pb-hd{padding:18px 22px;border-bottom:1px solid var(--b1);display:flex;justify-content:space-between;align-items:flex-start;position:sticky;top:0;background:var(--sbg);z-index:1}
+.pb-hd-l .pb-kind{font-size:10px;color:var(--t2);letter-spacing:1px;text-transform:uppercase;font-weight:600;margin-bottom:3px}
+.pb-hd-l .pb-name{font-size:18px;font-weight:700;color:var(--t0)}
+.pb-close{background:transparent;border:none;color:var(--t2);font-size:22px;cursor:pointer;padding:4px 10px;border-radius:4px;line-height:1}
+.pb-close:hover{background:var(--cbg2);color:var(--t0)}
+.pb-body{padding:18px 22px}
+.pb-kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+.pb-kpi{background:var(--cbg);border:1px solid var(--b1);border-radius:6px;padding:10px 12px}
+.pb-kpi-lbl{font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.pb-kpi-val{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
+.pb-chart{height:140px;margin-bottom:18px}
+.pb-trades{border-top:1px solid var(--b1);padding-top:14px}
+.pb-trades-hd{font-size:11px;color:var(--t2);font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px}
+.pb-trade-row{display:grid;grid-template-columns:80px 60px 40px 1fr 70px;gap:8px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.03);font-size:12px;align-items:center}
+.pb-trade-row:last-child{border-bottom:none}
+.pb-trade-row .pb-date{color:var(--t2);font-variant-numeric:tabular-nums}
+.pb-trade-row .pb-dir{font-size:10px;padding:2px 6px;border-radius:3px;text-align:center;font-weight:600}
+.pb-trade-row .pb-dir.buy{background:rgba(16,185,129,.15);color:var(--g)}
+.pb-trade-row .pb-dir.sell{background:rgba(244,63,94,.15);color:var(--r)}
+.pb-trade-row .pb-res{font-size:10px;font-weight:700;text-align:center;padding:2px;border-radius:3px}
+.pb-trade-row .pb-res.W{background:rgba(16,185,129,.15);color:var(--g)}
+.pb-trade-row .pb-res.L{background:rgba(244,63,94,.15);color:var(--r)}
+.pb-trade-row .pb-res.BE,.pb-trade-row .pb-res.PL{background:rgba(245,158,11,.15);color:var(--y)}
+.pb-trade-row .pb-cond{color:var(--t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pb-trade-row .pb-r{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.pb-link{color:var(--ac2);cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px}
+.pb-link:hover{color:var(--t0)}
+@media(max-width:640px){.pb-kpi-row{grid-template-columns:repeat(2,1fr)}.pb-trade-row{grid-template-columns:70px 50px 34px 1fr}.pb-trade-row .pb-r{grid-column:4;text-align:right}}
 .mx-table{width:100%;border-collapse:collapse;font-size:12px}
 .mx-table th{padding:8px 10px;text-align:center;color:var(--t2);font-size:10px;text-transform:uppercase;letter-spacing:.3px;border-bottom:1px solid var(--b1);background:var(--cbg2);font-weight:500}
 .mx-table td{padding:7px 10px;text-align:center;border-bottom:1px solid var(--b1)}
@@ -418,23 +564,69 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
   #sb{transform:translateX(-100%)}#sb.mob{transform:translateX(0)}
   .aw,.aw.col{margin-left:0;width:100vw}
   .stat-row{grid-template-columns:1fr 1fr}
+  .kpi-row{grid-template-columns:1fr 1fr}
+  .kpi-card{min-height:auto;padding:11px 13px}
+  .kpi-val{font-size:20px}
+  .pd-bar{padding:8px 10px;gap:8px}
+  .pd-tabs{flex-wrap:wrap}
+  .pd-custom{flex:1;min-width:0}
+  .pd-info{width:100%;order:10;margin-left:0}
+  .insight-row{grid-template-columns:1fr 1fr}
+  .ins-card{padding:10px 12px}
+  .ins-name{font-size:13px}
+  .ins-metric{font-size:16px}
+  .si-list{grid-template-columns:1fr}
+  .heatmap-wrap{padding-bottom:8px}
+  .heatmap-card{padding:11px 12px}
+  .goal-card{padding:12px 14px}
+  .goal-cur{font-size:22px}
+  .qchips{flex-wrap:wrap;gap:5px}
+  .qchip{font-size:11px;padding:4px 9px}
+  .fsum{flex-wrap:wrap;gap:8px}
 }
-@media(max-width:480px){.content{padding:13px}}
+@media(max-width:480px){
+  .content{padding:13px}
+  .kpi-row{grid-template-columns:1fr}
+  .insight-row{grid-template-columns:1fr}
+  .lock-box{padding:28px 22px 24px}
+  .lock-title{font-size:18px}
+  .pb-modal{max-height:92vh}
+  .pb-body{padding:14px 16px}
+  .pb-hd{padding:14px 16px}
+}
 </style>
 </head>
 <body>
 
 <!-- ══ PASSWORD SCREEN ══ -->
 <div id="lock-screen">
-  <div class="lock-box">
-    <div class="lock-icon">🔒</div>
-    <div class="lock-title" style="font-family:'JetBrains Mono',monospace">nnmn.log</div>
-    <div class="lock-sub" id="lock-sub">비밀번호를 설정하세요</div>
-    <input type="password" class="lock-input" id="lock-pw" placeholder="비밀번호" autofocus>
-    <input type="password" class="lock-input" id="lock-pw2" placeholder="비밀번호 확인">
-    <button class="lock-btn" id="lock-btn" onclick="handleLock()">설정</button>
+  <div class="lock-glow a"></div>
+  <div class="lock-glow b"></div>
+  <svg class="lock-chart" viewBox="0 0 1200 800" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0,560 L80,520 L160,540 L240,480 L320,500 L400,440 L480,460 L560,380 L640,410 L720,340 L800,360 L880,290 L960,320 L1040,250 L1120,275 L1200,200"/>
+    <path class="g2" d="M0,640 L80,600 L160,650 L240,590 L320,630 L400,570 L480,610 L560,540 L640,580 L720,500 L800,545 L880,470 L960,510 L1040,440 L1120,475 L1200,400"/>
+  </svg>
+  <div class="lock-box" id="lock-box">
+    <div class="lock-brand">
+      <div class="lock-logo">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5zm-3 8V7a3 3 0 1 1 6 0v3H9zm3 4a1.5 1.5 0 0 1 .75 2.8V19a.75.75 0 0 1-1.5 0v-2.2A1.5 1.5 0 0 1 12 14z"/></svg>
+      </div>
+      <div class="lock-title">nnmn.log<span class="cursor"></span></div>
+    </div>
+    <div class="lock-sub" id="lock-sub"><span class="prompt">&gt;</span><span id="lock-sub-txt">enter passphrase to unlock</span></div>
+
+    <div class="lock-field">
+      <svg class="key-ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 2l-2 2-2-2-2 2-2-2-3.5 3.5a5.5 5.5 0 1 0 2 2L17 4l2 2 2-2-2-2 2-2zM6.5 18A1.5 1.5 0 1 1 8 16.5 1.5 1.5 0 0 1 6.5 18z"/></svg>
+      <input type="password" class="lock-input" id="lock-pw" placeholder="passphrase" autocomplete="current-password" autofocus>
+    </div>
+    <div class="lock-field">
+      <svg class="key-ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 12l2 2 4-4M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <input type="password" class="lock-input" id="lock-pw2" placeholder="confirm passphrase" autocomplete="new-password">
+    </div>
+
+    <button class="lock-btn" id="lock-btn" onclick="handleLock()">UNLOCK</button>
     <div class="lock-err" id="lock-err"></div>
-    <div class="lock-hint">비밀번호는 이 브라우저에 해시로 저장됩니다</div>
+    <div class="lock-hint"><span class="dot"></span>local sha-256 hash · no server</div>
   </div>
 </div>
 
@@ -563,6 +755,25 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
             <span class="pos" id="avg-win-txt">—</span>
             <span class="neg" id="avg-loss-txt">—</span>
           </div>
+        </div>
+      </div>
+
+      <!-- Goal Tracker -->
+      <div class="goal-card" style="margin-bottom:14px">
+        <div class="goal-head">
+          <div class="goal-title">🎯 Monthly Goal</div>
+          <div class="goal-month" id="goal-month">—</div>
+        </div>
+        <div class="goal-main">
+          <div class="goal-cur" id="goal-cur">—</div>
+          <div class="goal-sep">/</div>
+          <input class="goal-tgt-input" id="goal-tgt-input" type="number" step="0.5" placeholder="20" onchange="saveGoalTarget()" onkeydown="if(event.key==='Enter')this.blur()">
+          <span style="color:var(--t2);font-size:13px">R</span>
+        </div>
+        <div class="goal-bar"><div class="goal-bar-fill" id="goal-bar-fill" style="width:0"></div></div>
+        <div class="goal-meta">
+          <span id="goal-pct">0%</span>
+          <span id="goal-pace">—</span>
         </div>
       </div>
 
@@ -725,6 +936,31 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
       <!-- Insight Cards -->
       <div class="insight-row" id="ana-insights"></div>
 
+      <!-- Phase 3a: Smart Insights -->
+      <div class="si-card" id="si-card">
+        <div class="si-hd"><span class="si-ic">🧠</span><div class="si-ttl">Smart Insights</div></div>
+        <div class="si-list" id="si-list"></div>
+      </div>
+
+      <!-- Phase 2a: Calendar Heatmap -->
+      <div class="heatmap-card">
+        <div class="heatmap-hd">
+          <div>
+            <div class="card-ttl">Daily Activity Heatmap</div>
+            <div class="heatmap-sub">하루 Net R 강도 · 초록 = 수익일 · 빨강 = 손실일</div>
+          </div>
+          <div id="heatmap-stats" style="font-size:11px;color:var(--t2)"></div>
+        </div>
+        <div class="heatmap-wrap" id="heatmap-wrap"></div>
+        <div class="heatmap-legend">
+          <span>Less</span>
+          <span class="hm-cell l4"></span><span class="hm-cell l2"></span>
+          <span class="hm-cell empty"></span>
+          <span class="hm-cell w2"></span><span class="hm-cell w4"></span>
+          <span>More</span>
+        </div>
+      </div>
+
       <div class="stat-row" id="ana-stat-row" style="display:none"></div>
 
       <!-- PERFORMANCE CURVES (full-width line charts) -->
@@ -844,6 +1080,27 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 
 <div id="toast"></div>
 
+<!-- Phase 3b: Playbook Modal -->
+<div class="pb-overlay" id="pb-overlay" onclick="if(event.target===this)closePlaybook()">
+  <div class="pb-modal">
+    <div class="pb-hd">
+      <div class="pb-hd-l">
+        <div class="pb-kind" id="pb-kind">Setup</div>
+        <div class="pb-name" id="pb-name">—</div>
+      </div>
+      <button class="pb-close" onclick="closePlaybook()" aria-label="close">×</button>
+    </div>
+    <div class="pb-body">
+      <div class="pb-kpi-row" id="pb-kpi-row"></div>
+      <div class="pb-chart"><canvas id="pb-chart"></canvas></div>
+      <div class="pb-trades">
+        <div class="pb-trades-hd">최근 거래</div>
+        <div id="pb-trades-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 // ══════════════════════════════════════════════════
 // PASSWORD
@@ -857,32 +1114,41 @@ const LS_HASH='tj_pw_hash';
 let isSetup=!localStorage.getItem(LS_HASH);
 
 (function initLock(){
+  const pw2Field=document.getElementById('lock-pw2').closest('.lock-field');
   if(isSetup){
-    document.getElementById('lock-pw2').style.display='';
-    document.getElementById('lock-sub').textContent='비밀번호를 설정하세요';
-    document.getElementById('lock-btn').textContent='설정';
+    if(pw2Field)pw2Field.style.display='';
+    document.getElementById('lock-sub-txt').textContent='create your passphrase';
+    document.getElementById('lock-btn').textContent='INITIALIZE';
   } else {
-    document.getElementById('lock-pw2').style.display='none';
-    document.getElementById('lock-sub').textContent='비밀번호를 입력하세요';
-    document.getElementById('lock-btn').textContent='열기';
+    if(pw2Field)pw2Field.style.display='none';
+    document.getElementById('lock-sub-txt').textContent='enter passphrase to unlock';
+    document.getElementById('lock-btn').textContent='UNLOCK';
   }
   // check session
   if(sessionStorage.getItem('tj_unlocked')){
-    unlock();
+    unlock(true);
   }
   // enter key
   document.getElementById('lock-pw').addEventListener('keydown',e=>{if(e.key==='Enter')handleLock()});
   document.getElementById('lock-pw2').addEventListener('keydown',e=>{if(e.key==='Enter')handleLock()});
 })();
 
+function lockShake(msg){
+  const err=document.getElementById('lock-err');
+  const box=document.getElementById('lock-box');
+  if(msg)err.textContent=msg;
+  if(box){box.classList.remove('shake');void box.offsetWidth;box.classList.add('shake')}
+}
+
 async function handleLock(){
   const pw=document.getElementById('lock-pw').value;
   const pw2=document.getElementById('lock-pw2').value;
   const err=document.getElementById('lock-err');
-  if(!pw){err.textContent='비밀번호를 입력하세요';return}
+  err.textContent='';
+  if(!pw){lockShake('passphrase required');return}
   if(isSetup){
-    if(pw!==pw2){err.textContent='비밀번호가 일치하지 않습니다';return}
-    if(pw.length<3){err.textContent='3자 이상 입력하세요';return}
+    if(pw!==pw2){lockShake('passphrases do not match');return}
+    if(pw.length<3){lockShake('minimum 3 characters');return}
     localStorage.setItem(LS_HASH,await sha256(pw));
     unlock();
   } else {
@@ -890,17 +1156,29 @@ async function handleLock(){
     if(hash===localStorage.getItem(LS_HASH)){
       unlock();
     } else {
-      err.textContent='비밀번호가 틀렸습니다';
+      lockShake('access denied');
       document.getElementById('lock-pw').value='';
     }
   }
 }
 
-function unlock(){
+function unlock(skipAnim){
   sessionStorage.setItem('tj_unlocked','1');
-  document.getElementById('lock-screen').classList.add('hidden');
-  document.getElementById('app').classList.add('show');
-  loadData();
+  const screen=document.getElementById('lock-screen');
+  const app=document.getElementById('app');
+  if(skipAnim){
+    screen.classList.add('hidden');
+    app.classList.add('show');
+    loadData();
+    return;
+  }
+  screen.classList.add('fadeout');
+  setTimeout(()=>{
+    screen.classList.add('hidden');
+    screen.classList.remove('fadeout');
+    app.classList.add('show');
+    loadData();
+  },430);
 }
 
 function logout(){
@@ -1022,11 +1300,60 @@ function toggleMob(){document.getElementById('sb').classList.toggle('mob')}
 function renderDash(){
   const T=getTrades(),s=stats(T);
   renderKPIs(T,s);
+  renderGoalTracker(T);
   renderGxTScore(T,s);
   renderCal();
   renderEqCh(T);
   renderDailyR(T);
   renderRecentTrades(T);
+}
+
+// ══════════════════════════════════════════════════
+// PHASE 2c: GOAL TRACKER
+// ══════════════════════════════════════════════════
+const LS_GOAL='tj_monthly_goal_r';
+function saveGoalTarget(){
+  const v=parseFloat(document.getElementById('goal-tgt-input').value);
+  if(isNaN(v)||v<=0){localStorage.removeItem(LS_GOAL)}
+  else{localStorage.setItem(LS_GOAL,v.toString())}
+  renderGoalTracker(getTrades());
+}
+function renderGoalTracker(T){
+  const now=new Date();
+  const yr=now.getFullYear(),mo=now.getMonth();
+  const monthKey=`${yr}-${String(mo+1).padStart(2,'0')}`;
+  document.getElementById('goal-month').textContent=now.toLocaleDateString('ko',{year:'numeric',month:'long'});
+  // current R
+  const monthT=T.filter(t=>t.date&&t.date.slice(0,7)===monthKey);
+  const curR=monthT.reduce((a,t)=>a+getR(t),0);
+  const tgt=parseFloat(localStorage.getItem(LS_GOAL))||null;
+  const input=document.getElementById('goal-tgt-input');
+  if(tgt&&document.activeElement!==input)input.value=tgt;
+  const curEl=document.getElementById('goal-cur');
+  curEl.textContent=fR(curR);
+  curEl.style.color=curR>0?'var(--g)':curR<0?'var(--r)':'var(--t1)';
+  // bar fill
+  const fill=document.getElementById('goal-bar-fill');
+  const pctEl=document.getElementById('goal-pct');
+  const paceEl=document.getElementById('goal-pace');
+  if(!tgt){
+    fill.style.width='0';fill.className='goal-bar-fill';
+    pctEl.textContent='목표 설정 필요';pctEl.style.color='var(--t2)';
+    paceEl.textContent='';return;
+  }
+  const pct=Math.max(0,Math.min(100,(curR/tgt)*100));
+  fill.style.width=pct+'%';
+  fill.className='goal-bar-fill '+(curR>=tgt?'pos':curR<0?'neg':'part');
+  pctEl.textContent=((curR/tgt)*100).toFixed(1)+'% of target';
+  pctEl.className=curR>=tgt?'pos':'';
+  // pace
+  const daysPassed=now.getDate();
+  const daysInMonth=new Date(yr,mo+1,0).getDate();
+  const expected=(tgt*daysPassed/daysInMonth);
+  const delta=curR-expected;
+  paceEl.innerHTML=delta>=0
+    ?`<span class="pos">+${delta.toFixed(2)}R ahead</span> · ${daysPassed}/${daysInMonth}d`
+    :`<span class="neg">${delta.toFixed(2)}R behind</span> · ${daysPassed}/${daysInMonth}d`;
 }
 
 // ── KPI Row (5 cards)
@@ -1587,19 +1914,20 @@ function renderInsightCards(T){
   if(!T.length){host.innerHTML='<div class="ins-card neutral"><div class="ins-hd"><span class="ins-ic">📭</span><div class="ins-lbl">No data</div></div><div class="ins-name">거래 기록 없음</div></div>';return}
 
   const cards=[];
+  const esc=(s)=>String(s).replace(/'/g,"\\'");
 
   // Best Setup by Avg R (min 2 trades)
   const setupR=groupAvgR(T,'setup').filter(x=>x.count>=2);
   if(setupR.length){
     const b=setupR[0];
-    cards.push({kind:b.value>=0?'good':'bad',ic:'🎯',lbl:'Best Setup',name:b.label,metric:fR(b.value),metricCls:b.value>=0?'pos':'neg',sub:`${b.count} trades · Avg R`});
+    cards.push({kind:b.value>=0?'good':'bad',ic:'🎯',lbl:'Best Setup',name:b.label,metric:fR(b.value),metricCls:b.value>=0?'pos':'neg',sub:`${b.count} trades · Avg R`,click:`openPlaybook('setup','${esc(b.label)}')`});
   }
 
   // Worst Setup
   if(setupR.length>1){
     const w=setupR[setupR.length-1];
     if(w.value<0){
-      cards.push({kind:'bad',ic:'⚠️',lbl:'Worst Setup',name:w.label,metric:fR(w.value),metricCls:'neg',sub:`${w.count} trades · 제거 검토`});
+      cards.push({kind:'bad',ic:'⚠️',lbl:'Worst Setup',name:w.label,metric:fR(w.value),metricCls:'neg',sub:`${w.count} trades · 제거 검토`,click:`openPlaybook('setup','${esc(w.label)}')`});
     }
   }
 
@@ -1607,14 +1935,14 @@ function renderInsightCards(T){
   const condR=groupAvgR(T,'condition').filter(x=>x.count>=2);
   if(condR.length){
     const b=condR[0];
-    cards.push({kind:b.value>=0?'good':'bad',ic:'🧭',lbl:'Best Condition',name:b.label,metric:fR(b.value),metricCls:b.value>=0?'pos':'neg',sub:`${b.count} trades · Avg R`});
+    cards.push({kind:b.value>=0?'good':'bad',ic:'🧭',lbl:'Best Condition',name:b.label,metric:fR(b.value),metricCls:b.value>=0?'pos':'neg',sub:`${b.count} trades · Avg R`,click:`openPlaybook('condition','${esc(b.label)}')`});
   }
 
   // Best Day of Week (by Avg R)
   const dowR=groupAvgR(T,'dayOfWeek').filter(x=>x.count>=2);
   if(dowR.length){
     const b=dowR[0];
-    cards.push({kind:b.value>=0?'good':'bad',ic:'📅',lbl:'Best Day of Week',name:b.label,metric:fR(b.value),metricCls:b.value>=0?'pos':'neg',sub:`${b.count} trades · Avg R`});
+    cards.push({kind:b.value>=0?'good':'bad',ic:'📅',lbl:'Best Day of Week',name:b.label,metric:fR(b.value),metricCls:b.value>=0?'pos':'neg',sub:`${b.count} trades · Avg R`,click:`openPlaybook('dayOfWeek','${esc(b.label)}')`});
   }
 
   // Current streak
@@ -1628,7 +1956,7 @@ function renderInsightCards(T){
   const dirR=groupAvgR(T,'direction').filter(x=>x.count>=2);
   if(dirR.length){
     const b=dirR[0];
-    cards.push({kind:b.value>=0?'good':'bad',ic:b.label==='Long'?'📈':'📉',lbl:'Best Direction',name:b.label,metric:fR(b.value),metricCls:b.value>=0?'pos':'neg',sub:`${b.count} trades · Avg R`});
+    cards.push({kind:b.value>=0?'good':'bad',ic:b.label==='Long'?'📈':'📉',lbl:'Best Direction',name:b.label,metric:fR(b.value),metricCls:b.value>=0?'pos':'neg',sub:`${b.count} trades · Avg R`,click:`openPlaybook('direction','${esc(b.label)}')`});
   }
 
   // Capture Rate
@@ -1639,8 +1967,8 @@ function renderInsightCards(T){
   }
 
   host.innerHTML=cards.map(c=>`
-    <div class="ins-card ${c.kind}">
-      <div class="ins-hd"><span class="ins-ic">${c.ic}</span><div class="ins-lbl">${c.lbl}</div></div>
+    <div class="ins-card ${c.kind}" ${c.click?`onclick="${c.click}" style="cursor:pointer"`:''}>
+      <div class="ins-hd"><span class="ins-ic">${c.ic}</span><div class="ins-lbl">${c.lbl}${c.click?' <span style="font-size:9px;opacity:.6;margin-left:4px">▸</span>':''}</div></div>
       <div class="ins-name">${c.name}</div>
       <div class="ins-metric ${c.metricCls}">${c.metric}</div>
       <div class="ins-sub">${c.sub}</div>
@@ -1689,6 +2017,9 @@ function renderAnalytics(){
     <div class="sc"><div class="sc-lbl">Worst Streak (L)</div><div class="sc-val neg">${maxStreak.loss}</div></div>
     <div class="sc"><div class="sc-lbl">Avg R / Trade</div><div class="sc-val ${s.aR>=0?'pos':'neg'}">${fR(s.aR)}</div></div>`}
 
+  renderSmartInsights(T);
+  renderCalendarHeatmap(T);
+
   renderCumulativeR(T);
   renderRollingWinRate(T);
   renderRDistribution(T);
@@ -1707,6 +2038,247 @@ function renderAnalytics(){
   renderSetupConditionMatrix(T);
   renderNotesInsight(T);
 }
+
+// ══════════════════════════════════════════════════
+// PHASE 2a: CALENDAR HEATMAP (yearly grid)
+// ══════════════════════════════════════════════════
+function renderCalendarHeatmap(T){
+  const wrap=document.getElementById('heatmap-wrap');
+  const statsEl=document.getElementById('heatmap-stats');
+  if(!wrap)return;
+  // date → net R
+  const byD={};
+  T.forEach(t=>{if(!t.date)return;const d=t.date.slice(0,10);byD[d]=(byD[d]||0)+getR(t)});
+  const dayKeys=Object.keys(byD);
+  if(!dayKeys.length){wrap.innerHTML='<div style="color:var(--t2);font-size:12px;padding:20px;text-align:center;width:100%">거래 데이터 없음</div>';statsEl.textContent='';return}
+  // range: last 365 days ending today
+  const today=new Date();today.setHours(0,0,0,0);
+  const end=new Date(today);
+  const start=new Date(today);start.setDate(start.getDate()-364);
+  // shift start back to Sunday
+  const startDow=start.getDay();
+  const gridStart=new Date(start);gridStart.setDate(gridStart.getDate()-startDow);
+  // max abs for scaling
+  let maxAbs=0;
+  for(const k in byD){const a=Math.abs(byD[k]);if(a>maxAbs)maxAbs=a}
+  // stats
+  const winDays=Object.values(byD).filter(r=>r>0.01).length;
+  const lossDays=Object.values(byD).filter(r=>r<-0.01).length;
+  statsEl.innerHTML=`<span style="color:var(--g)">${winDays}W</span> · <span style="color:var(--r)">${lossDays}L</span> · ${dayKeys.length} days traded`;
+  // build columns week-by-week
+  const cols=[];const monthLabels=[];
+  let cur=new Date(gridStart);
+  let lastMonth=-1;
+  while(cur<=end){
+    const col={cells:[],monthStart:false};
+    for(let d=0;d<7;d++){
+      const dd=cur.toISOString().slice(0,10);
+      const inRange=cur>=start&&cur<=end;
+      const r=byD[dd];
+      let cls='hm-cell';
+      if(!inRange){cls+=' empty'}
+      else if(r==null){cls+=' empty'}
+      else{
+        const intensity=maxAbs>0?Math.abs(r)/maxAbs:0;
+        const tier=intensity>=.75?4:intensity>=.5?3:intensity>=.25?2:1;
+        cls+=r>0?' w'+tier:r<0?' l'+tier:'';
+      }
+      const tt=r!=null?`${dd}: ${fR(r)}`:dd;
+      col.cells.push(`<div class="${cls}" title="${tt}"></div>`);
+      if(cur.getMonth()!==lastMonth&&cur.getDate()<=7){col.monthStart=true;col.monthLabel=cur.toLocaleString('en',{month:'short'})}
+      lastMonth=cur.getMonth();
+      cur.setDate(cur.getDate()+1);
+    }
+    cols.push(col);
+  }
+  // month labels row — sparse
+  const mlabels=cols.map(c=>`<div style="width:11px;flex-shrink:0">${c.monthStart?c.monthLabel:''}</div>`).join('');
+  const gridHtml=cols.map(c=>`<div class="heatmap-col">${c.cells.join('')}</div>`).join('');
+  wrap.innerHTML=`
+    <div class="heatmap-months">
+      <div class="hm-day"></div>
+      <div class="hm-day">Mon</div>
+      <div class="hm-day"></div>
+      <div class="hm-day">Wed</div>
+      <div class="hm-day"></div>
+      <div class="hm-day">Fri</div>
+      <div class="hm-day"></div>
+    </div>
+    <div class="heatmap-body">
+      <div class="heatmap-mlabels" style="gap:3px">${mlabels}</div>
+      <div class="heatmap-grid">${gridHtml}</div>
+    </div>`;
+}
+
+// ══════════════════════════════════════════════════
+// PHASE 3a: SMART INSIGHTS (narrative pattern detection)
+// ══════════════════════════════════════════════════
+function renderSmartInsights(T){
+  const host=document.getElementById('si-list');
+  if(!host)return;
+  if(T.length<5){host.innerHTML='<div class="si-it">거래 5건 이상 기록 시 Smart Insights가 활성화됩니다</div>';return}
+  const items=[];
+
+  // 1) 연패 후 다음 거래 성과
+  let afterLoss2W=0,afterLoss2N=0,afterLoss2R=0;
+  for(let i=2;i<T.length;i++){
+    if(T[i-1].result==='L'&&T[i-2].result==='L'){
+      afterLoss2N++;if(T[i].result==='W')afterLoss2W++;
+      afterLoss2R+=getR(T[i]);
+    }
+  }
+  if(afterLoss2N>=3){
+    const wr=(afterLoss2W/afterLoss2N*100).toFixed(0);
+    const avg=(afterLoss2R/afterLoss2N).toFixed(2);
+    const overallWR=(T.filter(t=>t.result==='W').length/T.length*100).toFixed(0);
+    const diff=parseFloat(wr)-parseFloat(overallWR);
+    const kind=diff<-10?'bad':diff>10?'good':'warn';
+    items.push({kind,html:`<strong>2연패 직후</strong> 다음 거래 승률 <span class="si-metric ${diff<0?'neg':'pos'}">${wr}%</span> (전체 ${overallWR}%, Avg ${avg}R · ${afterLoss2N}회) — ${diff<-10?'리벤지 트레이딩 주의':diff>10?'반등 구간 유효':'평균에 가까움'}`});
+  }
+
+  // 2) 연승 후 다음 거래 성과
+  let afterWin2W=0,afterWin2N=0,afterWin2R=0;
+  for(let i=2;i<T.length;i++){
+    if(T[i-1].result==='W'&&T[i-2].result==='W'){
+      afterWin2N++;if(T[i].result==='W')afterWin2W++;
+      afterWin2R+=getR(T[i]);
+    }
+  }
+  if(afterWin2N>=3){
+    const wr=(afterWin2W/afterWin2N*100).toFixed(0);
+    const avg=(afterWin2R/afterWin2N).toFixed(2);
+    const overallWR=(T.filter(t=>t.result==='W').length/T.length*100).toFixed(0);
+    const diff=parseFloat(wr)-parseFloat(overallWR);
+    const kind=diff<-10?'bad':diff>10?'good':'warn';
+    items.push({kind,html:`<strong>2연승 직후</strong> 다음 거래 승률 <span class="si-metric ${diff<0?'neg':'pos'}">${wr}%</span> (전체 ${overallWR}%, Avg ${avg}R · ${afterWin2N}회) — ${diff<-10?'오버트레이딩 경계':diff>10?'모멘텀 유지':'평균에 가까움'}`});
+  }
+
+  // 3) 당일 N번째 거래 성과 (과잉매매 탐지)
+  const byD={};T.forEach(t=>{if(!t.date)return;const d=t.date.slice(0,10);if(!byD[d])byD[d]=[];byD[d].push(t)});
+  const byOrder={};
+  Object.values(byD).forEach(arr=>{arr.forEach((t,i)=>{const o=i+1;if(!byOrder[o])byOrder[o]={n:0,w:0,r:0};byOrder[o].n++;if(t.result==='W')byOrder[o].w++;byOrder[o].r+=getR(t)})});
+  if(byOrder[3]&&byOrder[3].n>=3){
+    const wr1=byOrder[1]?byOrder[1].w/byOrder[1].n*100:0;
+    const wr3p=Object.entries(byOrder).filter(([k])=>+k>=3).reduce((a,[,v])=>({n:a.n+v.n,w:a.w+v.w,r:a.r+v.r}),{n:0,w:0,r:0});
+    const wr3=wr3p.n?wr3p.w/wr3p.n*100:0;
+    const diff=wr3-wr1;
+    const avg3=(wr3p.r/wr3p.n).toFixed(2);
+    const kind=diff<-10?'bad':diff>10?'good':'warn';
+    items.push({kind,html:`<strong>당일 3번째 이후 거래</strong> 승률 <span class="si-metric ${diff<0?'neg':'pos'}">${wr3.toFixed(0)}%</span> (1번째 ${wr1.toFixed(0)}%, Avg ${avg3}R · ${wr3p.n}회) — ${diff<-10?'하루 거래 제한 검토':diff>10?'꾸준히 기회 포착':'균등 수준'}`});
+  }
+
+  // 4) 가장 일관성 있는 요일 (R 표준편차 낮은)
+  const dowStats={};
+  T.forEach(t=>{if(!t.dayOfWeek)return;const d=t.dayOfWeek;if(!dowStats[d])dowStats[d]={rs:[]};dowStats[d].rs.push(getR(t))});
+  const dowEntries=Object.entries(dowStats).filter(([,v])=>v.rs.length>=3).map(([k,v])=>{
+    const m=v.rs.reduce((a,b)=>a+b,0)/v.rs.length;
+    const sd=Math.sqrt(v.rs.reduce((a,b)=>a+(b-m)*(b-m),0)/v.rs.length);
+    return{day:k,mean:m,sd,n:v.rs.length};
+  });
+  if(dowEntries.length>=2){
+    const sorted=[...dowEntries].sort((a,b)=>b.mean-a.mean);
+    const best=sorted[0],worst=sorted[sorted.length-1];
+    if(best.mean-worst.mean>0.3){
+      items.push({kind:'good',html:`<strong>${best.day}</strong>에 가장 잘함 (Avg <span class="si-metric pos">${fR(best.mean)}</span>) · <strong>${worst.day}</strong>는 <span class="si-metric neg">${fR(worst.mean)}</span> — 주간 편향 인지`});
+    }
+  }
+
+  // 5) Capture Rate 기반 TP 전략 피드백
+  const capT=T.filter(t=>t.maxRR>0&&t.result==='W');
+  if(capT.length>=5){
+    const cap=capT.reduce((a,t)=>a+getR(t)/t.maxRR,0)/capT.length;
+    if(cap<0.5){
+      items.push({kind:'warn',html:`<strong>승리 거래 평균 Capture Rate</strong> <span class="si-metric neg">${(cap*100).toFixed(0)}%</span> — 조기 익절 경향, trailing stop 전략 검토`});
+    } else if(cap>=0.8){
+      items.push({kind:'good',html:`<strong>승리 거래 평균 Capture Rate</strong> <span class="si-metric pos">${(cap*100).toFixed(0)}%</span> — TP 실행력 우수`});
+    }
+  }
+
+  // 6) Full SL 비율
+  const fullSL=T.filter(t=>t.result==='L'&&getR(t)<=-0.95).length;
+  const totalL=T.filter(t=>t.result==='L').length;
+  if(totalL>=5){
+    const pct=(fullSL/totalL*100).toFixed(0);
+    if(parseFloat(pct)>70){
+      items.push({kind:'bad',html:`<strong>손실 중 Full SL 비율</strong> <span class="si-metric neg">${pct}%</span> (${fullSL}/${totalL}) — 조기 손절 / Partial out 규칙 검토`});
+    } else if(parseFloat(pct)<30){
+      items.push({kind:'good',html:`<strong>손실 중 Full SL 비율</strong> <span class="si-metric pos">${pct}%</span> — Partial stop 규칙 효과적`});
+    }
+  }
+
+  // 7) 현재 월 성과
+  const now=new Date();
+  const monthKey=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  const monthT=T.filter(t=>t.date&&t.date.slice(0,7)===monthKey);
+  if(monthT.length>=3){
+    const mR=monthT.reduce((a,t)=>a+getR(t),0);
+    items.push({kind:mR>=0?'good':'bad',html:`<strong>이번 달 성과</strong> <span class="si-metric ${mR>=0?'pos':'neg'}">${fR(mR)}</span> (${monthT.length}거래) — ${mR>=0?'목표 페이스 유지':'손실 통제 필요'}`});
+  }
+
+  if(!items.length){host.innerHTML='<div class="si-it">아직 패턴을 감지할 데이터가 부족합니다</div>';return}
+  host.innerHTML=items.map(it=>`<div class="si-it ${it.kind}">${it.html}</div>`).join('');
+}
+
+// ══════════════════════════════════════════════════
+// PHASE 3b: SETUP PLAYBOOK MODAL
+// ══════════════════════════════════════════════════
+function openPlaybook(kind,name){
+  if(!name)return;
+  const T=getTrades();
+  const filtered=T.filter(t=>{
+    if(kind==='setup')return t.setup===name;
+    if(kind==='condition')return t.condition===name;
+    if(kind==='dayOfWeek')return t.dayOfWeek===name;
+    if(kind==='direction')return t.direction===name;
+    return false;
+  });
+  if(!filtered.length){toast('데이터 없음: '+name);return}
+
+  document.getElementById('pb-kind').textContent=({setup:'Setup',condition:'Condition',dayOfWeek:'Day of Week',direction:'Direction'})[kind]||kind;
+  document.getElementById('pb-name').textContent=name;
+
+  const s=stats(filtered);
+  const pf=isFinite(s.pf)?s.pf.toFixed(2):(s.pf>0?'∞':'—');
+  document.getElementById('pb-kpi-row').innerHTML=`
+    <div class="pb-kpi"><div class="pb-kpi-lbl">Trades</div><div class="pb-kpi-val">${s.n}</div></div>
+    <div class="pb-kpi"><div class="pb-kpi-lbl">Win Rate</div><div class="pb-kpi-val" style="color:${s.wr>=.5?'var(--g)':'var(--t0)'}">${(s.wr*100).toFixed(1)}%</div></div>
+    <div class="pb-kpi"><div class="pb-kpi-lbl">Net R</div><div class="pb-kpi-val" style="color:${s.tR>0?'var(--g)':s.tR<0?'var(--r)':'var(--t0)'}">${fR(s.tR)}</div></div>
+    <div class="pb-kpi"><div class="pb-kpi-lbl">Profit Factor</div><div class="pb-kpi-val">${pf}</div></div>`;
+
+  // mini equity curve
+  const ctx=document.getElementById('pb-chart');
+  if(charts['pb-chart'])charts['pb-chart'].destroy();
+  let cum=0;
+  const cumArr=filtered.map(t=>{cum+=getR(t);return parseFloat(cum.toFixed(2))});
+  const labels=filtered.map((_,i)=>'#'+(i+1));
+  const colors=filtered.map(t=>t.result==='W'?'#10b981':t.result==='L'?'#f43f5e':'#f59e0b');
+  charts['pb-chart']=new Chart(ctx,{type:'line',data:{labels,datasets:[{data:cumArr,borderColor:'#5e6ad2',backgroundColor:'rgba(94,106,210,.1)',fill:true,tension:.3,pointRadius:filtered.length>30?2:3.5,pointBackgroundColor:colors,pointBorderWidth:0,borderWidth:2}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{title:c=>'Trade '+c[0].label,label:c=>'Cumulative: '+fR(c.raw)}}},
+      scales:{x:{ticks:{color:'#62666d',font:{size:9},maxTicksLimit:8},grid:{display:false}},y:{ticks:{color:'#62666d',font:{size:9},callback:v=>v+'R'},grid:{color:'rgba(255,255,255,.04)'}}}}});
+
+  // recent trades list (last 10)
+  const recent=filtered.slice().reverse().slice(0,10);
+  document.getElementById('pb-trades-list').innerHTML=recent.map(t=>{
+    const r=getR(t),dir=(t.direction||'').toLowerCase();
+    return `<div class="pb-trade-row">
+      <span class="pb-date">${(t.date||'').slice(0,10)}</span>
+      <span class="pb-dir ${dir==='buy'?'buy':'sell'}">${t.direction||'—'}</span>
+      <span class="pb-res ${t.result||''}">${t.result||'—'}</span>
+      <span class="pb-cond">${t.condition||t.setup||'—'}</span>
+      <span class="pb-r" style="color:${r>0?'var(--g)':r<0?'var(--r)':'var(--t1)'}">${fR(r)}</span>
+    </div>`;
+  }).join('');
+
+  document.getElementById('pb-overlay').classList.add('on');
+  document.body.style.overflow='hidden';
+}
+function closePlaybook(){
+  document.getElementById('pb-overlay').classList.remove('on');
+  document.body.style.overflow='';
+  if(charts['pb-chart']){charts['pb-chart'].destroy();delete charts['pb-chart']}
+}
+// ESC to close
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){const ov=document.getElementById('pb-overlay');if(ov&&ov.classList.contains('on'))closePlaybook()}});
 
 function calcMaxStreak(T){
   let wMax=0,lMax=0,wCur=0,lCur=0;
