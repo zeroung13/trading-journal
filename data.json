@@ -1,5 +1,5 @@
 {
-  "lastSync": "2026-04-19T10:28:29.552Z",
+  "lastSync": "2026-04-19T22:29:46.563Z",
   "crypto": [
     {
       "id": "3470081c-521f-8077-9ab9-c32e0ccd51df",
@@ -101,10 +101,10 @@
       "entryChart": "https://www.tradingview.com/x/LUvKHXIe/",
       "notes": "깔끔한 GxT 모델의 매매였음.",
       "size": null,
-      "grade": null,
-      "gxtPass": null,
+      "grade": "B+",
+      "gxtPass": 8,
       "preTradeFilled": false,
-      "reviewSummary": null
+      "reviewSummary": "깔끔한 GxT Seek&Destroy 매매. 3종 SMT 복합(PSP+SMT Fill+Double Sweep) + V-shape + CSD. 2R Full TP 성공. 감정 Uncertainty만 주의."
     },
     {
       "id": "33c0081c-521f-80e6-a8eb-e8590e05f4c2",
@@ -151,10 +151,10 @@
       "entryChart": "https://www.tradingview.com/x/RmUimsSm/",
       "notes": "오버나이트 세션에서 이미 과도한 확장이 나오면서 NY continuation 거래를 노리는건 리스크가 컸음. 그래서 ERL > IRL 움직임이라도 노리려고 역추세 매매인 숏을 진행함. (추가적으로 2-stage SMT를 더 잘 봐야할듯함)",
       "size": null,
-      "grade": null,
-      "gxtPass": null,
+      "grade": "B+",
+      "gxtPass": 7,
       "preTradeFilled": false,
-      "reviewSummary": null
+      "reviewSummary": "Overnight 과확장 인지 후 Counter-trend retracement 의식적 선택(Memory #16). V-shape+Gap entry. 3.81R 최대 성공. 2-stage SMT 검토 필요."
     },
     {
       "id": "33d0081c-521f-80e2-bdf6-cc6f61f70994",
@@ -201,10 +201,10 @@
       "entryChart": null,
       "notes": "기본적으로 key level을 생각을 안했음. TDA를 하면서 key level을 체크했다면 매매를 하지 않았을 구간이었음.",
       "size": null,
-      "grade": null,
-      "gxtPass": null,
+      "grade": "D",
+      "gxtPass": 2,
       "preTradeFilled": false,
-      "reviewSummary": null
+      "reviewSummary": "Key level 체크 누락 + Rule Breaking 감정. TDA 전수 건너뛰고 진입. 진입 직후 손절(Max RR 0.19). 로직 기반 없는 충동 매매."
     },
     {
       "id": "33f0081c-521f-8010-bb46-d6bed8c76ce1",
@@ -251,10 +251,10 @@
       "entryChart": "https://www.tradingview.com/x/bvgZVv0R/",
       "notes": "2-stage PSP를 본 것 까지는 좋았지만, LTF entry를 들어갈 때 CISD가 아니었는데 대충 보고 진입을 함. 만약 진지하게 캔들을 추적했다면 더 좋은 자리에서 깔끔한 셋업이 나와서 무조건 먹고 가는 거래였음. (5RR 이상)",
       "size": null,
-      "grade": null,
-      "gxtPass": null,
+      "grade": "C",
+      "gxtPass": 4,
       "preTradeFilled": false,
-      "reviewSummary": null
+      "reviewSummary": "2-stage PSP 식별은 정확했으나 LTF entry에서 CISD 아닌 상태에서 대충 진입. Impatience가 5R+ 기회를 손절로 전환. 실시간 자기통제 부재."
     },
     {
       "id": "3410081c-521f-801c-93b7-d694f94b0b4e",
@@ -303,10 +303,10 @@
       "entryChart": "https://www.tradingview.com/x/mRPQPxTg/",
       "notes": "SL을 BE로 옮기는 타이밍이 아니었는데 조기에 BE로 옮김. 결과는 알다시피 목표가에 도착을 했음. ",
       "size": null,
-      "grade": null,
-      "gxtPass": null,
+      "grade": "B-",
+      "gxtPass": 6,
       "preTradeFilled": false,
-      "reviewSummary": null
+      "reviewSummary": "셋업 품질은 높았음(2-stage PSP + S.S + V-shape+Gap). 그러나 SL을 조기에 BE로 이동 → 목표가 도달했음에도 보상 없음. Trade Management 규칙 위반(Memory #9)."
     },
     {
       "id": "3420081c-521f-8025-a4b8-c74db0e2bf3c",
@@ -351,10 +351,10 @@
       "entryChart": "https://www.tradingview.com/x/MWNe8M0r/",
       "notes": "완벽한 universal seq 매매였음. 조금 아까운건 1계약을 들어가니까 분할 익절을 못하고 BE + Runner만 가능하다는점.",
       "size": 1,
-      "grade": null,
-      "gxtPass": null,
+      "grade": "B+",
+      "gxtPass": 8,
       "preTradeFilled": false,
-      "reviewSummary": null
+      "reviewSummary": "완벽한 Universal Sequence 매매(Memory #13 정석). IRL→ERL + 1-stage SMT Fill + V-shape+Gap + M15 Expansion. 감정 공란=차분한 실행. 1계약 한계로 분할 익절 불가."
     }
   ]
 }
