@@ -1,6 +1,57 @@
 {
-  "lastSync": "2026-04-18T22:28:39.584Z",
-  "crypto": [],
+  "lastSync": "2026-04-19T10:28:29.552Z",
+  "crypto": [
+    {
+      "id": "3470081c-521f-8077-9ab9-c32e0ccd51df",
+      "source": "crypto",
+      "num": "1",
+      "date": "2026-04-18",
+      "result": "L",
+      "dayOfWeek": "Saturday",
+      "asset": "ETH",
+      "oneRPct": 10,
+      "rr": -1,
+      "maxRR": 2.32,
+      "drawdown": "100%",
+      "direction": "Buy",
+      "setup": "Overnight Positional",
+      "entryPDA": [
+        "CSD"
+      ],
+      "entryType": "Limit",
+      "emotions": [
+        "Greed"
+      ],
+      "entryTF": [
+        "m2"
+      ],
+      "swingType": "C2 DIrect (small wick)",
+      "exitStrategy": "Full SL",
+      "actualRR": null,
+      "smtStage": "2-stage",
+      "smtType": [
+        "PSP"
+      ],
+      "universalModel": "IRL -> ERL",
+      "candleProfiling": [
+        "M30"
+      ],
+      "condition": "Consolidation",
+      "sl": 707,
+      "tp": 1641,
+      "dd": 707,
+      "slUnit": "ticks",
+      "htfChart": "https://www.tradingview.com/x/NcUlabXV/",
+      "mtfChart": "https://www.tradingview.com/x/YpOAPHMT/",
+      "entryChart": "https://www.tradingview.com/x/hCekilE3/",
+      "notes": "토요일은 유동성이 죽은 날인데 무리한 매매 시도. Size를 작게 잡은건 좋았음",
+      "size": null,
+      "grade": "C",
+      "gxtPass": 5,
+      "preTradeFilled": true,
+      "reviewSummary": "토요일 세션외 진입 + Counter-trend retracement에 H4 ERL 과도한 target. LTF 실행은 정확했으나 HTF 필터 3개 실격. Greed가 유도한 urgency entry."
+    }
+  ],
   "futures": [
     {
       "id": "33b0081c-521f-809a-b83b-dc5f5136519f",
@@ -48,7 +99,12 @@
       "htfChart": "https://www.tradingview.com/x/6Rj8Qdjn/",
       "mtfChart": "https://www.tradingview.com/x/f32YPmwR/",
       "entryChart": "https://www.tradingview.com/x/LUvKHXIe/",
-      "notes": "깔끔한 GxT 모델의 매매였음."
+      "notes": "깔끔한 GxT 모델의 매매였음.",
+      "size": null,
+      "grade": null,
+      "gxtPass": null,
+      "preTradeFilled": false,
+      "reviewSummary": null
     },
     {
       "id": "33c0081c-521f-80e6-a8eb-e8590e05f4c2",
@@ -93,7 +149,12 @@
       "htfChart": null,
       "mtfChart": "https://www.tradingview.com/x/BtuMOiXc/",
       "entryChart": "https://www.tradingview.com/x/RmUimsSm/",
-      "notes": "오버나이트 세션에서 이미 과도한 확장이 나오면서 NY continuation 거래를 노리는건 리스크가 컸음. 그래서 ERL > IRL 움직임이라도 노리려고 역추세 매매인 숏을 진행함. (추가적으로 2-stage SMT를 더 잘 봐야할듯함)"
+      "notes": "오버나이트 세션에서 이미 과도한 확장이 나오면서 NY continuation 거래를 노리는건 리스크가 컸음. 그래서 ERL > IRL 움직임이라도 노리려고 역추세 매매인 숏을 진행함. (추가적으로 2-stage SMT를 더 잘 봐야할듯함)",
+      "size": null,
+      "grade": null,
+      "gxtPass": null,
+      "preTradeFilled": false,
+      "reviewSummary": null
     },
     {
       "id": "33d0081c-521f-80e2-bdf6-cc6f61f70994",
@@ -138,7 +199,12 @@
       "htfChart": "https://www.tradingview.com/x/HPK7JC9o/",
       "mtfChart": "https://www.tradingview.com/x/AkN5y7m6/",
       "entryChart": null,
-      "notes": "기본적으로 key level을 생각을 안했음. TDA를 하면서 key level을 체크했다면 매매를 하지 않았을 구간이었음."
+      "notes": "기본적으로 key level을 생각을 안했음. TDA를 하면서 key level을 체크했다면 매매를 하지 않았을 구간이었음.",
+      "size": null,
+      "grade": null,
+      "gxtPass": null,
+      "preTradeFilled": false,
+      "reviewSummary": null
     },
     {
       "id": "33f0081c-521f-8010-bb46-d6bed8c76ce1",
@@ -183,7 +249,12 @@
       "htfChart": "https://www.tradingview.com/x/alU35Mnj/",
       "mtfChart": "https://www.tradingview.com/x/h0rQzzRk/",
       "entryChart": "https://www.tradingview.com/x/bvgZVv0R/",
-      "notes": "2-stage PSP를 본 것 까지는 좋았지만, LTF entry를 들어갈 때 CISD가 아니었는데 대충 보고 진입을 함. 만약 진지하게 캔들을 추적했다면 더 좋은 자리에서 깔끔한 셋업이 나와서 무조건 먹고 가는 거래였음. (5RR 이상)"
+      "notes": "2-stage PSP를 본 것 까지는 좋았지만, LTF entry를 들어갈 때 CISD가 아니었는데 대충 보고 진입을 함. 만약 진지하게 캔들을 추적했다면 더 좋은 자리에서 깔끔한 셋업이 나와서 무조건 먹고 가는 거래였음. (5RR 이상)",
+      "size": null,
+      "grade": null,
+      "gxtPass": null,
+      "preTradeFilled": false,
+      "reviewSummary": null
     },
     {
       "id": "3410081c-521f-801c-93b7-d694f94b0b4e",
@@ -230,7 +301,12 @@
       "htfChart": "https://www.tradingview.com/x/EWsSPOkt/",
       "mtfChart": "https://www.tradingview.com/x/1thVFlgn/",
       "entryChart": "https://www.tradingview.com/x/mRPQPxTg/",
-      "notes": "SL을 BE로 옮기는 타이밍이 아니었는데 조기에 BE로 옮김. 결과는 알다시피 목표가에 도착을 했음. "
+      "notes": "SL을 BE로 옮기는 타이밍이 아니었는데 조기에 BE로 옮김. 결과는 알다시피 목표가에 도착을 했음. ",
+      "size": null,
+      "grade": null,
+      "gxtPass": null,
+      "preTradeFilled": false,
+      "reviewSummary": null
     },
     {
       "id": "3420081c-521f-8025-a4b8-c74db0e2bf3c",
@@ -273,7 +349,12 @@
       "htfChart": null,
       "mtfChart": "https://www.tradingview.com/x/L60wX5UV/",
       "entryChart": "https://www.tradingview.com/x/MWNe8M0r/",
-      "notes": "완벽한 universal seq 매매였음. 조금 아까운건 1계약을 들어가니까 분할 익절을 못하고 BE + Runner만 가능하다는점."
+      "notes": "완벽한 universal seq 매매였음. 조금 아까운건 1계약을 들어가니까 분할 익절을 못하고 BE + Runner만 가능하다는점.",
+      "size": 1,
+      "grade": null,
+      "gxtPass": null,
+      "preTradeFilled": false,
+      "reviewSummary": null
     }
   ]
 }
