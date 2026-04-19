@@ -49,6 +49,8 @@ function prop(page, name) {
       if (p.formula.type === 'boolean') return p.formula.boolean;
       if (p.formula.type === 'date')    return p.formula.date?.start || null;
       return null;
+    case 'checkbox':
+      return p.checkbox === true;
     default:
       return null;
   }
@@ -91,6 +93,12 @@ function transform(page, source) {
     mtfChart:    prop(page, 'MTF Chart'),
     entryChart:  prop(page, 'Entry Chart'),
     notes:       prop(page, 'notes'),
+    // ── Phase 4: Position size + Claude Review fields ──
+    size:           prop(page, 'Size'),              // futures only (crypto returns null)
+    grade:          prop(page, 'Grade'),             // A / B+ / B / B- / C / D
+    gxtPass:        prop(page, 'GxT Pass Count'),    // 0~9
+    preTradeFilled: prop(page, 'Pre-Trade Filled'),  // checkbox boolean
+    reviewSummary:  prop(page, 'Review Summary'),    // 한 줄 요약
   };
 }
 

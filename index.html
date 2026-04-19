@@ -387,6 +387,44 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 .dd-sum strong.pos{color:var(--g)}
 .dd-sum strong.neg{color:var(--r)}
 
+/* ── Grade Analysis (Phase 4) ── */
+.grade-wrap{display:grid;grid-template-columns:220px 1fr;gap:20px;align-items:center}
+@media(max-width:760px){.grade-wrap{grid-template-columns:1fr;gap:14px}}
+.grade-donut-wrap{position:relative;width:200px;height:200px;margin:0 auto}
+.grade-matrix{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px}
+.grade-cell{background:var(--cbg2);border:1px solid var(--b1);border-radius:8px;padding:10px 11px;border-left:3px solid var(--b2);transition:transform .15s,border-color .15s;cursor:default}
+.grade-cell:hover{transform:translateY(-1px);border-color:var(--b2)}
+.grade-cell.empty{opacity:.35}
+.grade-cell.g-A{border-left-color:#10b981}
+.grade-cell.g-Bp{border-left-color:#3b82f6}
+.grade-cell.g-B{border-left-color:#5e6ad2}
+.grade-cell.g-Bm{border-left-color:#8b5cf6}
+.grade-cell.g-C{border-left-color:#f59e0b}
+.grade-cell.g-D{border-left-color:#f43f5e}
+.grade-cell.g-NA{border-left-color:rgba(255,255,255,.12)}
+.gc-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.gc-lbl{font-size:13px;font-weight:800;color:var(--t0);letter-spacing:.3px}
+.gc-n{font-size:10.5px;color:var(--t2);font-family:'JetBrains Mono',monospace}
+.gc-r{font-size:18px;font-weight:800;font-family:'JetBrains Mono',monospace;line-height:1;letter-spacing:-0.3px}
+.gc-meta{font-size:10.5px;color:var(--t1);font-family:'JetBrains Mono',monospace;margin-top:5px;display:flex;justify-content:space-between;letter-spacing:.2px}
+.gc-meta strong{color:var(--t0)}
+.grade-summary{margin-top:14px}
+.grade-sum{padding:10px 12px;border-radius:7px;font-size:12px;line-height:1.55;color:var(--t1);border-left:3px solid var(--ac);background:var(--cbg2)}
+.grade-sum.good{border-left-color:var(--g);background:linear-gradient(90deg,rgba(16,185,129,.08),var(--cbg2))}
+.grade-sum.warn{border-left-color:var(--y);background:linear-gradient(90deg,rgba(245,158,11,.08),var(--cbg2))}
+.grade-sum strong{color:var(--t0);font-weight:700}
+.grade-sum strong.pos{color:var(--g)}
+.grade-sum strong.neg{color:var(--r)}
+
+/* ── Review Summary chip (in trade table) ── */
+.rev-chip{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px;background:rgba(94,106,210,.12);color:var(--ac2);border:1px solid rgba(94,106,210,.22);max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help;letter-spacing:.2px}
+.rev-chip::before{content:'💬';font-size:9px}
+.grade-chip{display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;padding:2px 6px;border-radius:4px;letter-spacing:.3px;min-width:22px}
+.grade-chip.g-A{background:rgba(16,185,129,.15);color:var(--g);border:1px solid rgba(16,185,129,.3)}
+.grade-chip.g-Bp,.grade-chip.g-B,.grade-chip.g-Bm{background:rgba(94,106,210,.15);color:var(--ac2);border:1px solid rgba(94,106,210,.3)}
+.grade-chip.g-C{background:rgba(245,158,11,.15);color:var(--y);border:1px solid rgba(245,158,11,.3)}
+.grade-chip.g-D{background:rgba(244,63,94,.15);color:var(--r);border:1px solid rgba(244,63,94,.3)}
+
 /* ── Setup × Condition Heatmap ── */
 .mx-heat{overflow-x:auto;margin:-4px}
 .mxh-grid{display:grid;gap:6px;padding:4px;min-width:fit-content}
@@ -1032,6 +1070,19 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
           <div class="ch-wrap-sm"><canvas id="ch-dow"></canvas></div>
         </div>
       </div>
+      <!-- GRADE ANALYSIS (Phase 4: Claude Review) -->
+      <div class="panel" id="grade-panel" style="margin-bottom:16px">
+        <div class="panel-hd">
+          <div class="panel-ttl"><span class="panel-ic" style="background:rgba(94,106,210,.15);color:var(--ac2)">★</span>Trade Grade Analysis</div>
+          <div class="panel-sub">Claude Review 등급별 분포 + 성과 — 매매 품질 일관성 추적</div>
+        </div>
+        <div class="grade-wrap">
+          <div class="grade-donut-wrap"><canvas id="ch-grade-donut"></canvas></div>
+          <div class="grade-matrix" id="grade-matrix"></div>
+        </div>
+        <div class="grade-summary" id="grade-summary"></div>
+      </div>
+
       <!-- DD ZONE + MONTHLY + MATRIX (Upgraded) -->
       <div class="analysis-grid">
         <div class="panel">
@@ -1720,23 +1771,29 @@ function renderTbl(){
     } else {
       rrCell=`<span class="${rc}" style="font-variant-numeric:tabular-nums">${fR(r)}</span>`;
     }
+    // ── Phase 4: Grade chip + Review Summary ──
+    const gradeCls=t.grade?'grade-chip '+(GRADE_CLASS[t.grade]||''):'';
+    const gradeChip=t.grade?`<span class="${gradeCls}" title="Claude Review Grade">${t.grade}</span>`:'';
+    const reviewChip=t.reviewSummary?`<span class="rev-chip" title="${(t.reviewSummary||'').replace(/"/g,'&quot;')}">${t.reviewSummary}</span>`:'';
+    const setupCell=`${t.setup||'—'}${reviewChip?'<br>'+reviewChip:''}`;
+    const resultCell=`<span class="badge ${resBadge}">${t.result||''}</span>${gradeChip?' '+gradeChip:''}`;
     return`<tr class="${stripeCls}">
       <td>${srcDot} ${t.num||''}</td>
       <td style="white-space:nowrap;font-variant-numeric:tabular-nums">${t.date?.slice(0,10)||''}<br><span style="font-size:10px;color:var(--t2)">${t.dayOfWeek||''}</span></td>
       <td><strong>${t.asset||''}</strong></td>
       <td><span class="badge ${dirBadge}">${t.direction||''}</span></td>
-      <td><span class="badge ${resBadge}">${t.result||''}</span></td>
+      <td>${resultCell}</td>
       <td>${rrCell}</td>
       <td style="font-variant-numeric:tabular-nums">${t.maxRR!=null?t.maxRR.toFixed(1)+'R':'—'}</td>
       <td>${exitBadge}</td>
-      <td style="font-size:11px">${t.setup||'—'}</td>
+      <td style="font-size:11px">${setupCell}</td>
       <td style="font-size:11px">${t.swingType||'—'}</td>
       <td style="font-size:11px">${t.condition||'—'}</td>
       <td style="font-size:11px">${t.universalModel||'—'}</td>
       <td>${smtTags||'—'}</td>
       <td style="white-space:nowrap">${links||'—'}</td>
       <td>${note}</td>
-    </tr>${t.notes?`<tr class="note-row" id="${noteId}" style="display:none"><td colspan="14"><div class="note-cell">${t.notes}</div></td></tr>`:''}`;
+    </tr>${t.notes?`<tr class="note-row" id="${noteId}" style="display:none"><td colspan="15"><div class="note-cell">${t.notes}</div></td></tr>`:''}`;
   }).join('');
 }
 
@@ -1888,7 +1945,33 @@ function renderAnaKPIs(T){
       <div class="kpi-hd"><div class="kpi-lbl">Worst Day</div><div class="kpi-badge">${worst?fmtDay(worst[0]):'—'}</div></div>
       <div class="kpi-val neg">${worst?fR(worstR):'—'}</div>
       <div class="kpi-sub">MDD ${dayEntries.length?fR(calcMDD(T)):'—'}</div>
-    </div>`;
+    </div>
+    ${renderPreTradeKPI(T)}`;
+}
+
+// Pre-Trade fill rate KPI — Phase 4
+function renderPreTradeKPI(T){
+  const filled=T.filter(t=>t.preTradeFilled===true).length;
+  const rate=T.length?(filled/T.length):0;
+  const pct=(rate*100).toFixed(0);
+  const cls=rate>=.8?'pos':rate>=.5?'neu':'neg';
+  // discipline edge: avg R when filled vs not
+  const filledT=T.filter(t=>t.preTradeFilled===true);
+  const unfilledT=T.filter(t=>t.preTradeFilled!==true);
+  const avgF=filledT.length?filledT.reduce((s,t)=>s+getR(t),0)/filledT.length:null;
+  const avgU=unfilledT.length?unfilledT.reduce((s,t)=>s+getR(t),0)/unfilledT.length:null;
+  let sub;
+  if(avgF!=null&&avgU!=null){
+    const diff=avgF-avgU;
+    sub=`작성 ${fR(avgF)} vs 미작성 ${fR(avgU)} <span style="color:${diff>=0?'var(--g)':'var(--r)'}">(${diff>=0?'+':''}${diff.toFixed(2)}R)</span>`;
+  } else {
+    sub=`${filled}/${T.length} 거래`;
+  }
+  return `<div class="kpi-card">
+    <div class="kpi-hd"><div class="kpi-lbl">Pre-Trade 작성률</div><div class="kpi-badge">${filled}/${T.length}</div></div>
+    <div class="kpi-val ${cls}">${T.length?pct+'%':'—'}</div>
+    <div class="kpi-sub">${sub}</div>
+  </div>`;
 }
 
 function calcMDD(T){
@@ -2013,9 +2096,129 @@ function renderAnalytics(){
   renderBarChart('ch-exit',groupAvgR(T,'exitStrategy'),'Avg R',true);
   renderBarChart('ch-direction',groupWinRate(T,'direction'),'Win Rate %');
   renderBarChart('ch-dow',groupWinRate(T,'dayOfWeek'),'Win Rate %');
+  renderGradeAnalysis(T);
   renderDDAnalysis(T);
   renderMonthlyReport(T);
   renderSetupConditionMatrix(T);
+}
+
+// ══════════════════════════════════════════════════
+// PHASE 4: GRADE ANALYSIS (Claude Review)
+// ══════════════════════════════════════════════════
+let _gradeChart=null;
+const GRADE_ORDER=['A','B+','B','B-','C','D'];
+const GRADE_COLOR={'A':'#10b981','B+':'#3b82f6','B':'#5e6ad2','B-':'#8b5cf6','C':'#f59e0b','D':'#f43f5e','N/A':'rgba(255,255,255,.12)'};
+const GRADE_CLASS={'A':'g-A','B+':'g-Bp','B':'g-B','B-':'g-Bm','C':'g-C','D':'g-D','N/A':'g-NA'};
+
+function renderGradeAnalysis(T){
+  const panel=document.getElementById('grade-panel');
+  const matEl=document.getElementById('grade-matrix');
+  const sumEl=document.getElementById('grade-summary');
+  if(!matEl)return;
+
+  // Bucket by grade (treat null/empty as N/A)
+  const groups={};
+  GRADE_ORDER.forEach(g=>groups[g]=[]);
+  groups['N/A']=[];
+  T.forEach(t=>{
+    const g=t.grade||'N/A';
+    if(!groups[g])groups[g]=[];
+    groups[g].push(t);
+  });
+
+  // If no graded trades at all, hide panel gracefully
+  const gradedCount=GRADE_ORDER.reduce((s,g)=>s+groups[g].length,0);
+  if(gradedCount===0){
+    panel.style.display='none';
+    if(_gradeChart){_gradeChart.destroy();_gradeChart=null}
+    return;
+  }
+  panel.style.display='';
+
+  // Build per-grade stats
+  const rows=GRADE_ORDER.map(g=>{
+    const arr=groups[g];
+    if(!arr.length)return{g,n:0,wr:0,aR:0,tR:0};
+    const s=stats(arr);
+    return{g,n:arr.length,wr:s.wr,aR:s.aR,tR:s.tR};
+  });
+  const naArr=groups['N/A'];
+  const naRow=naArr.length?{g:'N/A',n:naArr.length,wr:stats(naArr).wr,aR:stats(naArr).aR,tR:stats(naArr).tR}:null;
+
+  // Render donut chart (only for graded)
+  const labels=rows.filter(r=>r.n>0).map(r=>r.g);
+  const data=rows.filter(r=>r.n>0).map(r=>r.n);
+  const colors=labels.map(l=>GRADE_COLOR[l]);
+  const ctx=document.getElementById('ch-grade-donut');
+  if(ctx){
+    if(_gradeChart)_gradeChart.destroy();
+    _gradeChart=new Chart(ctx,{
+      type:'doughnut',
+      data:{labels,datasets:[{data,backgroundColor:colors,borderColor:'#191a1b',borderWidth:2}]},
+      options:{
+        responsive:true,maintainAspectRatio:false,cutout:'62%',
+        plugins:{
+          legend:{position:'bottom',labels:{color:'#d0d6e0',font:{size:11},boxWidth:10,padding:8}},
+          tooltip:{callbacks:{label:(c)=>{const pct=(c.parsed/gradedCount*100).toFixed(0);return `${c.label}: ${c.parsed}건 (${pct}%)`}}}
+        }
+      }
+    });
+  }
+
+  // Render KPI matrix
+  const cells=rows.map(r=>{
+    if(!r.n)return `<div class="grade-cell empty ${GRADE_CLASS[r.g]}">
+      <div class="gc-hd"><span class="gc-lbl">${r.g}</span><span class="gc-n">0건</span></div>
+      <div class="gc-r" style="color:var(--t2)">—</div>
+      <div class="gc-meta"><span>—</span><span>—</span></div>
+    </div>`;
+    const rc=r.aR>=0?'var(--g)':'var(--r)';
+    const wrCls=r.wr>=.5?'pos':r.wr>=.35?'neu':'neg';
+    return `<div class="grade-cell ${GRADE_CLASS[r.g]}">
+      <div class="gc-hd"><span class="gc-lbl">${r.g}</span><span class="gc-n">${r.n}건</span></div>
+      <div class="gc-r" style="color:${rc}">${fR(r.aR)}</div>
+      <div class="gc-meta"><span>WR <strong class="${wrCls}">${(r.wr*100).toFixed(0)}%</strong></span><span>Net <strong style="color:${rc}">${fR(r.tR)}</strong></span></div>
+    </div>`;
+  });
+  if(naRow){
+    const rc=naRow.aR>=0?'var(--g)':'var(--r)';
+    const wrCls=naRow.wr>=.5?'pos':naRow.wr>=.35?'neu':'neg';
+    cells.push(`<div class="grade-cell g-NA" title="등급 미평가 거래">
+      <div class="gc-hd"><span class="gc-lbl" style="color:var(--t2)">N/A</span><span class="gc-n">${naRow.n}건</span></div>
+      <div class="gc-r" style="color:${rc}">${fR(naRow.aR)}</div>
+      <div class="gc-meta"><span>WR <strong class="${wrCls}">${(naRow.wr*100).toFixed(0)}%</strong></span><span>Net <strong style="color:${rc}">${fR(naRow.tR)}</strong></span></div>
+    </div>`);
+  }
+  matEl.innerHTML=cells.join('');
+
+  // Summary insight: compare top-tier (A/B+) vs bottom-tier (C/D)
+  const topArr=[...groups['A'],...groups['B+']];
+  const botArr=[...groups['C'],...groups['D']];
+  const topS=topArr.length?stats(topArr):null;
+  const botS=botArr.length?stats(botArr):null;
+  let msg='',tone='neu';
+  if(topS&&botS){
+    const diff=topS.aR-botS.aR;
+    if(diff>0.3){
+      msg=`상위 등급 (A/B+) Avg <strong class="pos">${fR(topS.aR)}</strong> vs 하위 (C/D) <strong class="neg">${fR(botS.aR)}</strong> — 등급이 곧 성과 (<strong>+${diff.toFixed(2)}R</strong> 차이)`;
+      tone='good';
+    } else if(diff<-0.1){
+      msg=`상위 (A/B+) <strong class="neg">${fR(topS.aR)}</strong> < 하위 (C/D) <strong class="pos">${fR(botS.aR)}</strong> — 평가 기준 재점검 필요`;
+      tone='warn';
+    } else {
+      msg=`등급간 성과 격차 작음 — 상위 ${fR(topS.aR)} vs 하위 ${fR(botS.aR)} (${diff>=0?'+':''}${diff.toFixed(2)}R)`;
+    }
+  } else if(topS){
+    msg=`상위 등급 (A/B+) ${topS.n}건 · Avg <strong style="color:${topS.aR>=0?'var(--g)':'var(--r)'}">${fR(topS.aR)}</strong> · 하위 등급 데이터 부족`;
+  } else if(botS){
+    msg=`하위 등급 (C/D) ${botS.n}건만 존재 — A/B+ 거래 늘려 비교 가능하게`;
+    tone='warn';
+  }
+  if(naRow){
+    const naPct=(naRow.n/(gradedCount+naRow.n)*100).toFixed(0);
+    msg+=` · <strong>미평가 ${naRow.n}건 (${naPct}%)</strong>`;
+  }
+  sumEl.innerHTML=msg?`<div class="grade-sum ${tone}">${msg}</div>`:'';
 }
 
 // ══════════════════════════════════════════════════
