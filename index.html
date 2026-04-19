@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -21,7 +22,11 @@
   --y:#f59e0b;--ybg:rgba(245,158,11,.12);--ybd:rgba(245,158,11,.28);
   --blue:#3b82f6;
 }
-body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--mbg);color:var(--t0);min-height:100vh;font-size:14px;font-feature-settings:'cv01','ss03';-webkit-font-smoothing:antialiased}
+body{font-family:'JetBrains Mono','SF Mono','Menlo','Inter',monospace;background:var(--mbg);color:var(--t0);min-height:100vh;font-size:13px;font-feature-settings:'cv01','ss03';-webkit-font-smoothing:antialiased;letter-spacing:.1px}
+/* Terminal / trading-desk typography defaults */
+.tb-title,.sb-lt,.card-ttl,.panel-ttl,.kpi-lbl,.sc-lbl,.pd-lbl,.src-title,.nav-lbl,.wk-ttl,.mrd-section-title,.pb-kind,.fsum-lbl,.si-ttl,.goal-title{font-family:'JetBrains Mono','SF Mono',monospace;letter-spacing:.6px;text-transform:uppercase}
+.kpi-val,.sc-val,.goal-cur,.mr-r,.dd-zn-stats,.mxh-r,.si-metric,.gc-r,.gc-n,.gc-meta,.rt-r,.wk-pnl,.cc-pnl,.rr-bar-val{font-family:'JetBrains Mono','SF Mono',monospace;letter-spacing:.2px}
+button,.btn,.btn-tb,.btn-cn,.fi,.nav-it,.src-it,.qchip,.pd-tab,.ins-lbl,.kpi-badge,.card-badge,.tag-chip,.chart-link,.note-toggle,.rev-chip,.grade-chip,.badge{font-family:'JetBrains Mono','SF Mono',monospace;letter-spacing:.3px}
 
 /* ── PASSWORD SCREEN ── */
 /* ════ LOCK SCREEN (Trading Terminal) ════ */
@@ -124,7 +129,7 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--mbg
 .aw.col{margin-left:58px;width:calc(100vw - 58px)}
 
 .tb{height:58px;background:var(--sbg);border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:40;flex-shrink:0}
-.tb-title{font-size:17px;font-weight:700}
+.tb-title{font-size:15px;font-weight:800;letter-spacing:2px}
 .tb-right{display:flex;gap:8px;align-items:center}
 .tb-sync{font-size:11px;color:var(--t2)}
 .btn-tb{background:var(--cbg2);border:1px solid var(--b1);color:var(--t1);padding:6px 13px;border-radius:6px;font-size:12px;cursor:pointer;transition:all .15s}
@@ -580,6 +585,97 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 .pb-link{color:var(--ac2);cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px}
 .pb-link:hover{color:var(--t0)}
 @media(max-width:640px){.pb-kpi-row{grid-template-columns:repeat(2,1fr)}.pb-trade-row{grid-template-columns:70px 50px 34px 1fr}.pb-trade-row .pb-r{grid-column:4;text-align:right}}
+
+/* ── Share Calendar Modal ── */
+.btn-share{background:linear-gradient(135deg,#5e6ad2,#828fff);color:#fff;border:none;font-weight:600}
+.btn-share:hover{filter:brightness(1.12)}
+.sc-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:999;display:none;align-items:center;justify-content:center;padding:20px;animation:pbFade .2s ease-out}
+.sc-overlay.on{display:flex}
+.sc-modal{background:var(--sbg);border:1px solid var(--b1);border-radius:14px;width:100%;max-width:1080px;max-height:92vh;overflow:hidden;display:flex;flex-direction:column;animation:pbSlide .28s cubic-bezier(.2,.8,.2,1);box-shadow:0 20px 60px rgba(0,0,0,.7)}
+.sc-hd{padding:14px 22px;border-bottom:1px solid var(--b1);display:flex;justify-content:space-between;align-items:center;background:var(--sbg)}
+.sc-hd-ttl{font-family:'JetBrains Mono','SF Mono',monospace;font-size:13px;font-weight:800;letter-spacing:1.6px;color:var(--t0)}
+.sc-close{background:transparent;border:none;color:var(--t2);font-size:22px;cursor:pointer;padding:4px 10px;border-radius:4px;line-height:1}
+.sc-close:hover{background:var(--cbg2);color:var(--t0)}
+.sc-body{display:grid;grid-template-columns:300px 1fr;gap:0;flex:1;overflow:hidden}
+.sc-config{padding:18px 18px 18px 22px;border-right:1px solid var(--b1);overflow-y:auto;background:var(--sbg);display:flex;flex-direction:column;gap:18px}
+.sc-grp{}
+.sc-grp-lbl{font-family:'JetBrains Mono','SF Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--t2);margin-bottom:8px}
+.sc-tabs{display:flex;background:var(--cbg);border:1px solid var(--b1);border-radius:7px;padding:3px;gap:2px}
+.sc-tab{flex:1;background:transparent;border:none;color:var(--t2);padding:6px 8px;font-size:11px;font-weight:600;border-radius:5px;cursor:pointer;font-family:'JetBrains Mono','SF Mono',monospace;letter-spacing:.4px;transition:all .15s}
+.sc-tab:hover{color:var(--t1)}
+.sc-tab.on{background:var(--ac);color:#fff}
+.sc-toggles{display:flex;flex-direction:column;gap:8px}
+.sc-toggle{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--t1);cursor:pointer;user-select:none}
+.sc-toggle input{display:none}
+.sc-toggle .sc-sw{width:30px;height:17px;background:var(--cbg2);border-radius:9px;position:relative;transition:background .18s;flex-shrink:0}
+.sc-toggle .sc-sw::after{content:'';position:absolute;top:2px;left:2px;width:13px;height:13px;background:#fff;border-radius:50%;transition:transform .18s}
+.sc-toggle input:checked + .sc-sw{background:var(--ac)}
+.sc-toggle input:checked + .sc-sw::after{transform:translateX(13px)}
+.sc-cap-in{width:100%;background:var(--cbg);border:1px solid var(--b1);border-radius:6px;padding:8px 11px;color:var(--t0);font-family:'JetBrains Mono','SF Mono',monospace;font-size:12px;outline:none}
+.sc-cap-in:focus{border-color:var(--ac)}
+.sc-actions{display:flex;gap:8px;margin-top:auto;padding-top:8px}
+.sc-actions .btn{flex:1}
+
+.sc-preview-wrap{padding:24px;overflow-y:auto;background:#0c0d0f;display:flex;align-items:flex-start;justify-content:center}
+.sc-preview{background:#0f1011;color:#f7f8f8;border-radius:12px;padding:22px;width:480px;font-family:'JetBrains Mono','SF Mono',monospace;box-shadow:0 14px 40px rgba(0,0,0,.5);transition:width .2s,background .15s}
+.sc-preview.story{width:380px;min-height:600px}
+.sc-preview.theme-dark{background:#0f1011;color:#f7f8f8}
+.sc-preview.theme-light{background:#f8f9fb;color:#1a1c1f}
+.sc-preview.theme-accent{background:linear-gradient(160deg,#1a1f5c 0%,#2c2f7a 100%);color:#fff}
+.sc-pv-hd{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.sc-pv-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#5e6ad2,#828fff);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:14px;letter-spacing:.5px}
+.sc-pv-name-wrap{display:flex;flex-direction:column;gap:1px}
+.sc-pv-name{font-size:13px;font-weight:700;letter-spacing:.4px}
+.sc-pv-handle{font-size:10px;opacity:.55;letter-spacing:.3px}
+.sc-pv-brand{margin-left:auto;font-size:9px;font-weight:700;letter-spacing:1.4px;opacity:.5;text-transform:uppercase}
+.sc-pv-period{font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;opacity:.65;margin-bottom:6px}
+.sc-pv-pnl{font-size:30px;font-weight:800;letter-spacing:-.6px;margin-bottom:2px}
+.sc-pv-pnl.pos{color:#10b981}
+.sc-pv-pnl.neg{color:#f43f5e}
+.sc-preview.theme-light .sc-pv-pnl.pos{color:#0a8a5f}
+.sc-preview.theme-light .sc-pv-pnl.neg{color:#d11538}
+.sc-pv-sub{font-size:10px;opacity:.55;letter-spacing:.4px;margin-bottom:14px}
+.sc-pv-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px;padding:10px 0;border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08)}
+.sc-preview.theme-light .sc-pv-kpis{border-color:rgba(0,0,0,.08)}
+.sc-pv-kpi{display:flex;flex-direction:column;gap:3px}
+.sc-pv-kpi-lbl{font-size:8.5px;letter-spacing:.6px;text-transform:uppercase;opacity:.55;font-weight:600}
+.sc-pv-kpi-val{font-size:14px;font-weight:800;letter-spacing:.2px}
+.sc-pv-cap{font-size:11px;opacity:.7;margin-top:8px;font-style:italic}
+
+.sc-cal-wrap{margin-top:4px}
+.sc-cal-mlbl{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.sc-cal-mlbl-t{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;opacity:.7}
+.sc-cal-mlbl-r{font-size:11px;font-weight:700;opacity:.7}
+.sc-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.sc-cal-h{font-size:8.5px;letter-spacing:.6px;text-transform:uppercase;opacity:.45;text-align:center;font-weight:700;padding:2px 0}
+.sc-cal-c{aspect-ratio:1;border-radius:4px;background:rgba(255,255,255,.04);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:9px;color:inherit;position:relative;overflow:hidden}
+.sc-preview.theme-light .sc-cal-c{background:rgba(0,0,0,.05)}
+.sc-cal-c.empty{background:transparent}
+.sc-cal-c.win{background:rgba(16,185,129,.20);color:#10b981}
+.sc-cal-c.win.h{background:rgba(16,185,129,.40)}
+.sc-cal-c.win.hh{background:rgba(16,185,129,.65);color:#fff}
+.sc-cal-c.loss{background:rgba(244,63,94,.20);color:#f43f5e}
+.sc-cal-c.loss.h{background:rgba(244,63,94,.40)}
+.sc-cal-c.loss.hh{background:rgba(244,63,94,.65);color:#fff}
+.sc-cal-c.be{background:rgba(245,158,11,.18);color:#f59e0b}
+.sc-cal-c .sc-cal-d{font-size:9px;font-weight:700;opacity:.65}
+.sc-cal-c .sc-cal-v{font-size:10px;font-weight:800;letter-spacing:.1px;line-height:1.1}
+.sc-cal-c.hh .sc-cal-d{opacity:.85}
+
+/* Year heatmap */
+.sc-year-grid{display:grid;grid-template-columns:repeat(53,1fr);gap:2px;margin-top:6px}
+.sc-year-c{aspect-ratio:1;border-radius:2px;background:rgba(255,255,255,.05)}
+.sc-preview.theme-light .sc-year-c{background:rgba(0,0,0,.06)}
+.sc-year-c.win{background:rgba(16,185,129,.30)}
+.sc-year-c.win.h{background:rgba(16,185,129,.55)}
+.sc-year-c.win.hh{background:rgba(16,185,129,.85)}
+.sc-year-c.loss{background:rgba(244,63,94,.30)}
+.sc-year-c.loss.h{background:rgba(244,63,94,.55)}
+.sc-year-c.loss.hh{background:rgba(244,63,94,.85)}
+.sc-year-c.be{background:rgba(245,158,11,.40)}
+
+@media(max-width:920px){.sc-body{grid-template-columns:1fr;overflow-y:auto}.sc-config{border-right:none;border-bottom:1px solid var(--b1);max-height:none}.sc-preview{width:100%;max-width:480px}}
+
 /* buttons */
 .btn{border-radius:4px;border:none;cursor:pointer;font-size:13px;font-weight:510;transition:all .15s;white-space:nowrap;padding:8px 16px}
 .btn-p{background:var(--ac);color:#fff}.btn-p:hover{background:var(--ac2)}
@@ -707,7 +803,7 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
       <span class="src-dot" style="background:var(--blue)"></span><span class="src-lbl">Futures</span>
     </div>
   </div>
-  <div class="sb-open-hint">› 열기</div>
+  <div class="sb-open-hint">› open</div>
 </aside>
 
 <div class="aw" id="aw">
@@ -865,7 +961,8 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
             <button class="btn-cn" onclick="calMv(-1)">◀</button>
             <div class="cal-lbl" id="cal-lbl"></div>
             <button class="btn-cn" onclick="calMv(1)">▶</button>
-            <button class="btn btn-g btn-sm" onclick="calToday()" style="margin-left:6px">오늘</button>
+            <button class="btn btn-g btn-sm" onclick="calToday()" style="margin-left:6px">Today</button>
+            <button class="btn btn-sm btn-share" onclick="openShareCal()" style="margin-left:6px" title="Share Calendar">↗ Share</button>
           </div>
           <div class="cal-grid" id="cal-grid"></div>
         </div>
@@ -881,44 +978,44 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
     <div id="view-log" class="view">
       <div class="fbar">
         <select class="fi" id="ff-result" onchange="renderTbl()">
-          <option value="">전체 결과</option><option>W</option><option>L</option><option>BE</option><option>PL</option>
+          <option value="">All Result</option><option>W</option><option>L</option><option>BE</option><option>PL</option>
         </select>
         <select class="fi" id="ff-dir" onchange="renderTbl()">
-          <option value="">전체 방향</option><option>Buy</option><option>Sell</option>
+          <option value="">All Direction</option><option>Buy</option><option>Sell</option>
         </select>
         <select class="fi" id="ff-setup" onchange="renderTbl()">
-          <option value="">전체 Setup</option>
+          <option value="">All Setup</option>
           <option>Asia Reversal</option><option>Asai Continuation</option>
           <option>London Reversal</option><option>London Continuation</option>
           <option>10 a.m. NY Continuation</option><option>10 a.m. NY Reversal</option>
           <option>PM Trade</option><option>Overnight Positional</option>
         </select>
         <select class="fi" id="ff-swing" onchange="renderTbl()">
-          <option value="">전체 Swing</option>
+          <option value="">All Swing</option>
           <option>C2 DIrect (small wick)</option><option>C3 Closure → C4</option><option>C2 Large Wick → C3</option>
         </select>
         <select class="fi" id="ff-condition" onchange="renderTbl()">
-          <option value="">전체 Condition</option>
+          <option value="">All Condition</option>
           <option>Expansion</option><option>Consolidation</option><option>Seek & Destroy</option>
         </select>
-        <input class="fi" id="ff-asset" type="text" placeholder="종목..." oninput="renderTbl()" style="width:80px">
+        <input class="fi" id="ff-asset" type="text" placeholder="Symbol..." oninput="renderTbl()" style="width:80px">
         <input class="fi" id="ff-from" type="date" onchange="renderTbl()">
         <span style="color:var(--t2);font-size:12px">~</span>
         <input class="fi" id="ff-to" type="date" onchange="renderTbl()">
-        <button class="btn btn-g btn-sm" onclick="clrF()">초기화</button>
+        <button class="btn btn-g btn-sm" onclick="clrF()">Reset</button>
       </div>
 
       <!-- Quick Filter Chips -->
       <div class="qchips" id="qchips">
-        <div class="qchip" data-qf="today" onclick="applyQuickFilter('today')">오늘</div>
-        <div class="qchip" data-qf="week" onclick="applyQuickFilter('week')">이번 주</div>
-        <div class="qchip" data-qf="month" onclick="applyQuickFilter('month')">이번 달</div>
+        <div class="qchip" data-qf="today" onclick="applyQuickFilter('today')">Today</div>
+        <div class="qchip" data-qf="week" onclick="applyQuickFilter('week')">This Week</div>
+        <div class="qchip" data-qf="month" onclick="applyQuickFilter('month')">This Month</div>
         <div class="qchip-sep"></div>
-        <div class="qchip" data-qf="win" onclick="applyQuickFilter('win')">✓ 승리만</div>
-        <div class="qchip" data-qf="loss" onclick="applyQuickFilter('loss')">✗ 손실만</div>
+        <div class="qchip" data-qf="win" onclick="applyQuickFilter('win')">✓ Wins</div>
+        <div class="qchip" data-qf="loss" onclick="applyQuickFilter('loss')">✗ Losses</div>
         <div class="qchip" data-qf="be" onclick="applyQuickFilter('be')">= BE</div>
         <div class="qchip-sep"></div>
-        <div class="qchip" data-qf="bigwin" onclick="applyQuickFilter('bigwin')">⭐ +2R 이상</div>
+        <div class="qchip" data-qf="bigwin" onclick="applyQuickFilter('bigwin')">⭐ +2R or more</div>
         <div class="qchip" data-qf="fullsl" onclick="applyQuickFilter('fullsl')">🔴 Full SL</div>
       </div>
 
@@ -930,25 +1027,25 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
           <table>
             <thead><tr>
               <th class="sortable" data-sort="num"># <span class="sort-arrow"></span></th>
-              <th class="sortable" data-sort="date">날짜 <span class="sort-arrow"></span></th>
-              <th class="sortable" data-sort="asset">종목 <span class="sort-arrow"></span></th>
-              <th class="sortable" data-sort="direction">방향 <span class="sort-arrow"></span></th>
-              <th class="sortable" data-sort="result">결과 <span class="sort-arrow"></span></th>
+              <th class="sortable" data-sort="date">Date <span class="sort-arrow"></span></th>
+              <th class="sortable" data-sort="asset">Symbol <span class="sort-arrow"></span></th>
+              <th class="sortable" data-sort="direction">Direction <span class="sort-arrow"></span></th>
+              <th class="sortable" data-sort="result">Result <span class="sort-arrow"></span></th>
               <th class="sortable" data-sort="rr">RR <span class="sort-arrow"></span></th>
               <th class="sortable" data-sort="maxRR">Max RR <span class="sort-arrow"></span></th>
               <th>Exit</th>
               <th class="sortable" data-sort="setup">Setup <span class="sort-arrow"></span></th>
               <th>Swing</th><th>Condition</th>
               <th>Universal</th><th>SMT</th>
-              <th>Charts</th><th>노트</th>
+              <th>Charts</th><th>Notes</th>
             </tr></thead>
             <tbody id="tbl-body"></tbody>
           </table>
         </div>
         <div id="tbl-empty" class="empty" style="display:none">
           <div style="font-size:28px;opacity:.35;margin-bottom:8px">📋</div>
-          <div>거래 내역이 없습니다</div>
-          <div style="font-size:12px;margin-top:4px">Notion에 거래를 기록한 후 GitHub Actions가 동기화합니다</div>
+          <div>No trades recorded</div>
+          <div style="font-size:12px;margin-top:4px">Log trades in Notion — GitHub Actions will sync automatically</div>
         </div>
       </div>
     </div>
@@ -958,13 +1055,13 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 
       <!-- Period Selector -->
       <div class="pd-bar">
-        <div class="pd-lbl">기간</div>
+        <div class="pd-lbl">Period</div>
         <div class="pd-tabs" id="pd-tabs">
           <div class="pd-tab" data-pd="7" onclick="applyPeriod('7')">7D</div>
           <div class="pd-tab" data-pd="30" onclick="applyPeriod('30')">30D</div>
           <div class="pd-tab" data-pd="90" onclick="applyPeriod('90')">90D</div>
           <div class="pd-tab" data-pd="ytd" onclick="applyPeriod('ytd')">YTD</div>
-          <div class="pd-tab on" data-pd="all" onclick="applyPeriod('all')">전체</div>
+          <div class="pd-tab on" data-pd="all" onclick="applyPeriod('all')">All</div>
         </div>
         <div class="pd-custom">
           <input class="fi" id="pd-from" type="date" onchange="applyPeriod('custom')">
@@ -991,7 +1088,7 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
         <div class="heatmap-hd">
           <div>
             <div class="card-ttl">Daily Activity Heatmap</div>
-            <div class="heatmap-sub">하루 Net R 강도 · 초록 = 수익일 · 빨강 = 손실일</div>
+            <div class="heatmap-sub">Daily Net R intensity · green = win day · red = loss day</div>
           </div>
           <div id="heatmap-stats" style="font-size:11px;color:var(--t2)"></div>
         </div>
@@ -1074,7 +1171,7 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
       <div class="panel" id="grade-panel" style="margin-bottom:16px">
         <div class="panel-hd">
           <div class="panel-ttl"><span class="panel-ic" style="background:rgba(94,106,210,.15);color:var(--ac2)">★</span>Trade Grade Analysis</div>
-          <div class="panel-sub">Claude Review 등급별 분포 + 성과 — 매매 품질 일관성 추적</div>
+          <div class="panel-sub">Claude Review grade distribution + performance — quality consistency tracker</div>
         </div>
         <div class="grade-wrap">
           <div class="grade-donut-wrap"><canvas id="ch-grade-donut"></canvas></div>
@@ -1088,7 +1185,7 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
         <div class="panel">
           <div class="panel-hd">
             <div class="panel-ttl"><span class="panel-ic" style="background:rgba(244,63,94,.15);color:var(--r)">⤵</span>DD Zone Analysis</div>
-            <div class="panel-sub">역행 깊이 구간별 승률 — 얼마나 반전에서 살아 돌아오는가</div>
+            <div class="panel-sub">Win rate by drawdown depth — how often do we recover from reversal</div>
           </div>
           <div class="dd-stack" id="dd-stack"></div>
           <div class="dd-summary" id="dd-summary"></div>
@@ -1097,7 +1194,7 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
         <div class="panel">
           <div class="panel-hd">
             <div class="panel-ttl"><span class="panel-ic" style="background:rgba(94,106,210,.15);color:var(--ac2)">◈</span>Setup × Condition</div>
-            <div class="panel-sub">어떤 시장 환경에서 어떤 셋업이 유리한가</div>
+            <div class="panel-sub">Which setup performs best in which market condition</div>
           </div>
           <div class="mx-heat" id="mx-heat"></div>
         </div>
@@ -1107,7 +1204,7 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
       <div class="panel" style="margin-top:16px">
         <div class="panel-hd">
           <div class="panel-ttl"><span class="panel-ic" style="background:rgba(16,185,129,.15);color:var(--g)">📆</span>Monthly Performance</div>
-          <div class="panel-sub">월별 성적 — 클릭하여 상세 분석 보기</div>
+          <div class="panel-sub">Monthly performance — click a card for deep-dive</div>
         </div>
         <div class="mr-grid" id="mr-grid"></div>
       </div>
@@ -1134,8 +1231,68 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
       <div class="pb-kpi-row" id="pb-kpi-row"></div>
       <div class="pb-chart"><canvas id="pb-chart"></canvas></div>
       <div class="pb-trades">
-        <div class="pb-trades-hd">최근 거래</div>
+        <div class="pb-trades-hd">Recent Trades</div>
         <div id="pb-trades-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Share Calendar Modal -->
+<div class="sc-overlay" id="sc-overlay" onclick="if(event.target===this)closeShareCal()">
+  <div class="sc-modal">
+    <div class="sc-hd">
+      <div class="sc-hd-ttl">SHARE CALENDAR</div>
+      <button class="sc-close" onclick="closeShareCal()" aria-label="close">×</button>
+    </div>
+    <div class="sc-body">
+      <!-- LEFT: Config panel -->
+      <div class="sc-config">
+        <div class="sc-grp">
+          <div class="sc-grp-lbl">Period</div>
+          <div class="sc-tabs" data-grp="period">
+            <button class="sc-tab on" data-v="weekly" onclick="setShareOpt('period','weekly')">Weekly</button>
+            <button class="sc-tab" data-v="monthly" onclick="setShareOpt('period','monthly')">Monthly</button>
+            <button class="sc-tab" data-v="year" onclick="setShareOpt('period','year')">Year</button>
+          </div>
+        </div>
+        <div class="sc-grp">
+          <div class="sc-grp-lbl">Theme</div>
+          <div class="sc-tabs" data-grp="theme">
+            <button class="sc-tab on" data-v="dark" onclick="setShareOpt('theme','dark')">Dark</button>
+            <button class="sc-tab" data-v="light" onclick="setShareOpt('theme','light')">Light</button>
+            <button class="sc-tab" data-v="accent" onclick="setShareOpt('theme','accent')">Accent</button>
+          </div>
+        </div>
+        <div class="sc-grp">
+          <div class="sc-grp-lbl">Format</div>
+          <div class="sc-tabs" data-grp="format">
+            <button class="sc-tab on" data-v="square" onclick="setShareOpt('format','square')">Square</button>
+            <button class="sc-tab" data-v="story" onclick="setShareOpt('format','story')">Story</button>
+          </div>
+        </div>
+        <div class="sc-grp">
+          <div class="sc-grp-lbl">Display</div>
+          <div class="sc-toggles">
+            <label class="sc-toggle"><span>Show Name</span><input type="checkbox" id="sc-tg-name" checked onchange="setShareOpt('name',this.checked)"><span class="sc-sw"></span></label>
+            <label class="sc-toggle"><span>Hide $</span><input type="checkbox" id="sc-tg-hide" onchange="setShareOpt('hideMoney',this.checked)"><span class="sc-sw"></span></label>
+            <label class="sc-toggle"><span>Show R</span><input type="checkbox" id="sc-tg-r" onchange="setShareOpt('showR',this.checked)"><span class="sc-sw"></span></label>
+            <label class="sc-toggle"><span>Show Trades</span><input type="checkbox" id="sc-tg-tr" onchange="setShareOpt('showTrades',this.checked)"><span class="sc-sw"></span></label>
+            <label class="sc-toggle"><span>Profile Avatar</span><input type="checkbox" id="sc-tg-pic" checked onchange="setShareOpt('profilePic',this.checked)"><span class="sc-sw"></span></label>
+          </div>
+        </div>
+        <div class="sc-grp">
+          <div class="sc-grp-lbl">Caption</div>
+          <input type="text" class="sc-cap-in" id="sc-cap-in" placeholder="Add a caption..." maxlength="80" oninput="setShareOpt('caption',this.value)">
+        </div>
+        <div class="sc-actions">
+          <button class="btn btn-sm" onclick="copyShareCal()">⧉ Copy</button>
+          <button class="btn btn-sm btn-g" onclick="downloadShareCalPNG()">↓ Download PNG</button>
+        </div>
+      </div>
+      <!-- RIGHT: Live preview -->
+      <div class="sc-preview-wrap">
+        <div class="sc-preview" id="sc-preview"></div>
       </div>
     </div>
   </div>
@@ -1277,7 +1434,7 @@ async function loadData(){
     ALL=await r.json();
   }catch(e){
     ALL={crypto:[],futures:[],lastSync:''};
-    toast('data.json을 찾을 수 없습니다. GitHub Actions 동기화를 실행하세요.');
+    toast('data.json not found. Please run GitHub Actions sync.');
   }
   if(ALL.lastSync){
     const d=new Date(ALL.lastSync);
@@ -1327,8 +1484,8 @@ function toggleSB(){
 }
 function sbAreaClick(e){
   const sb=document.getElementById('sb');
-  if(!sb.classList.contains('col'))return; // 열려있으면 무시
-  if(e.target.closest('.sb-tog'))return; // 토글버튼 클릭은 toggleSB가 처리
+  if(!sb.classList.contains('col'))return; // ignore when open
+  if(e.target.closest('.sb-tog'))return; // toggle button handled by toggleSB
   toggleSB();
 }
 function chkMob(){document.getElementById('mob-btn').style.display=window.innerWidth<768?'block':'none'}
@@ -1378,7 +1535,7 @@ function renderGoalTracker(T){
   const paceEl=document.getElementById('goal-pace');
   if(!tgt){
     fill.style.width='0';fill.className='goal-bar-fill';
-    pctEl.textContent='목표 설정 필요';pctEl.style.color='var(--t2)';
+    pctEl.textContent='Set a target';pctEl.style.color='var(--t2)';
     paceEl.textContent='';return;
   }
   const pct=Math.max(0,Math.min(100,(curR/tgt)*100));
@@ -1604,7 +1761,7 @@ function renderDailyR(T){
 function renderRecentTrades(T){
   const el=document.getElementById('rt-list');
   if(!el)return;
-  if(!T.length){el.innerHTML='<div class="rt-empty">거래 내역이 없습니다</div>';return}
+  if(!T.length){el.innerHTML='<div class="rt-empty">No trades</div>';return}
   const recent=[...T].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,12);
   el.innerHTML=recent.map(t=>{
     const r=getR(t);
@@ -1638,7 +1795,7 @@ function renderCal(){
     const wp=dt.length?Math.round(nw/dt.length*100):0;
     let cls='cal-c';if(ds===tod)cls+=' today';
     if(dt.length){cls+=tR>0.01?' win':tR<-0.01?' loss':' beven'}
-    h+=dt.length?`<div class="${cls}"><div class="cc-dn">${d}</div><div class="cc-pnl">${fR(tR)}</div><div class="cc-sub">${dt.length}건 ${wp}%</div></div>`
+    h+=dt.length?`<div class="${cls}"><div class="cc-dn">${d}</div><div class="cc-pnl">${fR(tR)}</div><div class="cc-sub">${dt.length}t ${wp}%</div></div>`
       :`<div class="${cls}"><div class="cc-dn">${d}</div></div>`;
   }
   document.getElementById('cal-grid').innerHTML=h;
@@ -1659,6 +1816,250 @@ function renderCal(){
 }
 function calMv(d){cM+=d;if(cM<0){cM=11;cY--}if(cM>11){cM=0;cY++}renderCal()}
 function calToday(){const n=new Date();cY=n.getFullYear();cM=n.getMonth();renderCal()}
+
+// ══════════════════════════════════════════════════
+// SHARE CALENDAR
+// ══════════════════════════════════════════════════
+const _shareCal={
+  period:'monthly',
+  theme:'dark',
+  format:'square',
+  name:true,
+  hideMoney:false,
+  showR:false,
+  profilePic:true,
+  showTrades:false,
+  caption:'',
+  displayName:'nnmn',
+  handle:'@nnmn'
+};
+
+function openShareCal(){
+  // Init caption + name from settings if available
+  const capIn=document.getElementById('sc-cap-in');
+  if(capIn)capIn.value=_shareCal.caption||'';
+  document.getElementById('sc-overlay').classList.add('on');
+  renderSharePreview();
+}
+function closeShareCal(){document.getElementById('sc-overlay').classList.remove('on')}
+
+function setShareOpt(k,v){
+  _shareCal[k]=v;
+  // Update active tab states
+  if(['period','theme','format'].includes(k)){
+    document.querySelectorAll(`.sc-tabs[data-grp="${k}"] .sc-tab`).forEach(b=>{
+      b.classList.toggle('on',b.dataset.v===v);
+    });
+  }
+  renderSharePreview();
+}
+
+// Calculate USD from R (rough estimate using risk per trade)
+function _scR2Usd(r){
+  // Use $125 per R as default (matches CLAUDE.md $50k * 0.25%)
+  return r*125;
+}
+function _fmtUsd(n){
+  const s=n>=0?'+':'-';
+  const abs=Math.abs(n);
+  return s+'$'+abs.toLocaleString('en-US',{maximumFractionDigits:0});
+}
+function _fmtUsdK(n){
+  const s=n>=0?'+':'-';
+  const abs=Math.abs(n);
+  if(abs>=1000)return s+'$'+(abs/1000).toFixed(1)+'k';
+  return s+'$'+abs.toFixed(0);
+}
+
+function renderSharePreview(){
+  const cfg=_shareCal;
+  const pv=document.getElementById('sc-preview');
+  if(!pv)return;
+  pv.className='sc-preview theme-'+cfg.theme+(cfg.format==='story'?' story':'');
+
+  const T=getTrades();
+  const now=new Date();
+  let from,to,periodLbl,gridHtml='';
+
+  if(cfg.period==='weekly'){
+    // Current week (Sun..Sat)
+    const d=new Date(now);d.setHours(0,0,0,0);
+    const dow=d.getDay();
+    from=new Date(d);from.setDate(d.getDate()-dow);
+    to=new Date(from);to.setDate(from.getDate()+6);
+    periodLbl='This Week · '+(from.getMonth()+1)+'/'+from.getDate()+' – '+(to.getMonth()+1)+'/'+to.getDate();
+  } else if(cfg.period==='monthly'){
+    from=new Date(cY,cM,1);
+    to=new Date(cY,cM+1,0);
+    const mo=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+    periodLbl=mo[cM]+' '+cY;
+  } else {
+    from=new Date(cY,0,1);
+    to=new Date(cY,11,31);
+    periodLbl='Year '+cY;
+  }
+  const fromStr=from.toISOString().slice(0,10);
+  const toStr=to.toISOString().slice(0,10);
+
+  // Filter trades
+  const F=T.filter(t=>{
+    if(!t.date)return false;
+    const ds=t.date.slice(0,10);
+    return ds>=fromStr && ds<=toStr;
+  });
+
+  // KPIs
+  const totR=F.reduce((s,t)=>s+getR(t),0);
+  const wins=F.filter(t=>t.result==='W').length;
+  const losses=F.filter(t=>t.result==='L').length;
+  const wr=F.length?Math.round(wins/F.length*100):0;
+  const tradingDays=new Set(F.map(t=>t.date.slice(0,10))).size;
+  const avgR=F.length?totR/F.length:0;
+  const totUsd=_scR2Usd(totR);
+
+  const pnlCls=totR>0.01?'pos':totR<-0.01?'neg':'';
+  const pnlMain=cfg.hideMoney?(totR>=0?'+':'')+totR.toFixed(2)+'R':_fmtUsd(totUsd);
+  const pnlSub=cfg.hideMoney?(F.length+' trades · '+wr+'% WR'):((totR>=0?'+':'')+totR.toFixed(2)+'R · '+F.length+' trades · '+wr+'% WR');
+
+  // Build calendar grid (monthly/weekly) or year heatmap
+  const byD={};F.forEach(t=>{const d=t.date.slice(0,10);if(!byD[d])byD[d]=[];byD[d].push(t)});
+
+  if(cfg.period==='year'){
+    // 53-week heatmap: start from first Sunday of year
+    const yStart=new Date(cY,0,1);
+    const dow0=yStart.getDay();
+    const hStart=new Date(yStart);hStart.setDate(yStart.getDate()-dow0);
+    let cells='';
+    for(let w=0;w<53;w++){
+      for(let d=0;d<7;d++){
+        const dd=new Date(hStart);dd.setDate(hStart.getDate()+w*7+d);
+        if(dd.getFullYear()!==cY){cells+='<div class="sc-year-c"></div>';continue}
+        const ds=dd.toISOString().slice(0,10);
+        const dt=byD[ds]||[];
+        if(!dt.length){cells+='<div class="sc-year-c"></div>';continue}
+        const r=dt.reduce((s,t)=>s+getR(t),0);
+        const ar=Math.abs(r);
+        const lvl=ar>=3?'hh':ar>=1?'h':'';
+        const sg=r>0.01?'win':r<-0.01?'loss':'be';
+        cells+='<div class="sc-year-c '+sg+' '+lvl+'"></div>';
+      }
+    }
+    gridHtml='<div class="sc-cal-wrap"><div class="sc-year-grid">'+cells+'</div></div>';
+  } else {
+    // Daily grid (weekly = 7 cells, monthly = full month)
+    let cells='';
+    const headers=['S','M','T','W','T','F','S'];
+    cells+=headers.map(h=>'<div class="sc-cal-h">'+h+'</div>').join('');
+    if(cfg.period==='weekly'){
+      for(let i=0;i<7;i++){
+        const dd=new Date(from);dd.setDate(from.getDate()+i);
+        cells+=_scCellHtml(dd,byD,cfg);
+      }
+    } else {
+      const fd=from.getDay();
+      const dm=to.getDate();
+      for(let i=0;i<fd;i++)cells+='<div class="sc-cal-c empty"></div>';
+      for(let d=1;d<=dm;d++){
+        const dd=new Date(cY,cM,d);
+        cells+=_scCellHtml(dd,byD,cfg);
+      }
+    }
+    gridHtml='<div class="sc-cal-wrap"><div class="sc-cal-mlbl"><div class="sc-cal-mlbl-t">'+periodLbl+'</div><div class="sc-cal-mlbl-r">'+tradingDays+' active days</div></div><div class="sc-cal-grid">'+cells+'</div></div>';
+  }
+
+  // Profile section
+  const initial=(cfg.displayName||'N').charAt(0).toUpperCase();
+  const profHtml=cfg.name?(
+    '<div class="sc-pv-hd">'+
+    (cfg.profilePic?'<div class="sc-pv-avatar">'+initial+'</div>':'')+
+    '<div class="sc-pv-name-wrap"><div class="sc-pv-name">'+_esc(cfg.displayName)+'</div><div class="sc-pv-handle">'+_esc(cfg.handle)+'</div></div>'+
+    '<div class="sc-pv-brand">nnmn.log</div>'+
+    '</div>'
+  ):'<div class="sc-pv-hd"><div class="sc-pv-brand" style="margin-left:0">nnmn.log</div></div>';
+
+  // KPI strip
+  const kpis=[
+    ['Trades',F.length],
+    ['Win Rate',wr+'%'],
+    ['Days',tradingDays],
+    ['Avg R',(avgR>=0?'+':'')+avgR.toFixed(2)]
+  ];
+  const kpisHtml='<div class="sc-pv-kpis">'+kpis.map(k=>'<div class="sc-pv-kpi"><div class="sc-pv-kpi-lbl">'+k[0]+'</div><div class="sc-pv-kpi-val">'+k[1]+'</div></div>').join('')+'</div>';
+
+  // Caption
+  const capHtml=cfg.caption?'<div class="sc-pv-cap">"'+_esc(cfg.caption)+'"</div>':'';
+
+  pv.innerHTML=profHtml+
+    '<div class="sc-pv-period">'+periodLbl+'</div>'+
+    '<div class="sc-pv-pnl '+pnlCls+'">'+pnlMain+'</div>'+
+    '<div class="sc-pv-sub">'+pnlSub+'</div>'+
+    kpisHtml+
+    gridHtml+
+    capHtml;
+}
+
+function _scCellHtml(dd,byD,cfg){
+  const ds=dd.toISOString().slice(0,10);
+  const dt=byD[ds]||[];
+  const dn=dd.getDate();
+  if(!dt.length)return '<div class="sc-cal-c"><div class="sc-cal-d">'+dn+'</div></div>';
+  const r=dt.reduce((s,t)=>s+getR(t),0);
+  const ar=Math.abs(r);
+  const lvl=ar>=3?'hh':ar>=1?'h':'';
+  const sg=r>0.01?'win':r<-0.01?'loss':'be';
+  let val;
+  if(cfg.showR)val=(r>=0?'+':'')+r.toFixed(1)+'R';
+  else if(cfg.hideMoney)val=(r>=0?'+':'')+r.toFixed(1)+'R';
+  else val=_fmtUsdK(_scR2Usd(r));
+  const sub=cfg.showTrades?'<div class="sc-cal-v" style="font-size:8px;opacity:.6;margin-top:1px">'+dt.length+'t</div>':'';
+  return '<div class="sc-cal-c '+sg+' '+lvl+'"><div class="sc-cal-d">'+dn+'</div><div class="sc-cal-v">'+val+'</div>'+sub+'</div>';
+}
+
+function _esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+async function downloadShareCalPNG(){
+  const pv=document.getElementById('sc-preview');
+  if(!pv){toast('Preview not ready');return}
+  if(typeof html2canvas==='undefined'){toast('html2canvas not loaded');return}
+  try{
+    toast('Rendering PNG...');
+    const bg=getComputedStyle(pv).backgroundColor;
+    const canvas=await html2canvas(pv,{backgroundColor:bg,scale:2,logging:false,useCORS:true});
+    const url=canvas.toDataURL('image/png');
+    const a=document.createElement('a');
+    a.href=url;
+    a.download='nnmn-calendar-'+_shareCal.period+'-'+Date.now()+'.png';
+    document.body.appendChild(a);a.click();a.remove();
+    toast('PNG downloaded ✓');
+  }catch(e){console.error(e);toast('Export failed: '+e.message)}
+}
+
+async function copyShareCal(){
+  const pv=document.getElementById('sc-preview');
+  if(!pv){toast('Preview not ready');return}
+  if(typeof html2canvas==='undefined'){toast('html2canvas not loaded');return}
+  try{
+    toast('Copying...');
+    const bg=getComputedStyle(pv).backgroundColor;
+    const canvas=await html2canvas(pv,{backgroundColor:bg,scale:2,logging:false,useCORS:true});
+    canvas.toBlob(async blob=>{
+      try{
+        await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);
+        toast('Copied to clipboard ✓');
+      }catch(err){
+        // Fallback: download instead
+        const url=URL.createObjectURL(blob);
+        const a=document.createElement('a');a.href=url;a.download='nnmn-calendar.png';
+        document.body.appendChild(a);a.click();a.remove();
+        URL.revokeObjectURL(url);
+        toast('Clipboard blocked — downloaded instead');
+      }
+    },'image/png');
+  }catch(e){console.error(e);toast('Copy failed: '+e.message)}
+}
+
+// Close on Escape
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){const ov=document.getElementById('sc-overlay');if(ov&&ov.classList.contains('on'))closeShareCal()}});
 
 // ── EQUITY CHART
 function renderEqCh(T){
@@ -1752,7 +2153,7 @@ function renderTbl(){
       t.mtfChart?`<a class="chart-link" href="${t.mtfChart}" target="_blank">MTF</a>`:null,
       t.entryChart?`<a class="chart-link" href="${t.entryChart}" target="_blank">E</a>`:null].filter(Boolean).join(' ');
     const noteId='note-'+Math.random().toString(36).slice(2,8);
-    const note=t.notes?`<span class="note-toggle" onclick="toggleNote('${noteId}')">📝 펼치기</span>`:'';
+    const note=t.notes?`<span class="note-toggle" onclick="toggleNote('${noteId}')">📝 expand</span>`:'';
     const srcDot=t.source==='crypto'?'🟡':'🔵';
     const exitBadge=t.exitStrategy?`<span class="tag-chip">${t.exitStrategy}</span>`:'—';
     // RR mini-bar: show actual R vs maxRR as capture ratio
@@ -1802,7 +2203,7 @@ function renderFsum(arr){
   const el=document.getElementById('fsum');
   if(!el)return;
   if(!arr.length){
-    el.innerHTML='<div class="fsum-item" style="color:var(--t2)">필터 결과 없음</div>';
+    el.innerHTML='<div class="fsum-item" style="color:var(--t2)">No matches</div>';
     return;
   }
   const s=stats(arr);
@@ -1814,7 +2215,7 @@ function renderFsum(arr){
   const bestCls=best>=0?'pos':'neg';
   const worstCls=worst>=0?'pos':'neg';
   el.innerHTML=`
-    <div class="fsum-item"><span class="fsum-lbl">필터 결과</span><span class="fsum-val neu">${s.n}건</span></div>
+    <div class="fsum-item"><span class="fsum-lbl">Filtered</span><span class="fsum-val neu">${s.n}t</span></div>
     <div class="fsum-sep"></div>
     <div class="fsum-item"><span class="fsum-lbl">Net R</span><span class="fsum-val ${tRcls}">${fR(s.tR)}</span></div>
     <div class="fsum-sep"></div>
@@ -1869,7 +2270,7 @@ function toggleNote(id){
   row.style.display=vis?'none':'table-row';
   // update toggle text
   const prev=row.previousElementSibling;
-  if(prev){const tog=prev.querySelector('.note-toggle');if(tog)tog.innerHTML=vis?'📝 펼치기':'📝 접기'}
+  if(prev){const tog=prev.querySelector('.note-toggle');if(tog)tog.innerHTML=vis?'📝 expand':'📝 collapse'}
 }
 
 // ══════════════════════════════════════════════════
@@ -1963,12 +2364,12 @@ function renderPreTradeKPI(T){
   let sub;
   if(avgF!=null&&avgU!=null){
     const diff=avgF-avgU;
-    sub=`작성 ${fR(avgF)} vs 미작성 ${fR(avgU)} <span style="color:${diff>=0?'var(--g)':'var(--r)'}">(${diff>=0?'+':''}${diff.toFixed(2)}R)</span>`;
+    sub=`Filled ${fR(avgF)} vs Unfilled ${fR(avgU)} <span style="color:${diff>=0?'var(--g)':'var(--r)'}">(${diff>=0?'+':''}${diff.toFixed(2)}R)</span>`;
   } else {
-    sub=`${filled}/${T.length} 거래`;
+    sub=`${filled}/${T.length} trades`;
   }
   return `<div class="kpi-card">
-    <div class="kpi-hd"><div class="kpi-lbl">Pre-Trade 작성률</div><div class="kpi-badge">${filled}/${T.length}</div></div>
+    <div class="kpi-hd"><div class="kpi-lbl">Pre-Trade Fill Rate</div><div class="kpi-badge">${filled}/${T.length}</div></div>
     <div class="kpi-val ${cls}">${T.length?pct+'%':'—'}</div>
     <div class="kpi-sub">${sub}</div>
   </div>`;
@@ -1983,7 +2384,7 @@ function calcMDD(T){
 function renderInsightCards(T){
   const host=document.getElementById('ana-insights');
   if(!host)return;
-  if(!T.length){host.innerHTML='<div class="ins-card neutral"><div class="ins-hd"><span class="ins-ic">📭</span><div class="ins-lbl">No data</div></div><div class="ins-name">거래 기록 없음</div></div>';return}
+  if(!T.length){host.innerHTML='<div class="ins-card neutral"><div class="ins-hd"><span class="ins-ic">📭</span><div class="ins-lbl">No data</div></div><div class="ins-name">No trades logged</div></div>';return}
 
   const cards=[];
   const esc=(s)=>String(s).replace(/'/g,"\\'");
@@ -1999,7 +2400,7 @@ function renderInsightCards(T){
   if(setupR.length>1){
     const w=setupR[setupR.length-1];
     if(w.value<0){
-      cards.push({kind:'bad',ic:'⚠️',lbl:'Worst Setup',name:w.label,metric:fR(w.value),metricCls:'neg',sub:`${w.count} trades · 제거 검토`,click:`openPlaybook('setup','${esc(w.label)}')`});
+      cards.push({kind:'bad',ic:'⚠️',lbl:'Worst Setup',name:w.label,metric:fR(w.value),metricCls:'neg',sub:`${w.count} trades · consider retiring`,click:`openPlaybook('setup','${esc(w.label)}')`});
     }
   }
 
@@ -2159,7 +2560,7 @@ function renderGradeAnalysis(T){
         responsive:true,maintainAspectRatio:false,cutout:'62%',
         plugins:{
           legend:{position:'bottom',labels:{color:'#d0d6e0',font:{size:11},boxWidth:10,padding:8}},
-          tooltip:{callbacks:{label:(c)=>{const pct=(c.parsed/gradedCount*100).toFixed(0);return `${c.label}: ${c.parsed}건 (${pct}%)`}}}
+          tooltip:{callbacks:{label:(c)=>{const pct=(c.parsed/gradedCount*100).toFixed(0);return `${c.label}: ${c.parsed}t (${pct}%)`}}}
         }
       }
     });
@@ -2168,14 +2569,14 @@ function renderGradeAnalysis(T){
   // Render KPI matrix
   const cells=rows.map(r=>{
     if(!r.n)return `<div class="grade-cell empty ${GRADE_CLASS[r.g]}">
-      <div class="gc-hd"><span class="gc-lbl">${r.g}</span><span class="gc-n">0건</span></div>
+      <div class="gc-hd"><span class="gc-lbl">${r.g}</span><span class="gc-n">0t</span></div>
       <div class="gc-r" style="color:var(--t2)">—</div>
       <div class="gc-meta"><span>—</span><span>—</span></div>
     </div>`;
     const rc=r.aR>=0?'var(--g)':'var(--r)';
     const wrCls=r.wr>=.5?'pos':r.wr>=.35?'neu':'neg';
     return `<div class="grade-cell ${GRADE_CLASS[r.g]}">
-      <div class="gc-hd"><span class="gc-lbl">${r.g}</span><span class="gc-n">${r.n}건</span></div>
+      <div class="gc-hd"><span class="gc-lbl">${r.g}</span><span class="gc-n">${r.n}t</span></div>
       <div class="gc-r" style="color:${rc}">${fR(r.aR)}</div>
       <div class="gc-meta"><span>WR <strong class="${wrCls}">${(r.wr*100).toFixed(0)}%</strong></span><span>Net <strong style="color:${rc}">${fR(r.tR)}</strong></span></div>
     </div>`;
@@ -2183,8 +2584,8 @@ function renderGradeAnalysis(T){
   if(naRow){
     const rc=naRow.aR>=0?'var(--g)':'var(--r)';
     const wrCls=naRow.wr>=.5?'pos':naRow.wr>=.35?'neu':'neg';
-    cells.push(`<div class="grade-cell g-NA" title="등급 미평가 거래">
-      <div class="gc-hd"><span class="gc-lbl" style="color:var(--t2)">N/A</span><span class="gc-n">${naRow.n}건</span></div>
+    cells.push(`<div class="grade-cell g-NA" title="Ungraded trades">
+      <div class="gc-hd"><span class="gc-lbl" style="color:var(--t2)">N/A</span><span class="gc-n">${naRow.n}t</span></div>
       <div class="gc-r" style="color:${rc}">${fR(naRow.aR)}</div>
       <div class="gc-meta"><span>WR <strong class="${wrCls}">${(naRow.wr*100).toFixed(0)}%</strong></span><span>Net <strong style="color:${rc}">${fR(naRow.tR)}</strong></span></div>
     </div>`);
@@ -2200,23 +2601,23 @@ function renderGradeAnalysis(T){
   if(topS&&botS){
     const diff=topS.aR-botS.aR;
     if(diff>0.3){
-      msg=`상위 등급 (A/B+) Avg <strong class="pos">${fR(topS.aR)}</strong> vs 하위 (C/D) <strong class="neg">${fR(botS.aR)}</strong> — 등급이 곧 성과 (<strong>+${diff.toFixed(2)}R</strong> 차이)`;
+      msg=`Top tier (A/B+) Avg <strong class="pos">${fR(topS.aR)}</strong> vs Bottom (C/D) <strong class="neg">${fR(botS.aR)}</strong> — grade predicts edge (<strong>+${diff.toFixed(2)}R</strong> gap)`;
       tone='good';
     } else if(diff<-0.1){
-      msg=`상위 (A/B+) <strong class="neg">${fR(topS.aR)}</strong> < 하위 (C/D) <strong class="pos">${fR(botS.aR)}</strong> — 평가 기준 재점검 필요`;
+      msg=`Top (A/B+) <strong class="neg">${fR(topS.aR)}</strong> < Bottom (C/D) <strong class="pos">${fR(botS.aR)}</strong> — review grading criteria`;
       tone='warn';
     } else {
-      msg=`등급간 성과 격차 작음 — 상위 ${fR(topS.aR)} vs 하위 ${fR(botS.aR)} (${diff>=0?'+':''}${diff.toFixed(2)}R)`;
+      msg=`Grade gap small — Top ${fR(topS.aR)} vs Bottom ${fR(botS.aR)} (${diff>=0?'+':''}${diff.toFixed(2)}R)`;
     }
   } else if(topS){
-    msg=`상위 등급 (A/B+) ${topS.n}건 · Avg <strong style="color:${topS.aR>=0?'var(--g)':'var(--r)'}">${fR(topS.aR)}</strong> · 하위 등급 데이터 부족`;
+    msg=`Top tier (A/B+) ${topS.n}t · Avg <strong style="color:${topS.aR>=0?'var(--g)':'var(--r)'}">${fR(topS.aR)}</strong> · bottom-tier data insufficient`;
   } else if(botS){
-    msg=`하위 등급 (C/D) ${botS.n}건만 존재 — A/B+ 거래 늘려 비교 가능하게`;
+    msg=`Only bottom-tier (C/D) ${botS.n}t — grow A/B+ sample for comparison`;
     tone='warn';
   }
   if(naRow){
     const naPct=(naRow.n/(gradedCount+naRow.n)*100).toFixed(0);
-    msg+=` · <strong>미평가 ${naRow.n}건 (${naPct}%)</strong>`;
+    msg+=` · <strong>Ungraded ${naRow.n}t (${naPct}%)</strong>`;
   }
   sumEl.innerHTML=msg?`<div class="grade-sum ${tone}">${msg}</div>`:'';
 }
@@ -2232,7 +2633,7 @@ function renderCalendarHeatmap(T){
   const byD={};
   T.forEach(t=>{if(!t.date)return;const d=t.date.slice(0,10);byD[d]=(byD[d]||0)+getR(t)});
   const dayKeys=Object.keys(byD);
-  if(!dayKeys.length){wrap.innerHTML='<div style="color:var(--t2);font-size:12px;padding:20px;text-align:center;width:100%">거래 데이터 없음</div>';statsEl.textContent='';return}
+  if(!dayKeys.length){wrap.innerHTML='<div style="color:var(--t2);font-size:12px;padding:20px;text-align:center;width:100%">No trade data</div>';statsEl.textContent='';return}
   // range: last 365 days ending today
   const today=new Date();today.setHours(0,0,0,0);
   const end=new Date(today);
@@ -2298,10 +2699,10 @@ function renderCalendarHeatmap(T){
 function renderSmartInsights(T){
   const host=document.getElementById('si-list');
   if(!host)return;
-  if(T.length<5){host.innerHTML='<div class="si-it">거래 5건 이상 기록 시 Smart Insights가 활성화됩니다</div>';return}
+  if(T.length<5){host.innerHTML='<div class="si-it">Smart Insights activates after 5+ trades</div>';return}
   const items=[];
 
-  // 1) 연패 후 다음 거래 성과
+  // 1) Performance after consecutive losses
   let afterLoss2W=0,afterLoss2N=0,afterLoss2R=0;
   for(let i=2;i<T.length;i++){
     if(T[i-1].result==='L'&&T[i-2].result==='L'){
@@ -2315,10 +2716,10 @@ function renderSmartInsights(T){
     const overallWR=(T.filter(t=>t.result==='W').length/T.length*100).toFixed(0);
     const diff=parseFloat(wr)-parseFloat(overallWR);
     const kind=diff<-10?'bad':diff>10?'good':'warn';
-    items.push({kind,html:`<strong>2연패 직후</strong> 다음 거래 승률 <span class="si-metric ${diff<0?'neg':'pos'}">${wr}%</span> (전체 ${overallWR}%, Avg ${avg}R · ${afterLoss2N}회) — ${diff<-10?'리벤지 트레이딩 주의':diff>10?'반등 구간 유효':'평균에 가까움'}`});
+    items.push({kind,html:`<strong>After 2 losses in a row</strong> next-trade WR <span class="si-metric ${diff<0?'neg':'pos'}">${wr}%</span> (overall ${overallWR}%, Avg ${avg}R · ${afterLoss2N} samples) — ${diff<-10?'watch for revenge trading':diff>10?'recovery edge holds':'near baseline'}`});
   }
 
-  // 2) 연승 후 다음 거래 성과
+  // 2) Performance after consecutive wins
   let afterWin2W=0,afterWin2N=0,afterWin2R=0;
   for(let i=2;i<T.length;i++){
     if(T[i-1].result==='W'&&T[i-2].result==='W'){
@@ -2332,10 +2733,10 @@ function renderSmartInsights(T){
     const overallWR=(T.filter(t=>t.result==='W').length/T.length*100).toFixed(0);
     const diff=parseFloat(wr)-parseFloat(overallWR);
     const kind=diff<-10?'bad':diff>10?'good':'warn';
-    items.push({kind,html:`<strong>2연승 직후</strong> 다음 거래 승률 <span class="si-metric ${diff<0?'neg':'pos'}">${wr}%</span> (전체 ${overallWR}%, Avg ${avg}R · ${afterWin2N}회) — ${diff<-10?'오버트레이딩 경계':diff>10?'모멘텀 유지':'평균에 가까움'}`});
+    items.push({kind,html:`<strong>After 2 wins in a row</strong> next-trade WR <span class="si-metric ${diff<0?'neg':'pos'}">${wr}%</span> (overall ${overallWR}%, Avg ${avg}R · ${afterWin2N} samples) — ${diff<-10?'beware overtrading':diff>10?'momentum holds':'near baseline'}`});
   }
 
-  // 3) 당일 N번째 거래 성과 (과잉매매 탐지)
+  // 3) Nth trade of the day (overtrading detection)
   const byD={};T.forEach(t=>{if(!t.date)return;const d=t.date.slice(0,10);if(!byD[d])byD[d]=[];byD[d].push(t)});
   const byOrder={};
   Object.values(byD).forEach(arr=>{arr.forEach((t,i)=>{const o=i+1;if(!byOrder[o])byOrder[o]={n:0,w:0,r:0};byOrder[o].n++;if(t.result==='W')byOrder[o].w++;byOrder[o].r+=getR(t)})});
@@ -2346,10 +2747,10 @@ function renderSmartInsights(T){
     const diff=wr3-wr1;
     const avg3=(wr3p.r/wr3p.n).toFixed(2);
     const kind=diff<-10?'bad':diff>10?'good':'warn';
-    items.push({kind,html:`<strong>당일 3번째 이후 거래</strong> 승률 <span class="si-metric ${diff<0?'neg':'pos'}">${wr3.toFixed(0)}%</span> (1번째 ${wr1.toFixed(0)}%, Avg ${avg3}R · ${wr3p.n}회) — ${diff<-10?'하루 거래 제한 검토':diff>10?'꾸준히 기회 포착':'균등 수준'}`});
+    items.push({kind,html:`<strong>3rd+ trade of the day</strong> WR <span class="si-metric ${diff<0?'neg':'pos'}">${wr3.toFixed(0)}%</span> (1st trade ${wr1.toFixed(0)}%, Avg ${avg3}R · ${wr3p.n} samples) — ${diff<-10?'consider daily trade cap':diff>10?'consistent opportunity capture':'balanced'}`});
   }
 
-  // 4) 가장 일관성 있는 요일 (R 표준편차 낮은)
+  // 4) Most consistent day-of-week (low R std deviation)
   const dowStats={};
   T.forEach(t=>{if(!t.dayOfWeek)return;const d=t.dayOfWeek;if(!dowStats[d])dowStats[d]={rs:[]};dowStats[d].rs.push(getR(t))});
   const dowEntries=Object.entries(dowStats).filter(([,v])=>v.rs.length>=3).map(([k,v])=>{
@@ -2361,43 +2762,43 @@ function renderSmartInsights(T){
     const sorted=[...dowEntries].sort((a,b)=>b.mean-a.mean);
     const best=sorted[0],worst=sorted[sorted.length-1];
     if(best.mean-worst.mean>0.3){
-      items.push({kind:'good',html:`<strong>${best.day}</strong>에 가장 잘함 (Avg <span class="si-metric pos">${fR(best.mean)}</span>) · <strong>${worst.day}</strong>는 <span class="si-metric neg">${fR(worst.mean)}</span> — 주간 편향 인지`});
+      items.push({kind:'good',html:`Best on <strong>${best.day}</strong> (Avg <span class="si-metric pos">${fR(best.mean)}</span>) · Worst on <strong>${worst.day}</strong> <span class="si-metric neg">${fR(worst.mean)}</span> — weekday edge`});
     }
   }
 
-  // 5) Capture Rate 기반 TP 전략 피드백
+  // 5) Capture-rate-based TP strategy feedback
   const capT=T.filter(t=>t.maxRR>0&&t.result==='W');
   if(capT.length>=5){
     const cap=capT.reduce((a,t)=>a+getR(t)/t.maxRR,0)/capT.length;
     if(cap<0.5){
-      items.push({kind:'warn',html:`<strong>승리 거래 평균 Capture Rate</strong> <span class="si-metric neg">${(cap*100).toFixed(0)}%</span> — 조기 익절 경향, trailing stop 전략 검토`});
+      items.push({kind:'warn',html:`<strong>Avg Capture Rate on wins</strong> <span class="si-metric neg">${(cap*100).toFixed(0)}%</span> — exiting early, consider trailing stops`});
     } else if(cap>=0.8){
-      items.push({kind:'good',html:`<strong>승리 거래 평균 Capture Rate</strong> <span class="si-metric pos">${(cap*100).toFixed(0)}%</span> — TP 실행력 우수`});
+      items.push({kind:'good',html:`<strong>Avg Capture Rate on wins</strong> <span class="si-metric pos">${(cap*100).toFixed(0)}%</span> — strong TP execution`});
     }
   }
 
-  // 6) Full SL 비율
+  // 6) Full SL ratio
   const fullSL=T.filter(t=>t.result==='L'&&getR(t)<=-0.95).length;
   const totalL=T.filter(t=>t.result==='L').length;
   if(totalL>=5){
     const pct=(fullSL/totalL*100).toFixed(0);
     if(parseFloat(pct)>70){
-      items.push({kind:'bad',html:`<strong>손실 중 Full SL 비율</strong> <span class="si-metric neg">${pct}%</span> (${fullSL}/${totalL}) — 조기 손절 / Partial out 규칙 검토`});
+      items.push({kind:'bad',html:`<strong>Full SL share of losses</strong> <span class="si-metric neg">${pct}%</span> (${fullSL}/${totalL}) — review early-exit / partial-out rules`});
     } else if(parseFloat(pct)<30){
-      items.push({kind:'good',html:`<strong>손실 중 Full SL 비율</strong> <span class="si-metric pos">${pct}%</span> — Partial stop 규칙 효과적`});
+      items.push({kind:'good',html:`<strong>Full SL share of losses</strong> <span class="si-metric pos">${pct}%</span> — partial-stop rule working`});
     }
   }
 
-  // 7) 현재 월 성과
+  // 7) Current-month performance
   const now=new Date();
   const monthKey=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
   const monthT=T.filter(t=>t.date&&t.date.slice(0,7)===monthKey);
   if(monthT.length>=3){
     const mR=monthT.reduce((a,t)=>a+getR(t),0);
-    items.push({kind:mR>=0?'good':'bad',html:`<strong>이번 달 성과</strong> <span class="si-metric ${mR>=0?'pos':'neg'}">${fR(mR)}</span> (${monthT.length}거래) — ${mR>=0?'목표 페이스 유지':'손실 통제 필요'}`});
+    items.push({kind:mR>=0?'good':'bad',html:`<strong>This month</strong> <span class="si-metric ${mR>=0?'pos':'neg'}">${fR(mR)}</span> (${monthT.length} trades) — ${mR>=0?'on pace for target':'tighten loss control'}`});
   }
 
-  if(!items.length){host.innerHTML='<div class="si-it">아직 패턴을 감지할 데이터가 부족합니다</div>';return}
+  if(!items.length){host.innerHTML='<div class="si-it">Not enough data to surface patterns yet</div>';return}
   host.innerHTML=items.map(it=>`<div class="si-it ${it.kind}">${it.html}</div>`).join('');
 }
 
@@ -2414,7 +2815,7 @@ function openPlaybook(kind,name){
     if(kind==='direction')return t.direction===name;
     return false;
   });
-  if(!filtered.length){toast('데이터 없음: '+name);return}
+  if(!filtered.length){toast('No data: '+name);return}
 
   document.getElementById('pb-kind').textContent=({setup:'Setup',condition:'Condition',dayOfWeek:'Day of Week',direction:'Direction'})[kind]||kind;
   document.getElementById('pb-name').textContent=name;
@@ -2686,7 +3087,7 @@ function renderDDAnalysis(T){
     return false;
   });
   if(valid.length<3){
-    stackEl.innerHTML='<div style="color:var(--t2);font-size:12px;padding:20px;text-align:center">DD 데이터가 있는 거래 3건 이상 필요</div>';
+    stackEl.innerHTML='<div style="color:var(--t2);font-size:12px;padding:20px;text-align:center">Need 3+ trades with DD data</div>';
     sumEl.innerHTML='';return;
   }
   const trades=valid.map(t=>{
@@ -2711,17 +3112,17 @@ function renderDDAnalysis(T){
   });
   const maxN=Math.max(...zd.map(z=>z.n),1);
   stackEl.innerHTML=zd.map(z=>{
-    if(!z.n)return `<div class="dd-zn empty"><div class="dd-zn-hd"><div class="dd-zn-lbl">${z.label}<span class="dd-zn-rng">${z.range}</span></div><div class="dd-zn-n">0건</div></div></div>`;
+    if(!z.n)return `<div class="dd-zn empty"><div class="dd-zn-hd"><div class="dd-zn-lbl">${z.label}<span class="dd-zn-rng">${z.range}</span></div><div class="dd-zn-n">0t</div></div></div>`;
     const barW=(z.n/maxN)*100;
     const wrCls=z.wr>=50?'pos':z.wr>=35?'neu':'neg';
     return `<div class="dd-zn">
       <div class="dd-zn-hd">
         <div class="dd-zn-lbl"><span class="dd-zn-dot" style="background:${z.accent}"></span>${z.label}<span class="dd-zn-rng">${z.range}</span></div>
-        <div class="dd-zn-n">${z.n}건</div>
+        <div class="dd-zn-n">${z.n}t</div>
       </div>
       <div class="dd-zn-bar"><div class="dd-zn-bar-fill" style="width:${barW}%;background:linear-gradient(90deg,${z.accent}aa,${z.accent})"></div></div>
       <div class="dd-zn-stats">
-        <span>승률 <strong class="${wrCls}">${z.wr.toFixed(0)}%</strong></span>
+        <span>WR <strong class="${wrCls}">${z.wr.toFixed(0)}%</strong></span>
         <span>Avg <strong style="color:${z.avgR>=0?'var(--g)':'var(--r)'}">${fR(z.avgR)}</strong></span>
       </div>
     </div>`;
@@ -2733,11 +3134,11 @@ function renderDDAnalysis(T){
   const slPct=trades.length?(zd[4].n/trades.length*100):0;
   let msg='',tone='neu';
   if(low&&high){
-    if(lowWr>highWr+15){msg=`얕은 DD (< 50%) 승률 <strong class="pos">${lowWr.toFixed(0)}%</strong> vs 깊은 DD <strong class="neg">${highWr.toFixed(0)}%</strong> — 50% 이상 역행 시 조기 손절 검토`;tone='warn'}
-    else if(highWr>=lowWr){msg=`깊은 DD에서도 승률 <strong class="pos">${highWr.toFixed(0)}%</strong> 유지 — SL 위치 적절`;tone='good'}
-    else{msg=`DD 50% 미만 <strong>${lowWr.toFixed(0)}%</strong> · 이상 <strong>${highWr.toFixed(0)}%</strong>`}
+    if(lowWr>highWr+15){msg=`Shallow DD (< 50%) WR <strong class="pos">${lowWr.toFixed(0)}%</strong> vs Deep DD <strong class="neg">${highWr.toFixed(0)}%</strong> — consider early exit beyond 50% drawdown`;tone='warn'}
+    else if(highWr>=lowWr){msg=`Even at deep DD, WR holds <strong class="pos">${highWr.toFixed(0)}%</strong> — SL placement is sound`;tone='good'}
+    else{msg=`DD < 50% <strong>${lowWr.toFixed(0)}%</strong> · DD ≥ 50% <strong>${highWr.toFixed(0)}%</strong>`}
   }
-  if(zd[4].n){msg+=` · Full SL <strong class="neg">${zd[4].n}건 (${slPct.toFixed(0)}%)</strong>`}
+  if(zd[4].n){msg+=` · Full SL <strong class="neg">${zd[4].n}t (${slPct.toFixed(0)}%)</strong>`}
   sumEl.innerHTML=msg?`<div class="dd-sum ${tone}">${msg}</div>`:'';
 }
 
@@ -2747,7 +3148,7 @@ function renderDDAnalysis(T){
 let _mrMonthData={};
 function renderMonthlyReport(T){
   const grid=document.getElementById('mr-grid');
-  if(!T.length){grid.innerHTML='<div style="color:var(--t2);font-size:13px">데이터 없음</div>';return}
+  if(!T.length){grid.innerHTML='<div style="color:var(--t2);font-size:13px">No data</div>';return}
 
   const byMonth={};
   T.forEach(t=>{
@@ -2788,11 +3189,11 @@ function renderMonthlyReport(T){
         <span class="mr-trend ${trendCls}">${trendIcon} ${trendTxt}</span>
       </div>
       <div class="mr-r" style="color:${rc}">${fR(s.tR)}</div>
-      <div class="mr-row"><span>거래 수</span><strong>${s.n}건</strong></div>
-      <div class="mr-row"><span>승률</span><strong style="color:${wrColor}">${(s.wr*100).toFixed(0)}%</strong></div>
-      <div class="mr-row"><span>평균 R</span><strong style="color:${rc}">${fR(s.aR)}</strong></div>
-      <div class="mr-row"><span>이익계수</span><strong>${isFinite(s.pf)?s.pf.toFixed(2):'∞'}</strong></div>
-      <div class="mr-expand">클릭하여 상세 분석 보기</div>
+      <div class="mr-row"><span>Trades</span><strong>${s.n}</strong></div>
+      <div class="mr-row"><span>Win Rate</span><strong style="color:${wrColor}">${(s.wr*100).toFixed(0)}%</strong></div>
+      <div class="mr-row"><span>Avg R</span><strong style="color:${rc}">${fR(s.aR)}</strong></div>
+      <div class="mr-row"><span>Profit Factor</span><strong>${isFinite(s.pf)?s.pf.toFixed(2):'∞'}</strong></div>
+      <div class="mr-expand">Click for detail</div>
     </div>`;
   }).join('');
 }
@@ -2838,7 +3239,7 @@ function toggleMonthDetail(m,cardEl){
     if(!t.date)return;
     const d=new Date(t.date);
     const day=d.getDate();
-    const wk=day<=7?'1주차':day<=14?'2주차':day<=21?'3주차':day<=28?'4주차':'5주차';
+    const wk=day<=7?'Week 1':day<=14?'Week 2':day<=21?'Week 3':day<=28?'Week 4':'Week 5';
     if(!byWeek[wk])byWeek[wk]=[];
     byWeek[wk].push(t);
   });
@@ -2867,13 +3268,13 @@ function toggleMonthDetail(m,cardEl){
   const setupRows=Object.entries(bySetup).map(([ss,arr])=>{
     const st=stats(arr);
     const c=st.tR>=0?'var(--g)':'var(--r)';
-    return`<div class="mrd-row"><span>${ss}</span><strong>${st.n}건 · <span style="color:${c}">${fR(st.tR)}</span> · 승률 ${(st.wr*100).toFixed(0)}%</strong></div>`;
+    return`<div class="mrd-row"><span>${ss}</span><strong>${st.n}t · <span style="color:${c}">${fR(st.tR)}</span> · WR ${(st.wr*100).toFixed(0)}%</strong></div>`;
   }).join('');
 
   const weekRows=Object.entries(byWeek).sort().map(([wk,arr])=>{
     const st=stats(arr);
     const c=st.tR>=0?'var(--g)':'var(--r)';
-    return`<div class="mrd-row"><span>${wk}</span><strong>${st.n}건 · <span style="color:${c}">${fR(st.tR)}</span></strong></div>`;
+    return`<div class="mrd-row"><span>${wk}</span><strong>${st.n}t · <span style="color:${c}">${fR(st.tR)}</span></strong></div>`;
   }).join('');
 
   const condColors={'Expansion':'var(--g)','Consolidation':'var(--y)','Seek & Destroy':'var(--r)','N/A':'var(--t2)'};
@@ -2882,7 +3283,7 @@ function toggleMonthDetail(m,cardEl){
     return`<div class="mrd-bar-wrap">
       <span class="mrd-bar-label" style="width:auto;min-width:36px">${c}</span>
       <div class="mrd-bar-track"><div class="mrd-bar-fill" style="width:${pct}%;background:${condColors[c]||'var(--t2)'}"></div></div>
-      <span class="mrd-bar-val">${cnt}건</span>
+      <span class="mrd-bar-val">${cnt}t</span>
     </div>`;
   }).join('');
 
@@ -2891,8 +3292,8 @@ function toggleMonthDetail(m,cardEl){
 
   panel.innerHTML=`
     <div class="mrd-header">
-      <div class="mrd-title">${label} 상세 분석</div>
-      <button class="mrd-close" onclick="closeMonthDetail(event)">✕ 닫기</button>
+      <div class="mrd-title">${label} Detail</div>
+      <button class="mrd-close" onclick="closeMonthDetail(event)">✕ Close</button>
     </div>
     <div class="mrd-grid">
 
@@ -2913,30 +3314,30 @@ function toggleMonthDetail(m,cardEl){
       </div>
 
       <div class="mrd-section">
-        <div class="mrd-section-title">Direction 분석</div>
-        <div class="mrd-row"><span>Long</span><strong>${sL.n}건 · <span style="color:${dirLColor}">${fR(sL.tR)}</span> · 승률 ${(sL.wr*100).toFixed(0)}%</strong></div>
-        <div class="mrd-row"><span>Short</span><strong>${sS.n}건 · <span style="color:${dirSColor}">${fR(sS.tR)}</span> · 승률 ${(sS.wr*100).toFixed(0)}%</strong></div>
+        <div class="mrd-section-title">Direction</div>
+        <div class="mrd-row"><span>Long</span><strong>${sL.n}t · <span style="color:${dirLColor}">${fR(sL.tR)}</span> · WR ${(sL.wr*100).toFixed(0)}%</strong></div>
+        <div class="mrd-row"><span>Short</span><strong>${sS.n}t · <span style="color:${dirSColor}">${fR(sS.tR)}</span> · WR ${(sS.wr*100).toFixed(0)}%</strong></div>
         <div style="margin-top:10px">
           <div class="mrd-section-title">Streak</div>
-          <div class="mrd-row"><span>최대 연속 승</span><strong style="color:var(--g)">${maxWS}회</strong></div>
-          <div class="mrd-row"><span>최대 연속 패</span><strong style="color:var(--r)">${maxLS}회</strong></div>
+          <div class="mrd-row"><span>Max Win Streak</span><strong style="color:var(--g)">${maxWS}</strong></div>
+          <div class="mrd-row"><span>Max Loss Streak</span><strong style="color:var(--r)">${maxLS}</strong></div>
           ${avgCap!=null?`<div class="mrd-row"><span>Capture Rate</span><strong>${avgCap>=100?Math.round(avgCap):avgCap.toFixed(1)}%</strong></div>`:''}
         </div>
       </div>
 
       <div class="mrd-section">
-        <div class="mrd-section-title">Condition 분포</div>
+        <div class="mrd-section-title">Condition Distribution</div>
         ${condBars}
       </div>
 
       <div class="mrd-section">
-        <div class="mrd-section-title">Setup 성과</div>
-        ${setupRows||'<div style="color:var(--t2);font-size:11px">Setup 데이터 없음</div>'}
+        <div class="mrd-section-title">Setup Performance</div>
+        ${setupRows||'<div style="color:var(--t2);font-size:11px">No Setup data</div>'}
       </div>
 
       <div class="mrd-section">
-        <div class="mrd-section-title">주차별 성과</div>
-        ${weekRows||'<div style="color:var(--t2);font-size:11px">데이터 없음</div>'}
+        <div class="mrd-section-title">Weekly Breakdown</div>
+        ${weekRows||'<div style="color:var(--t2);font-size:11px">No data</div>'}
       </div>
 
       <div class="mrd-section">
@@ -3003,7 +3404,7 @@ function renderSetupConditionMatrix(T){
   T.forEach(t=>{if(t.setup&&t.condition)setupSet.add(t.setup)});
   const setups=[...setupSet].sort();
   if(!setups.length||!T.filter(t=>t.setup&&t.condition).length){
-    wrap.innerHTML='<div style="color:var(--t2);font-size:12px;padding:20px;text-align:center">Setup + Condition 데이터 필요</div>';
+    wrap.innerHTML='<div style="color:var(--t2);font-size:12px;padding:20px;text-align:center">Setup + Condition data required</div>';
     return;
   }
   // build matrix
@@ -3029,7 +3430,7 @@ function renderSetupConditionMatrix(T){
     const border=`rgba(${base},${(0.3+intensity*0.5).toFixed(3)})`;
     return `<div class="mxh-cell" style="background:${bg};border-color:${border}">
       <div class="mxh-r" style="color:${avgR>=0?'#10b981':'#f43f5e'}">${fR(avgR)}</div>
-      <div class="mxh-meta">${wr.toFixed(0)}% · ${d.n}건</div>
+      <div class="mxh-meta">${wr.toFixed(0)}% · ${d.n}t</div>
     </div>`;
   };
   // build grid
@@ -3049,7 +3450,7 @@ function renderSetupConditionMatrix(T){
 // ══════════════════════════════════════════════════
 function exportCSV(){
   const T=getTrades();
-  if(!T.length){toast('데이터 없음');return}
+  if(!T.length){toast('No data');return}
   const h=['Source','#','Date','DayOfWeek','Asset','Direction','Result','RR','MaxRR','ActualRR','ExitStrategy','Setup','SwingType','Condition','EntryPDA','EntryTF','SMTStage','SMTType','UniversalModel','Emotions','Notes'];
   const rows=T.map(t=>[t.source,t.num||'',t.date?.slice(0,10)||'',t.dayOfWeek||'',t.asset||'',t.direction||'',t.result||'',
     getR(t).toFixed(2),t.maxRR||'',t.actualRR||'',(t.exitStrategy||''),(t.setup||''),(t.swingType||''),(t.condition||''),(t.entryPDA||[]).join('|'),(t.entryTF||[]).join('|'),(t.smtStage||''),(t.smtType||[]).join('|'),(t.universalModel||''),(t.emotions||[]).join('|'),(t.notes||'').replace(/[\r\n,]/g,' ')]);
@@ -3074,7 +3475,7 @@ const SYNC_WORKFLOW='sync.yml';
 async function triggerSync(){
   let token=localStorage.getItem('gh_pat');
   if(!token){
-    token=prompt('GitHub Personal Access Token을 입력하세요.\n(처음 1회만 입력, 이후 브라우저에 저장됩니다)\n\nGitHub > Settings > Developer settings > Personal access tokens > Fine-grained tokens\n권한: Actions (Read and Write)');
+    token=prompt('Enter your GitHub Personal Access Token.\n(One-time only — stored in your browser afterwards)\n\nGitHub > Settings > Developer settings > Personal access tokens > Fine-grained tokens\nPermission: Actions (Read and Write)');
     if(!token)return;
     localStorage.setItem('gh_pat',token.trim());
   }
@@ -3087,22 +3488,22 @@ async function triggerSync(){
       body:JSON.stringify({ref:'main'})
     });
     if(res.status===204){
-      toast('Sync 시작! 1~2분 후 새로고침하세요.');
-      btn.textContent='✓ 요청 완료';
+      toast('Sync started! Refresh in 1-2 min.');
+      btn.textContent='✓ Requested';
       setTimeout(()=>{btn.textContent='↻ Sync';btn.disabled=false},5000);
       // Auto-reload after 90 seconds
       setTimeout(()=>{location.reload()},90000);
     }else if(res.status===401||res.status===403){
       localStorage.removeItem('gh_pat');
-      toast('토큰이 유효하지 않습니다. 다시 시도하세요.');
+      toast('Invalid token — please retry.');
       btn.textContent='↻ Sync';btn.disabled=false;
     }else{
       const err=await res.json().catch(()=>({}));
-      toast('Sync 실패: '+(err.message||res.status));
+      toast('Sync failed: '+(err.message||res.status));
       btn.textContent='↻ Sync';btn.disabled=false;
     }
   }catch(e){
-    toast('네트워크 오류: '+e.message);
+    toast('Network error: '+e.message);
     btn.textContent='↻ Sync';btn.disabled=false;
   }
 }
