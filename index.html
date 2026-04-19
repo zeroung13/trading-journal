@@ -316,6 +316,12 @@ button,.btn,.btn-tb,.btn-cn,.fi,.nav-it,.src-it,.qchip,.pd-tab,.ins-lbl,.kpi-bad
 .row-stripe-l{box-shadow:inset 3px 0 0 0 var(--r)}
 .row-stripe-be{box-shadow:inset 3px 0 0 0 var(--y)}
 
+/* # cell (number + source dot) — keep on one line, clear of left stripe */
+.tbl-numcell{white-space:nowrap;padding-left:14px !important;font-variant-numeric:tabular-nums;color:var(--t1);font-weight:600}
+.src-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:7px;vertical-align:middle;flex-shrink:0}
+.src-dot.crypto{background:var(--y)}
+.src-dot.futures{background:var(--blue)}
+
 /* RR vs Max RR mini-bar */
 .rr-bar-wrap{display:inline-flex;flex-direction:column;gap:2px;min-width:60px}
 .rr-bar-val{font-variant-numeric:tabular-nums;font-weight:600}
@@ -1031,6 +1037,7 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
               <th class="sortable" data-sort="asset">Symbol <span class="sort-arrow"></span></th>
               <th class="sortable" data-sort="direction">Direction <span class="sort-arrow"></span></th>
               <th class="sortable" data-sort="result">Result <span class="sort-arrow"></span></th>
+              <th class="sortable" data-sort="grade">Grade <span class="sort-arrow"></span></th>
               <th class="sortable" data-sort="rr">RR <span class="sort-arrow"></span></th>
               <th class="sortable" data-sort="maxRR">Max RR <span class="sort-arrow"></span></th>
               <th>Exit</th>
@@ -2129,6 +2136,11 @@ function getFiltered(){
       if(c!==0)return c*m;
       return((a.num||0)-(b.num||0))*m;
     }
+    if(k==='grade'){
+      // Rank: A(0) > B+(1) > B(2) > B-(3) > C(4) > D(5) > ungraded(99)
+      const rank=g=>{const i=GRADE_ORDER.indexOf(g);return i>=0?i:99};
+      return(rank(a.grade)-rank(b.grade))*m;
+    }
     va=(a[k]||'').toString().toLowerCase();
     vb=(b[k]||'').toString().toLowerCase();
     return va.localeCompare(vb)*m;
@@ -2164,7 +2176,7 @@ function renderTbl(){
       t.entryChart?`<a class="chart-link" href="${t.entryChart}" target="_blank">E</a>`:null].filter(Boolean).join(' ');
     const noteId='note-'+Math.random().toString(36).slice(2,8);
     const note=t.notes?`<span class="note-toggle" onclick="toggleNote('${noteId}')">📝 open</span>`:'';
-    const srcDot=t.source==='crypto'?'🟡':'🔵';
+    const srcCls=t.source==='crypto'?'crypto':'futures';
     const exitBadge=t.exitStrategy?`<span class="tag-chip">${t.exitStrategy}</span>`:'—';
     // RR mini-bar: show actual R vs maxRR as capture ratio
     let rrCell;
@@ -2184,16 +2196,17 @@ function renderTbl(){
     }
     // ── Phase 4: Grade chip + Review Summary ──
     const gradeCls=t.grade?'grade-chip '+(GRADE_CLASS[t.grade]||''):'';
-    const gradeChip=t.grade?`<span class="${gradeCls}" title="Claude Review Grade">${t.grade}</span>`:'';
+    const gradeChip=t.grade?`<span class="${gradeCls}" title="Claude Review Grade">${t.grade}</span>`:'<span style="color:var(--t2)">—</span>';
     const reviewChip=t.reviewSummary?`<span class="rev-chip" title="${(t.reviewSummary||'').replace(/"/g,'&quot;')}">${t.reviewSummary}</span>`:'';
     const setupCell=`${t.setup||'—'}${reviewChip?'<br>'+reviewChip:''}`;
-    const resultCell=`<span class="badge ${resBadge}">${t.result||''}</span>${gradeChip?' '+gradeChip:''}`;
+    const resultCell=`<span class="badge ${resBadge}">${t.result||''}</span>`;
     return`<tr class="${stripeCls}">
-      <td>${srcDot} ${t.num||''}</td>
+      <td class="tbl-numcell"><span class="src-dot ${srcCls}" title="${t.source}"></span>${t.num||''}</td>
       <td style="white-space:nowrap;font-variant-numeric:tabular-nums">${t.date?.slice(0,10)||''}<br><span style="font-size:10px;color:var(--t2)">${t.dayOfWeek||''}</span></td>
       <td><strong>${t.asset||''}</strong></td>
       <td><span class="badge ${dirBadge}">${t.direction||''}</span></td>
       <td>${resultCell}</td>
+      <td>${gradeChip}</td>
       <td>${rrCell}</td>
       <td style="font-variant-numeric:tabular-nums">${t.maxRR!=null?t.maxRR.toFixed(1)+'R':'—'}</td>
       <td>${exitBadge}</td>
@@ -2204,7 +2217,7 @@ function renderTbl(){
       <td>${smtTags||'—'}</td>
       <td style="white-space:nowrap">${links||'—'}</td>
       <td>${note}</td>
-    </tr>${t.notes?`<tr class="note-row" id="${noteId}" style="display:none"><td colspan="15"><div class="note-cell">${t.notes}</div></td></tr>`:''}`;
+    </tr>${t.notes?`<tr class="note-row" id="${noteId}" style="display:none"><td colspan="16"><div class="note-cell">${t.notes}</div></td></tr>`:''}`;
   }).join('');
 }
 
