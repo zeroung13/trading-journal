@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1413,6 +1413,7 @@ function getR(t){
 }
 
 function fR(r){if(r==null||isNaN(r))return'—';return(r>=0?'+':'')+r.toFixed(2)+'R'}
+function nT(n){return n+' '+(n===1?'trade':'trades')}
 
 function stats(arr){
   const n=arr.length;if(!n)return{n:0,wr:0,tR:0,aR:0,pf:0,exp:0,nW:0,nL:0,nBE:0,aWR:0,aLR:0};
@@ -1734,18 +1735,21 @@ function renderGxTScore(T,s){
 }
 
 // ── Daily Net R (bar chart)
+// NOTE: Skip 0R (break-even) days so the axis isn't padded with invisible bars.
+// This keeps the bar density tight and avoids perceived "blank gap" days.
 function renderDailyR(T){
   const ctx=document.getElementById('daily-r-ch');
   if(!ctx)return;
   if(charts.dailyR){charts.dailyR.destroy()}
   const byD={};
   T.forEach(t=>{if(!t.date)return;const d=t.date.slice(0,10);if(!byD[d])byD[d]=0;byD[d]+=getR(t)});
-  const days=Object.keys(byD).sort();
+  // Filter out 0R days (BE days) + sort ascending
+  const days=Object.keys(byD).filter(d=>Math.abs(byD[d])>=0.01).sort();
   const data=days.map(d=>parseFloat(byD[d].toFixed(2)));
   const colors=data.map(v=>v>=0?'#10b981':'#f43f5e');
   charts.dailyR=new Chart(ctx,{
     type:'bar',
-    data:{labels:days,datasets:[{data,backgroundColor:colors.map(c=>c+'60'),borderColor:colors,borderWidth:1,borderRadius:3}]},
+    data:{labels:days,datasets:[{data,backgroundColor:colors.map(c=>c+'60'),borderColor:colors,borderWidth:1,borderRadius:3,minBarLength:3}]},
     options:{
       responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fR(c.parsed.y)}}},
@@ -1795,7 +1799,7 @@ function renderCal(){
     const wp=dt.length?Math.round(nw/dt.length*100):0;
     let cls='cal-c';if(ds===tod)cls+=' today';
     if(dt.length){cls+=tR>0.01?' win':tR<-0.01?' loss':' beven'}
-    h+=dt.length?`<div class="${cls}"><div class="cc-dn">${d}</div><div class="cc-pnl">${fR(tR)}</div><div class="cc-sub">${dt.length}t ${wp}%</div></div>`
+    h+=dt.length?`<div class="${cls}"><div class="cc-dn">${d}</div><div class="cc-pnl">${fR(tR)}</div><div class="cc-sub">${dt.length} ${dt.length===1?'trade':'trades'} · ${wp}%</div></div>`
       :`<div class="${cls}"><div class="cc-dn">${d}</div></div>`;
   }
   document.getElementById('cal-grid').innerHTML=h;
@@ -2011,7 +2015,7 @@ function _scCellHtml(dd,byD,cfg){
   if(cfg.showR)val=(r>=0?'+':'')+r.toFixed(1)+'R';
   else if(cfg.hideMoney)val=(r>=0?'+':'')+r.toFixed(1)+'R';
   else val=_fmtUsdK(_scR2Usd(r));
-  const sub=cfg.showTrades?'<div class="sc-cal-v" style="font-size:8px;opacity:.6;margin-top:1px">'+dt.length+'t</div>':'';
+  const sub=cfg.showTrades?'<div class="sc-cal-v" style="font-size:8px;opacity:.6;margin-top:1px">'+nT(dt.length)+'</div>':'';
   return '<div class="sc-cal-c '+sg+' '+lvl+'"><div class="sc-cal-d">'+dn+'</div><div class="sc-cal-v">'+val+'</div>'+sub+'</div>';
 }
 
@@ -2062,13 +2066,19 @@ async function copyShareCal(){
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){const ov=document.getElementById('sc-overlay');if(ov&&ov.classList.contains('on'))closeShareCal()}});
 
 // ── EQUITY CHART
+// Aggregated per trading-day for clean x-axis (no duplicate date labels).
 function renderEqCh(T){
   const ctx=document.getElementById('eq-ch').getContext('2d');
-  let cum=0;const lb=[],dt=[];
-  T.forEach(t=>{cum+=getR(t);lb.push(t.date?.slice(0,10)||'');dt.push(parseFloat(cum.toFixed(3)))});
   if(charts.eq){charts.eq.destroy()}
+  // Group by day, preserve per-trade order for cumulative
+  const sorted=[...T].sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+  const byDay={};
+  sorted.forEach(t=>{const d=(t.date||'').slice(0,10);if(!d)return;if(!byDay[d])byDay[d]=0;byDay[d]+=getR(t)});
+  const days=Object.keys(byDay).sort();
+  let cum=0;const lb=[],dt=[];
+  days.forEach(d=>{cum+=byDay[d];lb.push(d);dt.push(parseFloat(cum.toFixed(3)))});
   const col=cum>=0?'#10b981':'#f43f5e';
-  const datasets=[{label:'All Trades',data:dt,borderColor:col,backgroundColor:col+'14',fill:true,tension:.3,pointRadius:dt.length>80?0:3,pointHoverRadius:5,borderWidth:2}];
+  const datasets=[{label:'Cumulative R',data:dt,borderColor:col,backgroundColor:col+'14',fill:true,tension:.3,pointRadius:dt.length>80?0:3,pointHoverRadius:5,borderWidth:2}];
 
   charts.eq=new Chart(ctx,{type:'line',data:{labels:lb,datasets},
     options:{responsive:true,maintainAspectRatio:false,
@@ -2153,7 +2163,7 @@ function renderTbl(){
       t.mtfChart?`<a class="chart-link" href="${t.mtfChart}" target="_blank">MTF</a>`:null,
       t.entryChart?`<a class="chart-link" href="${t.entryChart}" target="_blank">E</a>`:null].filter(Boolean).join(' ');
     const noteId='note-'+Math.random().toString(36).slice(2,8);
-    const note=t.notes?`<span class="note-toggle" onclick="toggleNote('${noteId}')">📝 expand</span>`:'';
+    const note=t.notes?`<span class="note-toggle" onclick="toggleNote('${noteId}')">📝 open</span>`:'';
     const srcDot=t.source==='crypto'?'🟡':'🔵';
     const exitBadge=t.exitStrategy?`<span class="tag-chip">${t.exitStrategy}</span>`:'—';
     // RR mini-bar: show actual R vs maxRR as capture ratio
@@ -2215,7 +2225,7 @@ function renderFsum(arr){
   const bestCls=best>=0?'pos':'neg';
   const worstCls=worst>=0?'pos':'neg';
   el.innerHTML=`
-    <div class="fsum-item"><span class="fsum-lbl">Filtered</span><span class="fsum-val neu">${s.n}t</span></div>
+    <div class="fsum-item"><span class="fsum-lbl">Filtered</span><span class="fsum-val neu">${nT(s.n)}</span></div>
     <div class="fsum-sep"></div>
     <div class="fsum-item"><span class="fsum-lbl">Net R</span><span class="fsum-val ${tRcls}">${fR(s.tR)}</span></div>
     <div class="fsum-sep"></div>
@@ -2270,7 +2280,7 @@ function toggleNote(id){
   row.style.display=vis?'none':'table-row';
   // update toggle text
   const prev=row.previousElementSibling;
-  if(prev){const tog=prev.querySelector('.note-toggle');if(tog)tog.innerHTML=vis?'📝 expand':'📝 collapse'}
+  if(prev){const tog=prev.querySelector('.note-toggle');if(tog)tog.innerHTML=vis?'📝 open':'📝 close'}
 }
 
 // ══════════════════════════════════════════════════
@@ -2560,7 +2570,7 @@ function renderGradeAnalysis(T){
         responsive:true,maintainAspectRatio:false,cutout:'62%',
         plugins:{
           legend:{position:'bottom',labels:{color:'#d0d6e0',font:{size:11},boxWidth:10,padding:8}},
-          tooltip:{callbacks:{label:(c)=>{const pct=(c.parsed/gradedCount*100).toFixed(0);return `${c.label}: ${c.parsed}t (${pct}%)`}}}
+          tooltip:{callbacks:{label:(c)=>{const pct=(c.parsed/gradedCount*100).toFixed(0);return `${c.label}: ${nT(c.parsed)} (${pct}%)`}}}
         }
       }
     });
@@ -2576,7 +2586,7 @@ function renderGradeAnalysis(T){
     const rc=r.aR>=0?'var(--g)':'var(--r)';
     const wrCls=r.wr>=.5?'pos':r.wr>=.35?'neu':'neg';
     return `<div class="grade-cell ${GRADE_CLASS[r.g]}">
-      <div class="gc-hd"><span class="gc-lbl">${r.g}</span><span class="gc-n">${r.n}t</span></div>
+      <div class="gc-hd"><span class="gc-lbl">${r.g}</span><span class="gc-n">${nT(r.n)}</span></div>
       <div class="gc-r" style="color:${rc}">${fR(r.aR)}</div>
       <div class="gc-meta"><span>WR <strong class="${wrCls}">${(r.wr*100).toFixed(0)}%</strong></span><span>Net <strong style="color:${rc}">${fR(r.tR)}</strong></span></div>
     </div>`;
@@ -2585,7 +2595,7 @@ function renderGradeAnalysis(T){
     const rc=naRow.aR>=0?'var(--g)':'var(--r)';
     const wrCls=naRow.wr>=.5?'pos':naRow.wr>=.35?'neu':'neg';
     cells.push(`<div class="grade-cell g-NA" title="Ungraded trades">
-      <div class="gc-hd"><span class="gc-lbl" style="color:var(--t2)">N/A</span><span class="gc-n">${naRow.n}t</span></div>
+      <div class="gc-hd"><span class="gc-lbl" style="color:var(--t2)">N/A</span><span class="gc-n">${nT(naRow.n)}</span></div>
       <div class="gc-r" style="color:${rc}">${fR(naRow.aR)}</div>
       <div class="gc-meta"><span>WR <strong class="${wrCls}">${(naRow.wr*100).toFixed(0)}%</strong></span><span>Net <strong style="color:${rc}">${fR(naRow.tR)}</strong></span></div>
     </div>`);
@@ -2610,14 +2620,14 @@ function renderGradeAnalysis(T){
       msg=`Grade gap small — Top ${fR(topS.aR)} vs Bottom ${fR(botS.aR)} (${diff>=0?'+':''}${diff.toFixed(2)}R)`;
     }
   } else if(topS){
-    msg=`Top tier (A/B+) ${topS.n}t · Avg <strong style="color:${topS.aR>=0?'var(--g)':'var(--r)'}">${fR(topS.aR)}</strong> · bottom-tier data insufficient`;
+    msg=`Top tier (A/B+) ${nT(topS.n)} · Avg <strong style="color:${topS.aR>=0?'var(--g)':'var(--r)'}">${fR(topS.aR)}</strong> · bottom-tier data insufficient`;
   } else if(botS){
-    msg=`Only bottom-tier (C/D) ${botS.n}t — grow A/B+ sample for comparison`;
+    msg=`Only bottom-tier (C/D) ${nT(botS.n)} — grow A/B+ sample for comparison`;
     tone='warn';
   }
   if(naRow){
     const naPct=(naRow.n/(gradedCount+naRow.n)*100).toFixed(0);
-    msg+=` · <strong>Ungraded ${naRow.n}t (${naPct}%)</strong>`;
+    msg+=` · <strong>Ungraded ${nT(naRow.n)} (${naPct}%)</strong>`;
   }
   sumEl.innerHTML=msg?`<div class="grade-sum ${tone}">${msg}</div>`:'';
 }
@@ -3118,7 +3128,7 @@ function renderDDAnalysis(T){
     return `<div class="dd-zn">
       <div class="dd-zn-hd">
         <div class="dd-zn-lbl"><span class="dd-zn-dot" style="background:${z.accent}"></span>${z.label}<span class="dd-zn-rng">${z.range}</span></div>
-        <div class="dd-zn-n">${z.n}t</div>
+        <div class="dd-zn-n">${nT(z.n)}</div>
       </div>
       <div class="dd-zn-bar"><div class="dd-zn-bar-fill" style="width:${barW}%;background:linear-gradient(90deg,${z.accent}aa,${z.accent})"></div></div>
       <div class="dd-zn-stats">
@@ -3138,7 +3148,7 @@ function renderDDAnalysis(T){
     else if(highWr>=lowWr){msg=`Even at deep DD, WR holds <strong class="pos">${highWr.toFixed(0)}%</strong> — SL placement is sound`;tone='good'}
     else{msg=`DD < 50% <strong>${lowWr.toFixed(0)}%</strong> · DD ≥ 50% <strong>${highWr.toFixed(0)}%</strong>`}
   }
-  if(zd[4].n){msg+=` · Full SL <strong class="neg">${zd[4].n}t (${slPct.toFixed(0)}%)</strong>`}
+  if(zd[4].n){msg+=` · Full SL <strong class="neg">${nT(zd[4].n)} (${slPct.toFixed(0)}%)</strong>`}
   sumEl.innerHTML=msg?`<div class="dd-sum ${tone}">${msg}</div>`:'';
 }
 
@@ -3268,13 +3278,13 @@ function toggleMonthDetail(m,cardEl){
   const setupRows=Object.entries(bySetup).map(([ss,arr])=>{
     const st=stats(arr);
     const c=st.tR>=0?'var(--g)':'var(--r)';
-    return`<div class="mrd-row"><span>${ss}</span><strong>${st.n}t · <span style="color:${c}">${fR(st.tR)}</span> · WR ${(st.wr*100).toFixed(0)}%</strong></div>`;
+    return`<div class="mrd-row"><span>${ss}</span><strong>${nT(st.n)} · <span style="color:${c}">${fR(st.tR)}</span> · WR ${(st.wr*100).toFixed(0)}%</strong></div>`;
   }).join('');
 
   const weekRows=Object.entries(byWeek).sort().map(([wk,arr])=>{
     const st=stats(arr);
     const c=st.tR>=0?'var(--g)':'var(--r)';
-    return`<div class="mrd-row"><span>${wk}</span><strong>${st.n}t · <span style="color:${c}">${fR(st.tR)}</span></strong></div>`;
+    return`<div class="mrd-row"><span>${wk}</span><strong>${nT(st.n)} · <span style="color:${c}">${fR(st.tR)}</span></strong></div>`;
   }).join('');
 
   const condColors={'Expansion':'var(--g)','Consolidation':'var(--y)','Seek & Destroy':'var(--r)','N/A':'var(--t2)'};
@@ -3283,7 +3293,7 @@ function toggleMonthDetail(m,cardEl){
     return`<div class="mrd-bar-wrap">
       <span class="mrd-bar-label" style="width:auto;min-width:36px">${c}</span>
       <div class="mrd-bar-track"><div class="mrd-bar-fill" style="width:${pct}%;background:${condColors[c]||'var(--t2)'}"></div></div>
-      <span class="mrd-bar-val">${cnt}t</span>
+      <span class="mrd-bar-val">${nT(cnt)}</span>
     </div>`;
   }).join('');
 
@@ -3315,8 +3325,8 @@ function toggleMonthDetail(m,cardEl){
 
       <div class="mrd-section">
         <div class="mrd-section-title">Direction</div>
-        <div class="mrd-row"><span>Long</span><strong>${sL.n}t · <span style="color:${dirLColor}">${fR(sL.tR)}</span> · WR ${(sL.wr*100).toFixed(0)}%</strong></div>
-        <div class="mrd-row"><span>Short</span><strong>${sS.n}t · <span style="color:${dirSColor}">${fR(sS.tR)}</span> · WR ${(sS.wr*100).toFixed(0)}%</strong></div>
+        <div class="mrd-row"><span>Long</span><strong>${nT(sL.n)} · <span style="color:${dirLColor}">${fR(sL.tR)}</span> · WR ${(sL.wr*100).toFixed(0)}%</strong></div>
+        <div class="mrd-row"><span>Short</span><strong>${nT(sS.n)} · <span style="color:${dirSColor}">${fR(sS.tR)}</span> · WR ${(sS.wr*100).toFixed(0)}%</strong></div>
         <div style="margin-top:10px">
           <div class="mrd-section-title">Streak</div>
           <div class="mrd-row"><span>Max Win Streak</span><strong style="color:var(--g)">${maxWS}</strong></div>
@@ -3430,7 +3440,7 @@ function renderSetupConditionMatrix(T){
     const border=`rgba(${base},${(0.3+intensity*0.5).toFixed(3)})`;
     return `<div class="mxh-cell" style="background:${bg};border-color:${border}">
       <div class="mxh-r" style="color:${avgR>=0?'#10b981':'#f43f5e'}">${fR(avgR)}</div>
-      <div class="mxh-meta">${wr.toFixed(0)}% · ${d.n}t</div>
+      <div class="mxh-meta">${wr.toFixed(0)}% · ${nT(d.n)}</div>
     </div>`;
   };
   // build grid
