@@ -696,8 +696,17 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 .prop-kpi-val.neg{color:var(--r)}
 .prop-kpi-sub{font-size:11px;color:var(--t2);margin-top:4px;letter-spacing:.2px}
 
-.prop-tb{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;gap:10px;flex-wrap:wrap}
+.prop-tb{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:10px;flex-wrap:wrap}
 .prop-tb-r{display:flex;gap:6px}
+
+/* Firm filter chips */
+.prop-firm-bar{display:flex;align-items:center;gap:8px;margin-bottom:18px;padding:8px 12px;background:var(--cbg);border:1px solid var(--b1);border-radius:8px;flex-wrap:wrap}
+.prop-firm-bar-lbl{font-family:'JetBrains Mono','SF Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--t2);margin-right:4px}
+.prop-firm-chip{background:transparent;border:1px solid var(--b1);color:var(--t1);padding:5px 12px;font-size:11px;font-weight:600;border-radius:5px;cursor:pointer;font-family:'JetBrains Mono','SF Mono',monospace;letter-spacing:.4px;text-transform:uppercase;transition:all .15s;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.prop-firm-chip:hover{color:var(--t0);border-color:var(--b2);background:var(--cbg2)}
+.prop-firm-chip.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.prop-firm-chip.on .prop-firm-chip-cnt{color:rgba(255,255,255,.8)}
+.prop-firm-chip-cnt{font-size:10px;color:var(--t2);font-weight:600;font-variant-numeric:tabular-nums;padding:1px 5px;background:rgba(255,255,255,.06);border-radius:3px}
 
 .prop-section{margin-bottom:24px}
 .prop-section-hd{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--b1)}
@@ -1353,6 +1362,12 @@ select.prop-in{cursor:pointer}
           <button class="btn btn-g btn-sm" onclick="document.getElementById('prop-import-in').click()" title="Restore from JSON file">↓ Import</button>
           <input type="file" id="prop-import-in" accept=".json,application/json" style="display:none" onchange="importProp(event)">
         </div>
+      </div>
+
+      <!-- FIRM FILTER CHIPS -->
+      <div class="prop-firm-bar" id="prop-firm-bar">
+        <div class="prop-firm-bar-lbl">Firm</div>
+        <div id="prop-firm-chips" style="display:flex;gap:6px;flex-wrap:wrap"></div>
       </div>
 
       <!-- EVAL SECTION -->
@@ -2117,6 +2132,7 @@ let _editingAcctId=null;     // null = new account
 let _payoutForId=null;       // account id receiving the payout
 let _balanceForId=null;      // account id whose balance is being edited
 let _newAcctStatus='Active'; // status tab state for add/edit modal
+let _propFirmFilter='all';   // 'all' or specific firm name (uppercased)
 
 function loadProp(){
   try{
@@ -2142,9 +2158,21 @@ function _fmtMoneyDelta(n){
 }
 
 // ── Render
+function _firmKey(a){return((a.firm||'').trim().toUpperCase()||'OTHER')}
+function _matchesFirm(a){return _propFirmFilter==='all'||_firmKey(a)===_propFirmFilter}
+
 function renderProp(){
   loadProp();
-  const accts=propData.accounts||[];
+  const allAccts=propData.accounts||[];
+
+  // Render firm filter chips first (uses ALL accounts to count, regardless of filter)
+  _renderFirmChips(allAccts);
+
+  // If current filter no longer matches any account (e.g. last APEX deleted), reset to 'all'
+  if(_propFirmFilter!=='all'&&!allAccts.some(a=>_firmKey(a)===_propFirmFilter))_propFirmFilter='all';
+
+  // Apply firm filter
+  const accts=allAccts.filter(_matchesFirm);
   const evals=accts.filter(a=>a.type==='EVAL');
   const pas=accts.filter(a=>a.type==='PA');
   const evalActive=evals.filter(a=>a.status==='Active').length;
@@ -2153,13 +2181,15 @@ function renderProp(){
   const allPayouts=accts.flatMap(a=>(a.payouts||[]).map(p=>({...p,acctName:a.name,acctId:a.id})));
   const totWd=allPayouts.reduce((s,p)=>s+(parseFloat(p.amount)||0),0);
 
+  const filterLbl=_propFirmFilter==='all'?'across active accounts':'in '+_propFirmFilter;
+
   // KPIs
   document.getElementById('pk-eval').textContent=evals.length;
   document.getElementById('pk-eval-sub').textContent=evalActive+' active';
   document.getElementById('pk-pa').textContent=pas.length;
   document.getElementById('pk-pa-sub').textContent=paActive+' active';
   document.getElementById('pk-bal').textContent=_fmtMoney(totBal);
-  document.getElementById('pk-bal-sub').textContent='across active accounts';
+  document.getElementById('pk-bal-sub').textContent=filterLbl;
   document.getElementById('pk-wd').textContent=_fmtMoney(totWd);
   document.getElementById('pk-wd-sub').textContent=allPayouts.length+' payout'+(allPayouts.length===1?'':'s');
 
@@ -2170,10 +2200,10 @@ function renderProp(){
   // Render grids
   document.getElementById('prop-eval-grid').innerHTML=evals.length
     ? evals.map(_propCard).join('')
-    : '<div class="prop-empty">No eval accounts yet — click "+ Add Account" above.</div>';
+    : `<div class="prop-empty">No eval accounts${_propFirmFilter==='all'?' yet — click "+ Add Account" above.':' for '+_propFirmFilter+'.'}</div>`;
   document.getElementById('prop-pa-grid').innerHTML=pas.length
     ? pas.map(_propCard).join('')
-    : '<div class="prop-empty">No funded accounts yet.</div>';
+    : `<div class="prop-empty">No funded accounts${_propFirmFilter==='all'?' yet.':' for '+_propFirmFilter+'.'}</div>`;
 
   // Recent payouts (sort by date desc, top 10)
   const sortedP=allPayouts.sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,10);
@@ -2185,6 +2215,32 @@ function renderProp(){
         <div class="ppr-note">${_esc(p.note||'')}</div>
       </div>`).join('')
     : '<div class="prop-empty">No payouts logged yet.</div>';
+}
+
+// Render firm filter chips (auto-populated from existing accounts)
+function _renderFirmChips(allAccts){
+  // Count accounts per firm (uppercased)
+  const firmCounts={};
+  allAccts.forEach(a=>{const f=_firmKey(a);firmCounts[f]=(firmCounts[f]||0)+1});
+  const firmList=Object.keys(firmCounts).sort();
+  const wrap=document.getElementById('prop-firm-chips');
+  if(!wrap)return;
+
+  // Hide entire bar if no accounts at all
+  document.getElementById('prop-firm-bar').style.display=allAccts.length?'flex':'none';
+
+  const chips=[
+    `<button class="prop-firm-chip ${_propFirmFilter==='all'?'on':''}" onclick="setPropFirmFilter('all')">All <span class="prop-firm-chip-cnt">${allAccts.length}</span></button>`,
+    ...firmList.map(f=>
+      `<button class="prop-firm-chip ${_propFirmFilter===f?'on':''}" onclick="setPropFirmFilter('${_esc(f)}')">${_esc(f)} <span class="prop-firm-chip-cnt">${firmCounts[f]}</span></button>`
+    )
+  ];
+  wrap.innerHTML=chips.join('');
+}
+
+function setPropFirmFilter(f){
+  _propFirmFilter=f;
+  renderProp();
 }
 
 function _propCard(a){
