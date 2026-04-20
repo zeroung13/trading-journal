@@ -736,10 +736,14 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 .prop-card-stat{display:flex;justify-content:space-between;font-size:11px;color:var(--t1)}
 .prop-card-stat-lbl{color:var(--t2)}
 .prop-card-stat-val{font-variant-numeric:tabular-nums;font-weight:600}
-.prop-card-actions{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
-.prop-card-actions .btn{flex:1;min-width:0;padding:5px 8px;font-size:11px}
-.prop-card-actions .btn-del{flex:0 0 auto;padding:5px 8px;font-size:11px;background:transparent;color:var(--t2);border:1px solid var(--b1)}
-.prop-card-actions .btn-del:hover{color:var(--r);border-color:var(--rbd)}
+/* Two-row actions: primary buttons on top, text-link secondary below */
+.prop-card-actions{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.prop-card-actions-pri{display:flex;gap:6px}
+.prop-card-actions-pri .btn{flex:1;min-width:0;padding:7px 10px;font-size:11.5px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:4px;letter-spacing:.3px}
+.prop-card-actions-sec{display:flex;justify-content:space-between;align-items:center;padding-top:2px}
+.prop-card-link{background:transparent;border:none;color:var(--t2);font-family:'JetBrains Mono','SF Mono',monospace;font-size:11px;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;padding:3px 4px;font-weight:600;transition:color .15s}
+.prop-card-link:hover{color:var(--t0)}
+.prop-card-link.del:hover{color:var(--r)}
 
 .prop-payout-list{display:flex;flex-direction:column;gap:6px}
 .prop-payout-row{display:grid;grid-template-columns:90px 1fr 110px 1fr;gap:12px;padding:10px 14px;background:var(--cbg);border:1px solid var(--b1);border-radius:6px;font-size:12px;align-items:center}
@@ -2219,10 +2223,14 @@ function _propCard(a){
     </div>
     ${a.cost?`<div class="prop-card-stat"><span class="prop-card-stat-lbl">Cost</span><span class="prop-card-stat-val">${_fmtMoney(a.cost)}</span></div>`:''}
     <div class="prop-card-actions">
-      <button class="btn btn-g btn-sm" onclick="openBalModal('${a.id}')">$ Update</button>
-      <button class="btn btn-g btn-sm" onclick="openPayoutModal('${a.id}')">+ Payout</button>
-      <button class="btn btn-g btn-sm" onclick="openEditAcct('${a.id}')">Edit</button>
-      <button class="btn btn-sm btn-del" onclick="delAcct('${a.id}')" title="Delete">×</button>
+      <div class="prop-card-actions-pri">
+        <button class="btn btn-g btn-sm" onclick="openBalModal('${a.id}')" title="Update balance"><span>$</span> Update</button>
+        <button class="btn btn-g btn-sm" onclick="openPayoutModal('${a.id}')" title="Add payout"><span>+</span> Payout</button>
+      </div>
+      <div class="prop-card-actions-sec">
+        <button class="prop-card-link" onclick="openEditAcct('${a.id}')">Edit</button>
+        <button class="prop-card-link del" onclick="delAcct('${a.id}')">Delete</button>
+      </div>
     </div>
   </div>`;
 }
