@@ -682,6 +682,100 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 
 @media(max-width:920px){.sc-body{grid-template-columns:1fr;overflow-y:auto}.sc-config{border-right:none;border-bottom:1px solid var(--b1);max-height:none}.sc-preview{width:100%;max-width:480px}}
 
+/* ── PROP TRACKER ── */
+.prop-kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.prop-kpi-card{background:var(--cbg);border:1px solid var(--b1);border-radius:8px;padding:14px 16px;position:relative;overflow:hidden}
+.prop-kpi-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--ac)}
+.prop-kpi-card:nth-child(1)::before{background:var(--ac)}
+.prop-kpi-card:nth-child(2)::before{background:var(--blue)}
+.prop-kpi-card:nth-child(3)::before{background:var(--g)}
+.prop-kpi-card:nth-child(4)::before{background:var(--y)}
+.prop-kpi-lbl{font-family:'JetBrains Mono','SF Mono',monospace;font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.6px;font-weight:600;margin-bottom:8px}
+.prop-kpi-val{font-family:'JetBrains Mono','SF Mono',monospace;font-size:24px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:.2px;color:var(--t0);line-height:1.1}
+.prop-kpi-val.pos{color:var(--g)}
+.prop-kpi-val.neg{color:var(--r)}
+.prop-kpi-sub{font-size:11px;color:var(--t2);margin-top:4px;letter-spacing:.2px}
+
+.prop-tb{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;gap:10px;flex-wrap:wrap}
+.prop-tb-r{display:flex;gap:6px}
+
+.prop-section{margin-bottom:24px}
+.prop-section-hd{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--b1)}
+.prop-section-ttl{font-family:'JetBrains Mono','SF Mono',monospace;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--t1)}
+.prop-section-cnt{font-family:'JetBrains Mono','SF Mono',monospace;font-size:11px;color:var(--t2);letter-spacing:.3px}
+
+.prop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.prop-empty{grid-column:1/-1;text-align:center;padding:32px;color:var(--t2);font-size:13px;border:1px dashed var(--b1);border-radius:8px}
+
+.prop-card{background:var(--cbg);border:1px solid var(--b1);border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden;transition:border-color .15s}
+.prop-card:hover{border-color:var(--b2)}
+.prop-card.failed{opacity:.6}
+.prop-card.passed{opacity:.85}
+.prop-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
+.prop-card.eval::before{background:var(--ac)}
+.prop-card.pa::before{background:var(--blue)}
+.prop-card.failed::before{background:var(--r)}
+.prop-card.passed::before{background:var(--g)}
+.prop-card-hd{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.prop-card-name{font-family:'JetBrains Mono','SF Mono',monospace;font-size:13px;font-weight:700;color:var(--t0);letter-spacing:.3px;word-break:break-all}
+.prop-card-meta{font-family:'JetBrains Mono','SF Mono',monospace;font-size:10px;color:var(--t2);letter-spacing:.4px;text-transform:uppercase;display:flex;gap:6px;flex-wrap:wrap;margin-top:3px}
+.prop-card-tag{padding:1px 6px;border-radius:3px;background:var(--cbg2);border:1px solid var(--b1);font-size:9px;font-weight:600}
+.prop-card-tag.eval{color:var(--ac2);background:var(--acbg);border-color:rgba(94,106,210,.3)}
+.prop-card-tag.pa{color:var(--blue);background:rgba(59,130,246,.1);border-color:rgba(59,130,246,.3)}
+.prop-card-tag.active{color:var(--g);background:var(--gbg);border-color:var(--gbd)}
+.prop-card-tag.passed{color:var(--g);background:var(--gbg);border-color:var(--gbd)}
+.prop-card-tag.failed{color:var(--r);background:var(--rbg);border-color:var(--rbd)}
+.prop-card-bal{display:flex;align-items:baseline;justify-content:space-between;padding:8px 0;border-top:1px solid var(--b1);border-bottom:1px solid var(--b1)}
+.prop-card-bal-lbl{font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.prop-card-bal-val{font-family:'JetBrains Mono','SF Mono',monospace;font-size:18px;font-weight:800;color:var(--t0);font-variant-numeric:tabular-nums;letter-spacing:.2px}
+.prop-card-bal-val.pos{color:var(--g)}
+.prop-card-bal-val.neg{color:var(--r)}
+.prop-card-pnl{font-size:11px;font-variant-numeric:tabular-nums;font-weight:600;margin-left:6px}
+.prop-card-pnl.pos{color:var(--g)}
+.prop-card-pnl.neg{color:var(--r)}
+.prop-card-stat{display:flex;justify-content:space-between;font-size:11px;color:var(--t1)}
+.prop-card-stat-lbl{color:var(--t2)}
+.prop-card-stat-val{font-variant-numeric:tabular-nums;font-weight:600}
+.prop-card-actions{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.prop-card-actions .btn{flex:1;min-width:0;padding:5px 8px;font-size:11px}
+.prop-card-actions .btn-del{flex:0 0 auto;padding:5px 8px;font-size:11px;background:transparent;color:var(--t2);border:1px solid var(--b1)}
+.prop-card-actions .btn-del:hover{color:var(--r);border-color:var(--rbd)}
+
+.prop-payout-list{display:flex;flex-direction:column;gap:6px}
+.prop-payout-row{display:grid;grid-template-columns:90px 1fr 110px 1fr;gap:12px;padding:10px 14px;background:var(--cbg);border:1px solid var(--b1);border-radius:6px;font-size:12px;align-items:center}
+.prop-payout-row .ppr-date{font-family:'JetBrains Mono','SF Mono',monospace;color:var(--t2);font-variant-numeric:tabular-nums}
+.prop-payout-row .ppr-acct{font-family:'JetBrains Mono','SF Mono',monospace;color:var(--t1);font-weight:600;font-size:12px}
+.prop-payout-row .ppr-amt{font-family:'JetBrains Mono','SF Mono',monospace;color:var(--g);font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
+.prop-payout-row .ppr-note{color:var(--t2);font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* PROP modals */
+.prop-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:999;display:none;align-items:center;justify-content:center;padding:20px;animation:pbFade .2s ease-out}
+.prop-overlay.on{display:flex}
+.prop-modal{background:var(--sbg);border:1px solid var(--b1);border-radius:12px;width:100%;max-width:480px;max-height:92vh;overflow:hidden;display:flex;flex-direction:column;animation:pbSlide .28s cubic-bezier(.2,.8,.2,1);box-shadow:0 20px 60px rgba(0,0,0,.7)}
+.prop-modal-hd{padding:14px 20px;border-bottom:1px solid var(--b1);display:flex;justify-content:space-between;align-items:center}
+.prop-modal-ttl{font-family:'JetBrains Mono','SF Mono',monospace;font-size:12px;font-weight:800;letter-spacing:1.4px;color:var(--t0)}
+.prop-modal-close{background:transparent;border:none;color:var(--t2);font-size:22px;cursor:pointer;padding:4px 10px;border-radius:4px;line-height:1}
+.prop-modal-close:hover{background:var(--cbg2);color:var(--t0)}
+.prop-modal-body{padding:18px 20px;overflow-y:auto;display:flex;flex-direction:column;gap:14px}
+.prop-fld{display:flex;flex-direction:column;gap:6px;flex:1;min-width:0}
+.prop-fld-row{display:flex;gap:12px}
+.prop-fld-lbl{font-family:'JetBrains Mono','SF Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--t2)}
+.prop-in{background:var(--cbg);border:1px solid var(--b1);border-radius:6px;padding:8px 11px;color:var(--t0);font-family:'JetBrains Mono','SF Mono',monospace;font-size:13px;outline:none;transition:border-color .15s}
+.prop-in:focus{border-color:var(--ac)}
+.prop-in[type="date"]{color-scheme:dark}
+select.prop-in{cursor:pointer}
+.prop-stat-tabs{display:flex;background:var(--cbg);border:1px solid var(--b1);border-radius:7px;padding:3px;gap:2px}
+.prop-stat-tab{flex:1;background:transparent;border:none;color:var(--t2);padding:7px 10px;font-size:11px;font-weight:600;border-radius:5px;cursor:pointer;font-family:'JetBrains Mono','SF Mono',monospace;letter-spacing:.4px;transition:all .15s}
+.prop-stat-tab:hover{color:var(--t1)}
+.prop-stat-tab.on{background:var(--ac);color:#fff}
+.prop-stat-tab.on[data-v="Passed"]{background:var(--g)}
+.prop-stat-tab.on[data-v="Failed"]{background:var(--r)}
+.prop-modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:6px}
+.prop-payout-acct{font-family:'JetBrains Mono','SF Mono',monospace;font-size:11px;color:var(--t2);text-transform:uppercase;letter-spacing:.6px;padding:6px 10px;background:var(--cbg);border-radius:5px;border:1px solid var(--b1);text-align:center}
+
+@media(max-width:900px){.prop-kpi-row{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.prop-fld-row{flex-direction:column}.prop-payout-row{grid-template-columns:80px 1fr 100px;gap:8px}.prop-payout-row .ppr-note{display:none}}
+
 /* buttons */
 .btn{border-radius:4px;border:none;cursor:pointer;font-size:13px;font-weight:510;transition:all .15s;white-space:nowrap;padding:8px 16px}
 .btn-p{background:var(--ac);color:#fff}.btn-p:hover{background:var(--ac2)}
@@ -795,6 +889,9 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
     </div>
     <div class="nav-it" data-v="analytics" onclick="switchV(this)">
       <span class="nav-icon">◎</span><span class="nav-lbl">Analytics</span>
+    </div>
+    <div class="nav-it" data-v="prop" onclick="switchV(this)">
+      <span class="nav-icon">▣</span><span class="nav-lbl">Prop</span>
     </div>
   </nav>
   <div class="src-section">
@@ -1218,6 +1315,69 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 
     </div>
 
+    <!-- PROP TRACKER -->
+    <div id="view-prop" class="view">
+      <!-- KPI ROW -->
+      <div class="prop-kpi-row">
+        <div class="prop-kpi-card">
+          <div class="prop-kpi-lbl">Eval Accounts</div>
+          <div class="prop-kpi-val" id="pk-eval">0</div>
+          <div class="prop-kpi-sub" id="pk-eval-sub">0 active</div>
+        </div>
+        <div class="prop-kpi-card">
+          <div class="prop-kpi-lbl">PA Accounts</div>
+          <div class="prop-kpi-val" id="pk-pa">0</div>
+          <div class="prop-kpi-sub" id="pk-pa-sub">0 active</div>
+        </div>
+        <div class="prop-kpi-card">
+          <div class="prop-kpi-lbl">Total Balance</div>
+          <div class="prop-kpi-val" id="pk-bal">$0</div>
+          <div class="prop-kpi-sub" id="pk-bal-sub">across active accounts</div>
+        </div>
+        <div class="prop-kpi-card">
+          <div class="prop-kpi-lbl">Total Withdrawn</div>
+          <div class="prop-kpi-val pos" id="pk-wd">$0</div>
+          <div class="prop-kpi-sub" id="pk-wd-sub">0 payouts</div>
+        </div>
+      </div>
+
+      <!-- TOOLBAR -->
+      <div class="prop-tb">
+        <button class="btn btn-p btn-sm" onclick="openAddAcct()">+ Add Account</button>
+        <div class="prop-tb-r">
+          <button class="btn btn-g btn-sm" onclick="exportProp()" title="Download backup as JSON">↑ Export</button>
+          <button class="btn btn-g btn-sm" onclick="document.getElementById('prop-import-in').click()" title="Restore from JSON file">↓ Import</button>
+          <input type="file" id="prop-import-in" accept=".json,application/json" style="display:none" onchange="importProp(event)">
+        </div>
+      </div>
+
+      <!-- EVAL SECTION -->
+      <div class="prop-section">
+        <div class="prop-section-hd">
+          <div class="prop-section-ttl">Eval Accounts</div>
+          <div class="prop-section-cnt" id="ps-eval-cnt">—</div>
+        </div>
+        <div class="prop-grid" id="prop-eval-grid"></div>
+      </div>
+
+      <!-- PA SECTION -->
+      <div class="prop-section">
+        <div class="prop-section-hd">
+          <div class="prop-section-ttl">PA / Funded Accounts</div>
+          <div class="prop-section-cnt" id="ps-pa-cnt">—</div>
+        </div>
+        <div class="prop-grid" id="prop-pa-grid"></div>
+      </div>
+
+      <!-- PAYOUT HISTORY -->
+      <div class="prop-section">
+        <div class="prop-section-hd">
+          <div class="prop-section-ttl">Recent Payouts</div>
+        </div>
+        <div class="prop-payout-list" id="prop-payout-list"></div>
+      </div>
+    </div>
+
   </div>
 </div>
 </div>
@@ -1300,6 +1460,121 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
       <!-- RIGHT: Live preview -->
       <div class="sc-preview-wrap">
         <div class="sc-preview" id="sc-preview"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROP: Add / Edit Account Modal -->
+<div class="prop-overlay" id="prop-acct-overlay" onclick="if(event.target===this)closeAcctModal()">
+  <div class="prop-modal">
+    <div class="prop-modal-hd">
+      <div class="prop-modal-ttl" id="prop-acct-ttl">ADD ACCOUNT</div>
+      <button class="prop-modal-close" onclick="closeAcctModal()" aria-label="close">×</button>
+    </div>
+    <div class="prop-modal-body">
+      <div class="prop-fld">
+        <label class="prop-fld-lbl">Account Name</label>
+        <input type="text" class="prop-in" id="pa-name" placeholder="APEX-50K-001" maxlength="40">
+      </div>
+      <div class="prop-fld-row">
+        <div class="prop-fld">
+          <label class="prop-fld-lbl">Type</label>
+          <select class="prop-in" id="pa-type">
+            <option value="EVAL">EVAL</option>
+            <option value="PA">PA / Funded</option>
+          </select>
+        </div>
+        <div class="prop-fld">
+          <label class="prop-fld-lbl">Firm</label>
+          <input type="text" class="prop-in" id="pa-firm" placeholder="APEX" maxlength="20">
+        </div>
+      </div>
+      <div class="prop-fld-row">
+        <div class="prop-fld">
+          <label class="prop-fld-lbl">Account Size</label>
+          <select class="prop-in" id="pa-size">
+            <option value="25000">$25,000</option>
+            <option value="50000" selected>$50,000</option>
+            <option value="100000">$100,000</option>
+            <option value="150000">$150,000</option>
+            <option value="250000">$250,000</option>
+            <option value="custom">Custom...</option>
+          </select>
+          <input type="number" class="prop-in" id="pa-size-custom" placeholder="Enter size" style="display:none;margin-top:6px">
+        </div>
+        <div class="prop-fld">
+          <label class="prop-fld-lbl">Current Balance</label>
+          <input type="number" class="prop-in" id="pa-balance" placeholder="50000" step="0.01">
+        </div>
+      </div>
+      <div class="prop-fld">
+        <label class="prop-fld-lbl">Status</label>
+        <div class="prop-stat-tabs" id="pa-status-tabs">
+          <button type="button" class="prop-stat-tab on" data-v="Active">Active</button>
+          <button type="button" class="prop-stat-tab" data-v="Passed">Passed</button>
+          <button type="button" class="prop-stat-tab" data-v="Failed">Failed</button>
+        </div>
+      </div>
+      <div class="prop-fld">
+        <label class="prop-fld-lbl">Cost (optional)</label>
+        <input type="number" class="prop-in" id="pa-cost" placeholder="147" step="0.01">
+      </div>
+      <div class="prop-modal-actions">
+        <button class="btn btn-g btn-sm" onclick="closeAcctModal()">Cancel</button>
+        <button class="btn btn-p btn-sm" onclick="saveAcct()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROP: Add Payout Modal -->
+<div class="prop-overlay" id="prop-payout-overlay" onclick="if(event.target===this)closePayoutModal()">
+  <div class="prop-modal" style="max-width:380px">
+    <div class="prop-modal-hd">
+      <div class="prop-modal-ttl">ADD PAYOUT</div>
+      <button class="prop-modal-close" onclick="closePayoutModal()" aria-label="close">×</button>
+    </div>
+    <div class="prop-modal-body">
+      <div class="prop-payout-acct" id="pp-acct">—</div>
+      <div class="prop-fld-row">
+        <div class="prop-fld">
+          <label class="prop-fld-lbl">Date</label>
+          <input type="date" class="prop-in" id="pp-date">
+        </div>
+        <div class="prop-fld">
+          <label class="prop-fld-lbl">Amount ($)</label>
+          <input type="number" class="prop-in" id="pp-amount" placeholder="2500" step="0.01">
+        </div>
+      </div>
+      <div class="prop-fld">
+        <label class="prop-fld-lbl">Note (optional)</label>
+        <input type="text" class="prop-in" id="pp-note" placeholder="Plane Payments / Wire / ..." maxlength="60">
+      </div>
+      <div class="prop-modal-actions">
+        <button class="btn btn-g btn-sm" onclick="closePayoutModal()">Cancel</button>
+        <button class="btn btn-p btn-sm" onclick="savePayout()">Save Payout</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROP: Edit Balance Modal -->
+<div class="prop-overlay" id="prop-bal-overlay" onclick="if(event.target===this)closeBalModal()">
+  <div class="prop-modal" style="max-width:340px">
+    <div class="prop-modal-hd">
+      <div class="prop-modal-ttl">UPDATE BALANCE</div>
+      <button class="prop-modal-close" onclick="closeBalModal()" aria-label="close">×</button>
+    </div>
+    <div class="prop-modal-body">
+      <div class="prop-payout-acct" id="pb-acct">—</div>
+      <div class="prop-fld">
+        <label class="prop-fld-lbl">New Balance ($)</label>
+        <input type="number" class="prop-in" id="pb-balance" placeholder="52840" step="0.01">
+      </div>
+      <div class="prop-modal-actions">
+        <button class="btn btn-g btn-sm" onclick="closeBalModal()">Cancel</button>
+        <button class="btn btn-p btn-sm" onclick="saveBalance()">Save</button>
       </div>
     </div>
   </div>
@@ -1466,11 +1741,12 @@ function switchV(el){
   document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));
   el.classList.add('on');
   document.getElementById('view-'+v).classList.add('on');
-  const titles={dash:'Dashboard',log:'Trade Log',analytics:'Analytics'};
+  const titles={dash:'Dashboard',log:'Trade Log',analytics:'Analytics',prop:'Prop Tracker'};
   document.getElementById('pg-ttl').textContent=titles[v]||'';
   if(v==='dash')renderDash();
   if(v==='log')renderTbl();
   if(v==='analytics')renderAnalytics();
+  if(v==='prop')renderProp();
   document.getElementById('sb').classList.remove('mob');
 }
 
@@ -1827,6 +2103,299 @@ function renderCal(){
 }
 function calMv(d){cM+=d;if(cM<0){cM=11;cY--}if(cM>11){cM=0;cY++}renderCal()}
 function calToday(){const n=new Date();cY=n.getFullYear();cM=n.getMonth();renderCal()}
+
+// ══════════════════════════════════════════════════
+// PROP TRACKER
+// ══════════════════════════════════════════════════
+const PROP_LS='tj_prop_v1';
+let propData={accounts:[]};
+let _editingAcctId=null;     // null = new account
+let _payoutForId=null;       // account id receiving the payout
+let _balanceForId=null;      // account id whose balance is being edited
+let _newAcctStatus='Active'; // status tab state for add/edit modal
+
+function loadProp(){
+  try{
+    const raw=localStorage.getItem(PROP_LS);
+    if(raw)propData=JSON.parse(raw);
+    if(!propData.accounts)propData.accounts=[];
+  }catch(e){console.warn('prop load failed',e);propData={accounts:[]}}
+}
+function saveProp(){
+  try{localStorage.setItem(PROP_LS,JSON.stringify(propData))}
+  catch(e){console.error('prop save failed',e);toast('Save failed: storage full?')}
+}
+function _uid(){return 'a'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+function _fmtMoney(n){
+  if(n==null||isNaN(n))return '$0';
+  const abs=Math.abs(n);
+  const sign=n<0?'-':'';
+  return sign+'$'+abs.toLocaleString('en-US',{maximumFractionDigits:0});
+}
+function _fmtMoneyDelta(n){
+  const sign=n>=0?'+':'-';
+  return sign+'$'+Math.abs(n).toLocaleString('en-US',{maximumFractionDigits:0});
+}
+
+// ── Render
+function renderProp(){
+  loadProp();
+  const accts=propData.accounts||[];
+  const evals=accts.filter(a=>a.type==='EVAL');
+  const pas=accts.filter(a=>a.type==='PA');
+  const evalActive=evals.filter(a=>a.status==='Active').length;
+  const paActive=pas.filter(a=>a.status==='Active').length;
+  const totBal=accts.filter(a=>a.status==='Active').reduce((s,a)=>s+(parseFloat(a.balance)||0),0);
+  const allPayouts=accts.flatMap(a=>(a.payouts||[]).map(p=>({...p,acctName:a.name,acctId:a.id})));
+  const totWd=allPayouts.reduce((s,p)=>s+(parseFloat(p.amount)||0),0);
+
+  // KPIs
+  document.getElementById('pk-eval').textContent=evals.length;
+  document.getElementById('pk-eval-sub').textContent=evalActive+' active';
+  document.getElementById('pk-pa').textContent=pas.length;
+  document.getElementById('pk-pa-sub').textContent=paActive+' active';
+  document.getElementById('pk-bal').textContent=_fmtMoney(totBal);
+  document.getElementById('pk-bal-sub').textContent='across active accounts';
+  document.getElementById('pk-wd').textContent=_fmtMoney(totWd);
+  document.getElementById('pk-wd-sub').textContent=allPayouts.length+' payout'+(allPayouts.length===1?'':'s');
+
+  // Section counts
+  document.getElementById('ps-eval-cnt').textContent=evals.length+' total · '+evalActive+' active';
+  document.getElementById('ps-pa-cnt').textContent=pas.length+' total · '+paActive+' active';
+
+  // Render grids
+  document.getElementById('prop-eval-grid').innerHTML=evals.length
+    ? evals.map(_propCard).join('')
+    : '<div class="prop-empty">No eval accounts yet — click "+ Add Account" above.</div>';
+  document.getElementById('prop-pa-grid').innerHTML=pas.length
+    ? pas.map(_propCard).join('')
+    : '<div class="prop-empty">No funded accounts yet.</div>';
+
+  // Recent payouts (sort by date desc, top 10)
+  const sortedP=allPayouts.sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,10);
+  document.getElementById('prop-payout-list').innerHTML=sortedP.length
+    ? sortedP.map(p=>`<div class="prop-payout-row">
+        <div class="ppr-date">${p.date||'—'}</div>
+        <div class="ppr-acct">${_esc(p.acctName||'')}</div>
+        <div class="ppr-amt">+${_fmtMoney(p.amount)}</div>
+        <div class="ppr-note">${_esc(p.note||'')}</div>
+      </div>`).join('')
+    : '<div class="prop-empty">No payouts logged yet.</div>';
+}
+
+function _propCard(a){
+  const stCls=a.status==='Failed'?'failed':a.status==='Passed'?'passed':'';
+  const typeCls=a.type==='EVAL'?'eval':'pa';
+  const startBal=parseFloat(a.size)||0;
+  const curBal=parseFloat(a.balance)||0;
+  const delta=curBal-startBal;
+  const deltaCls=delta>=0?'pos':'neg';
+  const totWd=(a.payouts||[]).reduce((s,p)=>s+(parseFloat(p.amount)||0),0);
+  const sizeStr='$'+(parseFloat(a.size)||0).toLocaleString('en-US',{maximumFractionDigits:0});
+  return `<div class="prop-card ${typeCls} ${stCls}">
+    <div class="prop-card-hd">
+      <div>
+        <div class="prop-card-name">${_esc(a.name||'—')}</div>
+        <div class="prop-card-meta">
+          <span class="prop-card-tag ${typeCls}">${a.type||''}</span>
+          <span class="prop-card-tag ${a.status==='Active'?'active':a.status==='Passed'?'passed':'failed'}">${a.status||''}</span>
+          ${a.firm?`<span>${_esc(a.firm)}</span>`:''}
+          <span>${sizeStr}</span>
+        </div>
+      </div>
+    </div>
+    <div class="prop-card-bal">
+      <div>
+        <div class="prop-card-bal-lbl">Balance</div>
+        <div style="display:flex;align-items:baseline">
+          <div class="prop-card-bal-val ${delta>=0?'pos':delta<0?'neg':''}">${_fmtMoney(curBal)}</div>
+          <div class="prop-card-pnl ${deltaCls}">${_fmtMoneyDelta(delta)}</div>
+        </div>
+      </div>
+    </div>
+    <div class="prop-card-stat">
+      <span class="prop-card-stat-lbl">Withdrawn</span>
+      <span class="prop-card-stat-val" style="color:${totWd>0?'var(--g)':'var(--t1)'}">${_fmtMoney(totWd)}</span>
+    </div>
+    ${a.cost?`<div class="prop-card-stat"><span class="prop-card-stat-lbl">Cost</span><span class="prop-card-stat-val">${_fmtMoney(a.cost)}</span></div>`:''}
+    <div class="prop-card-actions">
+      <button class="btn btn-g btn-sm" onclick="openBalModal('${a.id}')">$ Update</button>
+      <button class="btn btn-g btn-sm" onclick="openPayoutModal('${a.id}')">+ Payout</button>
+      <button class="btn btn-g btn-sm" onclick="openEditAcct('${a.id}')">Edit</button>
+      <button class="btn btn-sm btn-del" onclick="delAcct('${a.id}')" title="Delete">×</button>
+    </div>
+  </div>`;
+}
+
+// ── Add / Edit Account modal
+function openAddAcct(){
+  _editingAcctId=null;
+  document.getElementById('prop-acct-ttl').textContent='ADD ACCOUNT';
+  document.getElementById('pa-name').value='';
+  document.getElementById('pa-firm').value='APEX';
+  document.getElementById('pa-type').value='EVAL';
+  document.getElementById('pa-size').value='50000';
+  document.getElementById('pa-size-custom').style.display='none';
+  document.getElementById('pa-size-custom').value='';
+  document.getElementById('pa-balance').value='50000';
+  document.getElementById('pa-cost').value='';
+  _setStatusTab('Active');
+  document.getElementById('prop-acct-overlay').classList.add('on');
+  setTimeout(()=>document.getElementById('pa-name').focus(),50);
+}
+function openEditAcct(id){
+  const a=propData.accounts.find(x=>x.id===id);
+  if(!a)return;
+  _editingAcctId=id;
+  document.getElementById('prop-acct-ttl').textContent='EDIT ACCOUNT';
+  document.getElementById('pa-name').value=a.name||'';
+  document.getElementById('pa-firm').value=a.firm||'';
+  document.getElementById('pa-type').value=a.type||'EVAL';
+  const sizeSel=document.getElementById('pa-size');
+  const sizes=['25000','50000','100000','150000','250000'];
+  if(sizes.includes(String(a.size))){sizeSel.value=String(a.size);document.getElementById('pa-size-custom').style.display='none'}
+  else{sizeSel.value='custom';document.getElementById('pa-size-custom').style.display='block';document.getElementById('pa-size-custom').value=a.size||''}
+  document.getElementById('pa-balance').value=a.balance||'';
+  document.getElementById('pa-cost').value=a.cost||'';
+  _setStatusTab(a.status||'Active');
+  document.getElementById('prop-acct-overlay').classList.add('on');
+}
+function closeAcctModal(){document.getElementById('prop-acct-overlay').classList.remove('on')}
+function _setStatusTab(v){
+  _newAcctStatus=v;
+  document.querySelectorAll('#pa-status-tabs .prop-stat-tab').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+}
+// Wire up status tabs (delegated since modal is static)
+document.addEventListener('click',e=>{
+  const t=e.target.closest('#pa-status-tabs .prop-stat-tab');
+  if(t)_setStatusTab(t.dataset.v);
+});
+// Show custom size input when "custom" selected
+document.addEventListener('change',e=>{
+  if(e.target&&e.target.id==='pa-size'){
+    document.getElementById('pa-size-custom').style.display=e.target.value==='custom'?'block':'none';
+  }
+});
+
+function saveAcct(){
+  const name=document.getElementById('pa-name').value.trim();
+  if(!name){toast('Name required');return}
+  const type=document.getElementById('pa-type').value;
+  const firm=document.getElementById('pa-firm').value.trim();
+  const sizeSel=document.getElementById('pa-size').value;
+  const size=sizeSel==='custom'?parseFloat(document.getElementById('pa-size-custom').value)||0:parseFloat(sizeSel);
+  const balance=parseFloat(document.getElementById('pa-balance').value)||0;
+  const cost=parseFloat(document.getElementById('pa-cost').value)||0;
+  if(_editingAcctId){
+    const a=propData.accounts.find(x=>x.id===_editingAcctId);
+    if(a){Object.assign(a,{name,type,firm,size,balance,cost,status:_newAcctStatus,updatedAt:new Date().toISOString()})}
+  } else {
+    propData.accounts.push({
+      id:_uid(),name,type,firm,size,balance,cost,status:_newAcctStatus,
+      createdAt:new Date().toISOString(),payouts:[]
+    });
+  }
+  saveProp();renderProp();closeAcctModal();
+  toast(_editingAcctId?'Account updated':'Account added');
+}
+
+function delAcct(id){
+  const a=propData.accounts.find(x=>x.id===id);
+  if(!a)return;
+  if(!confirm('Delete account "'+a.name+'"? This cannot be undone.'))return;
+  propData.accounts=propData.accounts.filter(x=>x.id!==id);
+  saveProp();renderProp();
+  toast('Account deleted');
+}
+
+// ── Update Balance modal
+function openBalModal(id){
+  const a=propData.accounts.find(x=>x.id===id);
+  if(!a)return;
+  _balanceForId=id;
+  document.getElementById('pb-acct').textContent=a.name+' · current: '+_fmtMoney(a.balance);
+  document.getElementById('pb-balance').value=a.balance||'';
+  document.getElementById('prop-bal-overlay').classList.add('on');
+  setTimeout(()=>{const i=document.getElementById('pb-balance');i.focus();i.select()},50);
+}
+function closeBalModal(){document.getElementById('prop-bal-overlay').classList.remove('on')}
+function saveBalance(){
+  const a=propData.accounts.find(x=>x.id===_balanceForId);
+  if(!a){closeBalModal();return}
+  const v=parseFloat(document.getElementById('pb-balance').value);
+  if(isNaN(v)){toast('Invalid balance');return}
+  a.balance=v;a.updatedAt=new Date().toISOString();
+  saveProp();renderProp();closeBalModal();
+  toast('Balance updated');
+}
+
+// ── Add Payout modal
+function openPayoutModal(id){
+  const a=propData.accounts.find(x=>x.id===id);
+  if(!a)return;
+  _payoutForId=id;
+  document.getElementById('pp-acct').textContent=a.name+' · '+a.type;
+  document.getElementById('pp-date').value=new Date().toISOString().slice(0,10);
+  document.getElementById('pp-amount').value='';
+  document.getElementById('pp-note').value='';
+  document.getElementById('prop-payout-overlay').classList.add('on');
+  setTimeout(()=>document.getElementById('pp-amount').focus(),50);
+}
+function closePayoutModal(){document.getElementById('prop-payout-overlay').classList.remove('on')}
+function savePayout(){
+  const a=propData.accounts.find(x=>x.id===_payoutForId);
+  if(!a){closePayoutModal();return}
+  const date=document.getElementById('pp-date').value;
+  const amount=parseFloat(document.getElementById('pp-amount').value);
+  const note=document.getElementById('pp-note').value.trim();
+  if(!date){toast('Date required');return}
+  if(!amount||amount<=0){toast('Amount must be > 0');return}
+  if(!a.payouts)a.payouts=[];
+  a.payouts.push({id:_uid(),date,amount,note,createdAt:new Date().toISOString()});
+  // Auto-deduct from balance (typical PA workflow)
+  const cur=parseFloat(a.balance)||0;
+  a.balance=parseFloat((cur-amount).toFixed(2));
+  saveProp();renderProp();closePayoutModal();
+  toast('Payout +'+_fmtMoney(amount)+' logged');
+}
+
+// ── Export / Import
+function exportProp(){
+  loadProp();
+  const blob=new Blob([JSON.stringify(propData,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='nnmn-prop-'+new Date().toISOString().slice(0,10)+'.json';
+  document.body.appendChild(a);a.click();a.remove();
+  URL.revokeObjectURL(url);
+  toast('Exported '+(propData.accounts||[]).length+' accounts');
+}
+function importProp(ev){
+  const file=ev.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const data=JSON.parse(e.target.result);
+      if(!data||!Array.isArray(data.accounts))throw new Error('Invalid file format');
+      if(!confirm('Import '+data.accounts.length+' accounts? This will REPLACE current data.'))return;
+      propData=data;
+      saveProp();renderProp();
+      toast('Imported '+data.accounts.length+' accounts');
+    }catch(err){console.error(err);toast('Import failed: '+err.message)}
+    ev.target.value='';
+  };
+  reader.readAsText(file);
+}
+
+// Close PROP modals on Escape
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Escape')return;
+  ['prop-acct-overlay','prop-payout-overlay','prop-bal-overlay'].forEach(id=>{
+    const ov=document.getElementById(id);
+    if(ov&&ov.classList.contains('on'))ov.classList.remove('on');
+  });
+});
 
 // ══════════════════════════════════════════════════
 // SHARE CALENDAR
