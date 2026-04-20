@@ -1,5 +1,5 @@
 {
-  "lastSync": "2026-04-20T04:34:34.990Z",
+  "lastSync": "2026-04-20T22:38:28.758Z",
   "crypto": [
     {
       "id": "3470081c-521f-8077-9ab9-c32e0ccd51df",
@@ -50,6 +50,106 @@
       "gxtPass": 5,
       "preTradeFilled": true,
       "reviewSummary": "토요일 세션외 진입 + Counter-trend retracement에 H4 ERL 과도한 target. LTF 실행은 정확했으나 HTF 필터 3개 실격. Greed가 유도한 urgency entry."
+    },
+    {
+      "id": "3480081c-521f-8024-b74a-d4461570e58f",
+      "source": "crypto",
+      "num": "3",
+      "date": "2026-04-20",
+      "result": "L",
+      "dayOfWeek": "Monday",
+      "asset": "BTC",
+      "oneRPct": null,
+      "rr": -1,
+      "maxRR": 2.19,
+      "drawdown": "100%",
+      "direction": "Buy",
+      "setup": "10 a.m. NY Continuation",
+      "entryPDA": [
+        "V-shape + Gap"
+      ],
+      "entryType": "Market",
+      "emotions": [
+        "Rule Breaking"
+      ],
+      "entryTF": [
+        "m5"
+      ],
+      "swingType": "C2 Large Wick → C3",
+      "exitStrategy": "Full SL",
+      "actualRR": null,
+      "smtStage": "2-stage",
+      "smtType": [
+        "S.S"
+      ],
+      "universalModel": "IRL -> ERL",
+      "candleProfiling": [
+        "H1"
+      ],
+      "condition": "Consolidation",
+      "sl": 21843,
+      "tp": 94926,
+      "dd": 21843,
+      "slUnit": "ticks",
+      "htfChart": "https://www.tradingview.com/x/BIA1H6IU/",
+      "mtfChart": null,
+      "entryChart": "https://www.tradingview.com/x/vXo4yYMV/",
+      "notes": "2R을 터치하면 반드시 반익절 후 본절로스라는 규칙을 지키지 않음. 쓸데없는 확신에 차서 불필요한 손실을 당함.",
+      "size": null,
+      "grade": "B-",
+      "gxtPass": null,
+      "preTradeFilled": false,
+      "reviewSummary": "하단 2-Stage SMT+SS 완성 상태에서 상단 DOL 터치를 target으로 한 intraday retracement 매매. 로직 유효(Max RR 2.19). BUT 2R 반익절 규칙 의식적 위반 + Profile 예측 실패(S&D→Consolidation) + Pre-Trade Filled No. 실행/관리 실패로 Full SL."
+    },
+    {
+      "id": "3480081c-521f-80ef-8d0e-ca5f7f7909b4",
+      "source": "crypto",
+      "num": "2",
+      "date": "2026-04-20",
+      "result": "BE",
+      "dayOfWeek": "Monday",
+      "asset": "ETH",
+      "oneRPct": null,
+      "rr": 0,
+      "maxRR": 2.15,
+      "drawdown": "0%",
+      "direction": "Sell",
+      "setup": "10 a.m. NY Reversal",
+      "entryPDA": [
+        "V-shape + Gap"
+      ],
+      "entryType": "Limit",
+      "emotions": [
+        "Rushing"
+      ],
+      "entryTF": [
+        "m5"
+      ],
+      "swingType": "C2 DIrect (small wick)",
+      "exitStrategy": "SL Adjusted",
+      "actualRR": null,
+      "smtStage": "2-stage",
+      "smtType": [
+        "S.S"
+      ],
+      "universalModel": "IRL -> ERL",
+      "candleProfiling": [
+        "M30"
+      ],
+      "condition": "Consolidation",
+      "sl": 653,
+      "tp": 1584,
+      "dd": 0,
+      "slUnit": "ticks",
+      "htfChart": null,
+      "mtfChart": null,
+      "entryChart": null,
+      "notes": "2R에서 1차 익절을 할 수 있었는데 조작 이슈로 하지 못함.",
+      "size": null,
+      "grade": "B",
+      "gxtPass": null,
+      "preTradeFilled": false,
+      "reviewSummary": "로직은 완벽(Weekly Bearish+H4 FVG+2-Stage SMT+V-shape). Max RR 2.15. BUT Profile을 S&D로 오판(실제 Consolidation)+TP Pre-set 누락으로 수익 기회를 BE로 축소."
     }
   ],
   "futures": [
