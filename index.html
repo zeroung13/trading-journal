@@ -1538,7 +1538,8 @@ select.prop-in{cursor:pointer}
             <option value="APEX">APEX</option>
             <option value="LUCID">LUCID</option>
             <option value="LIFEUP">LIFEUP</option>
-            <option value="TRADEIFY">TRADEIFY</option>
+            <option value="TRADEIFY-C">TRADEIFY (Crypto)</option>
+            <option value="TRADEIFY-F">TRADEIFY (Futures)</option>
             <option value="__custom">Other (custom)…</option>
           </select>
           <input type="text" class="prop-in" id="pa-firm-custom" placeholder="Enter firm name" maxlength="20" style="display:none;margin-top:6px" oninput="_onCustomFirmInput()">
@@ -2389,26 +2390,50 @@ function quickStatus(id,newStatus){
 }
 
 // ── Add / Edit Account modal
-const PROP_PRESET_FIRMS=['APEX','LUCID','LIFEUP','TRADEIFY'];
+// Preset firms: stored value, dropdown label, and short name-prefix used in account name
+const PROP_FIRMS=[
+  {value:'APEX',       label:'APEX',               namePrefix:'APEX'},
+  {value:'LUCID',      label:'LUCID',              namePrefix:'LUCID'},
+  {value:'LIFEUP',     label:'LIFEUP',             namePrefix:'LIFEUP'},
+  {value:'TRADEIFY-C', label:'TRADEIFY (Crypto)',  namePrefix:'TDFY-C'},
+  {value:'TRADEIFY-F', label:'TRADEIFY (Futures)', namePrefix:'TDFY-F'},
+];
+function _firmToPrefix(firmValue){
+  const f=PROP_FIRMS.find(x=>x.value===firmValue);
+  return f?f.namePrefix:(firmValue||'').trim().toUpperCase();
+}
+// All known name-prefixes (preset + every firm ever stored), sorted by length DESC for greedy matching
+function _knownNamePrefixes(){
+  const set=new Set(PROP_FIRMS.map(f=>f.namePrefix.toUpperCase()));
+  (propData.accounts||[]).forEach(a=>{
+    if(!a.firm)return;
+    const f=PROP_FIRMS.find(x=>x.value===a.firm);
+    set.add((f?f.namePrefix:a.firm).trim().toUpperCase());
+  });
+  return [...set].sort((a,b)=>b.length-a.length);
+}
 
-// Smart name-prefix updater: fills empty name, swaps known-firm prefix, leaves custom names alone
-function _updateNamePrefix(newFirm){
-  if(!newFirm)return;
+// Smart name-prefix updater: fills empty name, swaps known prefix, leaves custom names alone.
+// Argument is the NAME PREFIX (e.g. 'TDFY-C'), not the firm value.
+function _updateNamePrefix(newPrefix){
+  if(!newPrefix)return;
   const nameIn=document.getElementById('pa-name');
   const cur=nameIn.value;
-  // Build set of known firm prefixes (presets + everything ever stored)
-  const knownFirms=new Set(PROP_PRESET_FIRMS);
-  (propData.accounts||[]).forEach(a=>{if(a.firm)knownFirms.add(a.firm.trim().toUpperCase())});
   if(!cur){
-    nameIn.value=newFirm+'-';
+    nameIn.value=newPrefix+'-';
   } else {
-    const m=cur.match(/^([A-Za-z]+)-/);
-    if(m && knownFirms.has(m[1].toUpperCase())){
-      nameIn.value=newFirm+'-'+cur.slice(m[0].length);
+    const curUp=cur.toUpperCase();
+    let matched=false;
+    for(const p of _knownNamePrefixes()){
+      const pDash=p+'-';
+      if(curUp.startsWith(pDash)){
+        nameIn.value=newPrefix+'-'+cur.slice(pDash.length);
+        matched=true;break;
+      }
+      if(curUp===p){nameIn.value=newPrefix+'-';matched=true;break}
     }
-    // else: user has a custom name — don't touch
+    // else: user has a custom name unrelated to any known firm — leave alone
   }
-  // Move cursor to end so user keeps typing the suffix
   try{nameIn.setSelectionRange(nameIn.value.length,nameIn.value.length)}catch(e){}
 }
 
@@ -2421,7 +2446,7 @@ function _onFirmChange(){
     setTimeout(()=>customIn.focus(),30);
   } else {
     customIn.style.display='none';
-    _updateNamePrefix(sel.value);
+    _updateNamePrefix(_firmToPrefix(sel.value));
     document.getElementById('pa-name').focus();
   }
 }
@@ -2436,7 +2461,7 @@ function openAddAcct(){
   document.getElementById('pa-firm').value='APEX';
   document.getElementById('pa-firm-custom').style.display='none';
   document.getElementById('pa-firm-custom').value='';
-  document.getElementById('pa-name').value='APEX-';
+  document.getElementById('pa-name').value=_firmToPrefix('APEX')+'-';
   document.getElementById('pa-type').value='EVAL';
   document.getElementById('pa-size').value='50000';
   document.getElementById('pa-size-custom').style.display='none';
@@ -2458,17 +2483,19 @@ function openEditAcct(id){
   document.getElementById('prop-acct-ttl').textContent='EDIT ACCOUNT';
   document.getElementById('pa-name').value=a.name||'';
   // Firm: preset → select; otherwise → custom field
-  const firmUp=(a.firm||'').trim().toUpperCase();
+  const firmVal=(a.firm||'').trim();
+  const firmUp=firmVal.toUpperCase();
   const firmSel=document.getElementById('pa-firm');
   const firmCustom=document.getElementById('pa-firm-custom');
-  if(PROP_PRESET_FIRMS.includes(firmUp)){
-    firmSel.value=firmUp;
+  const matchPreset=PROP_FIRMS.find(f=>f.value.toUpperCase()===firmUp);
+  if(matchPreset){
+    firmSel.value=matchPreset.value;
     firmCustom.style.display='none';
     firmCustom.value='';
-  } else if(firmUp){
+  } else if(firmVal){
     firmSel.value='__custom';
     firmCustom.style.display='block';
-    firmCustom.value=a.firm||'';
+    firmCustom.value=firmVal;
   } else {
     firmSel.value='APEX';
     firmCustom.style.display='none';
@@ -2504,8 +2531,10 @@ document.addEventListener('change',e=>{
 function saveAcct(){
   const name=document.getElementById('pa-name').value.trim();
   if(!name){toast('Name required');return}
-  // Reject names that are just the prefix (e.g. "APEX-")
-  if(/^[A-Za-z]+-?$/.test(name)){toast('Add an identifier after the firm prefix');return}
+  // Reject names that are just a bare firm prefix (e.g. "APEX-", "TDFY-C-")
+  const nameUp=name.toUpperCase();
+  const bareHit=_knownNamePrefixes().some(p=>nameUp===p||nameUp===p+'-');
+  if(bareHit){toast('Add an identifier after the firm prefix');return}
   const type=document.getElementById('pa-type').value;
   const firmSel=document.getElementById('pa-firm').value;
   const firm=firmSel==='__custom'
