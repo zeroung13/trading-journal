@@ -683,13 +683,15 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 @media(max-width:920px){.sc-body{grid-template-columns:1fr;overflow-y:auto}.sc-config{border-right:none;border-bottom:1px solid var(--b1);max-height:none}.sc-preview{width:100%;max-width:480px}}
 
 /* ── PROP TRACKER ── */
-.prop-kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.prop-kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:14px}
 .prop-kpi-card{background:var(--cbg);border:1px solid var(--b1);border-radius:8px;padding:14px 16px;position:relative;overflow:hidden}
 .prop-kpi-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--ac)}
 .prop-kpi-card:nth-child(1)::before{background:var(--ac)}
 .prop-kpi-card:nth-child(2)::before{background:var(--blue)}
 .prop-kpi-card:nth-child(3)::before{background:var(--g)}
 .prop-kpi-card:nth-child(4)::before{background:var(--y)}
+.prop-kpi-card:nth-child(5)::before{background:var(--r)}
+.prop-kpi-card.kpi-net::before{background:linear-gradient(to bottom,var(--g),var(--r))}
 .prop-kpi-lbl{font-family:'JetBrains Mono','SF Mono',monospace;font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.6px;font-weight:600;margin-bottom:8px}
 .prop-kpi-val{font-family:'JetBrains Mono','SF Mono',monospace;font-size:24px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:.2px;color:var(--t0);line-height:1.1}
 .prop-kpi-val.pos{color:var(--g)}
@@ -714,7 +716,17 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 .prop-section-cnt{font-family:'JetBrains Mono','SF Mono',monospace;font-size:11px;color:var(--t2);letter-spacing:.3px}
 
 .prop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.prop-grid.compact{grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
 .prop-empty{grid-column:1/-1;text-align:center;padding:32px;color:var(--t2);font-size:13px;border:1px dashed var(--b1);border-radius:8px}
+
+/* Archive summary strip */
+.prop-arc-summary{display:flex;gap:18px;margin-bottom:12px;padding:10px 14px;background:var(--cbg);border:1px solid var(--b1);border-radius:6px;flex-wrap:wrap;font-family:'JetBrains Mono','SF Mono',monospace;font-size:11px;align-items:center}
+.prop-arc-summary-it{display:flex;gap:8px;align-items:baseline}
+.prop-arc-summary-lbl{color:var(--t2);text-transform:uppercase;letter-spacing:.6px;font-weight:600;font-size:10px}
+.prop-arc-summary-val{color:var(--t0);font-weight:700;font-variant-numeric:tabular-nums;font-size:13px}
+.prop-arc-summary-val.neg{color:var(--r)}
+.prop-arc-summary-val.pos{color:var(--g)}
+.prop-arc-summary-sep{width:1px;height:18px;background:var(--b1)}
 
 .prop-card{background:var(--cbg);border:1px solid var(--b1);border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden;transition:border-color .15s}
 .prop-card:hover{border-color:var(--b2)}
@@ -786,8 +798,9 @@ select.prop-in{cursor:pointer}
 .prop-modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:6px}
 .prop-payout-acct{font-family:'JetBrains Mono','SF Mono',monospace;font-size:11px;color:var(--t2);text-transform:uppercase;letter-spacing:.6px;padding:6px 10px;background:var(--cbg);border-radius:5px;border:1px solid var(--b1);text-align:center}
 
-@media(max-width:900px){.prop-kpi-row{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:560px){.prop-fld-row{flex-direction:column}.prop-payout-row{grid-template-columns:80px 1fr 100px;gap:8px}.prop-payout-row .ppr-note{display:none}}
+@media(max-width:1280px){.prop-kpi-row{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:760px){.prop-kpi-row{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.prop-fld-row{flex-direction:column}.prop-payout-row{grid-template-columns:80px 1fr 100px;gap:8px}.prop-payout-row .ppr-note{display:none}.prop-arc-summary-sep{display:none}}
 
 /* buttons */
 .btn{border-radius:4px;border:none;cursor:pointer;font-size:13px;font-weight:510;transition:all .15s;white-space:nowrap;padding:8px 16px}
@@ -1352,6 +1365,11 @@ select.prop-in{cursor:pointer}
           <div class="prop-kpi-val pos" id="pk-wd">$0</div>
           <div class="prop-kpi-sub" id="pk-wd-sub">0 payouts</div>
         </div>
+        <div class="prop-kpi-card kpi-net" title="Total Withdrawn − Total Cost (across all accounts incl. archived)">
+          <div class="prop-kpi-lbl">Net P/L</div>
+          <div class="prop-kpi-val" id="pk-net">$0</div>
+          <div class="prop-kpi-sub" id="pk-net-sub">payouts − costs</div>
+        </div>
       </div>
 
       <!-- TOOLBAR -->
@@ -1386,6 +1404,16 @@ select.prop-in{cursor:pointer}
           <div class="prop-section-cnt" id="ps-pa-cnt">—</div>
         </div>
         <div class="prop-grid" id="prop-pa-grid"></div>
+      </div>
+
+      <!-- ARCHIVE SECTION (Failed + Passed) -->
+      <div class="prop-section" id="prop-arc-section" style="display:none">
+        <div class="prop-section-hd">
+          <div class="prop-section-ttl">Archive · Failed &amp; Passed</div>
+          <div class="prop-section-cnt" id="ps-arc-cnt">—</div>
+        </div>
+        <div class="prop-arc-summary" id="prop-arc-summary"></div>
+        <div class="prop-grid compact" id="prop-arc-grid"></div>
       </div>
 
       <!-- PAYOUT HISTORY -->
@@ -2173,37 +2201,85 @@ function renderProp(){
 
   // Apply firm filter
   const accts=allAccts.filter(_matchesFirm);
+
+  // Split by type & status
   const evals=accts.filter(a=>a.type==='EVAL');
   const pas=accts.filter(a=>a.type==='PA');
-  const evalActive=evals.filter(a=>a.status==='Active').length;
-  const paActive=pas.filter(a=>a.status==='Active').length;
+  const activeEvals=evals.filter(a=>a.status==='Active');
+  const activePAs=pas.filter(a=>a.status==='Active');
+  const archived=accts.filter(a=>a.status==='Failed'||a.status==='Passed');
+  const failedList=archived.filter(a=>a.status==='Failed');
+  const passedList=archived.filter(a=>a.status==='Passed');
+
+  // Money math
   const totBal=accts.filter(a=>a.status==='Active').reduce((s,a)=>s+(parseFloat(a.balance)||0),0);
   const allPayouts=accts.flatMap(a=>(a.payouts||[]).map(p=>({...p,acctName:a.name,acctId:a.id})));
   const totWd=allPayouts.reduce((s,p)=>s+(parseFloat(p.amount)||0),0);
+  // Cost spans ALL accounts (active + archived) so failed costs stay counted
+  const totCost=accts.reduce((s,a)=>s+(parseFloat(a.cost)||0),0);
+  const failedCost=failedList.reduce((s,a)=>s+(parseFloat(a.cost)||0),0);
+  const passedCost=passedList.reduce((s,a)=>s+(parseFloat(a.cost)||0),0);
+  const activeCost=accts.filter(a=>a.status==='Active').reduce((s,a)=>s+(parseFloat(a.cost)||0),0);
+  const netPL=totWd-totCost;
 
   const filterLbl=_propFirmFilter==='all'?'across active accounts':'in '+_propFirmFilter;
 
   // KPIs
   document.getElementById('pk-eval').textContent=evals.length;
-  document.getElementById('pk-eval-sub').textContent=evalActive+' active';
+  document.getElementById('pk-eval-sub').textContent=activeEvals.length+' active';
   document.getElementById('pk-pa').textContent=pas.length;
-  document.getElementById('pk-pa-sub').textContent=paActive+' active';
+  document.getElementById('pk-pa-sub').textContent=activePAs.length+' active';
   document.getElementById('pk-bal').textContent=_fmtMoney(totBal);
   document.getElementById('pk-bal-sub').textContent=filterLbl;
   document.getElementById('pk-wd').textContent=_fmtMoney(totWd);
   document.getElementById('pk-wd-sub').textContent=allPayouts.length+' payout'+(allPayouts.length===1?'':'s');
+  // Net P/L (color-coded)
+  const pkNet=document.getElementById('pk-net');
+  pkNet.textContent=_fmtMoneyDelta(netPL);
+  pkNet.className='prop-kpi-val '+(netPL>0?'pos':netPL<0?'neg':'');
+  document.getElementById('pk-net-sub').textContent=_fmtMoney(totWd)+' − '+_fmtMoney(totCost)+' cost';
 
-  // Section counts
-  document.getElementById('ps-eval-cnt').textContent=evals.length+' total · '+evalActive+' active';
-  document.getElementById('ps-pa-cnt').textContent=pas.length+' total · '+paActive+' active';
+  // Section counts (Active grids only)
+  document.getElementById('ps-eval-cnt').textContent=activeEvals.length+' active'+(failedList.filter(a=>a.type==='EVAL').length?' · '+failedList.filter(a=>a.type==='EVAL').length+' failed':'');
+  document.getElementById('ps-pa-cnt').textContent=activePAs.length+' active'+(failedList.filter(a=>a.type==='PA').length?' · '+failedList.filter(a=>a.type==='PA').length+' failed':'');
 
-  // Render grids
-  document.getElementById('prop-eval-grid').innerHTML=evals.length
-    ? evals.map(_propCard).join('')
-    : `<div class="prop-empty">No eval accounts${_propFirmFilter==='all'?' yet — click "+ Add Account" above.':' for '+_propFirmFilter+'.'}</div>`;
-  document.getElementById('prop-pa-grid').innerHTML=pas.length
-    ? pas.map(_propCard).join('')
-    : `<div class="prop-empty">No funded accounts${_propFirmFilter==='all'?' yet.':' for '+_propFirmFilter+'.'}</div>`;
+  // Render grids — Active accounts only
+  document.getElementById('prop-eval-grid').innerHTML=activeEvals.length
+    ? activeEvals.map(_propCard).join('')
+    : `<div class="prop-empty">No active eval accounts${_propFirmFilter==='all'?' — click "+ Add Account" above.':' for '+_propFirmFilter+'.'}</div>`;
+  document.getElementById('prop-pa-grid').innerHTML=activePAs.length
+    ? activePAs.map(_propCard).join('')
+    : `<div class="prop-empty">No active funded accounts${_propFirmFilter==='all'?'.':' for '+_propFirmFilter+'.'}</div>`;
+
+  // Archive section — show only if there are archived accounts
+  const arcSec=document.getElementById('prop-arc-section');
+  if(archived.length){
+    arcSec.style.display='block';
+    document.getElementById('ps-arc-cnt').textContent=failedList.length+' failed · '+passedList.length+' passed';
+    // Summary strip
+    const totalLost=failedCost; // money in for failed accounts
+    const totalRecovered=totWd; // payouts received
+    const summaryHTML=[
+      `<div class="prop-arc-summary-it"><span class="prop-arc-summary-lbl">Failed</span><span class="prop-arc-summary-val neg">${failedList.length}</span></div>`,
+      `<div class="prop-arc-summary-sep"></div>`,
+      `<div class="prop-arc-summary-it"><span class="prop-arc-summary-lbl">Passed</span><span class="prop-arc-summary-val pos">${passedList.length}</span></div>`,
+      `<div class="prop-arc-summary-sep"></div>`,
+      `<div class="prop-arc-summary-it"><span class="prop-arc-summary-lbl">Cost Lost (Failed)</span><span class="prop-arc-summary-val neg">${_fmtMoney(failedCost)}</span></div>`,
+      `<div class="prop-arc-summary-sep"></div>`,
+      `<div class="prop-arc-summary-it"><span class="prop-arc-summary-lbl">Cost Active</span><span class="prop-arc-summary-val">${_fmtMoney(activeCost)}</span></div>`,
+      `<div class="prop-arc-summary-sep"></div>`,
+      `<div class="prop-arc-summary-it"><span class="prop-arc-summary-lbl">Total Cost (All)</span><span class="prop-arc-summary-val">${_fmtMoney(totCost)}</span></div>`
+    ];
+    document.getElementById('prop-arc-summary').innerHTML=summaryHTML.join('');
+    // Sort: failed first (most recent updatedAt), then passed
+    const sortedArc=[...archived].sort((a,b)=>{
+      if(a.status!==b.status)return a.status==='Failed'?-1:1;
+      return (b.updatedAt||'').localeCompare(a.updatedAt||'');
+    });
+    document.getElementById('prop-arc-grid').innerHTML=sortedArc.map(_propCard).join('');
+  }else{
+    arcSec.style.display='none';
+  }
 
   // Recent payouts (sort by date desc, top 10)
   const sortedP=allPayouts.sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,10);
@@ -2279,16 +2355,30 @@ function _propCard(a){
     </div>
     ${a.cost?`<div class="prop-card-stat"><span class="prop-card-stat-lbl">Cost</span><span class="prop-card-stat-val">${_fmtMoney(a.cost)}</span></div>`:''}
     <div class="prop-card-actions">
-      <div class="prop-card-actions-pri">
+      ${a.status==='Active'?`<div class="prop-card-actions-pri">
         <button class="btn btn-g btn-sm" onclick="openBalModal('${a.id}')" title="Update balance"><span>$</span> Update</button>
         <button class="btn btn-g btn-sm" onclick="openPayoutModal('${a.id}')" title="Add payout"><span>+</span> Payout</button>
-      </div>
+      </div>`:''}
       <div class="prop-card-actions-sec">
         <button class="prop-card-link" onclick="openEditAcct('${a.id}')">Edit</button>
-        <button class="prop-card-link del" onclick="delAcct('${a.id}')">Delete</button>
+        ${a.status==='Active'
+          ? `<button class="prop-card-link del" onclick="quickStatus('${a.id}','Failed')" title="Mark this account as failed (kept in archive)">Mark Failed</button>`
+          : `<button class="prop-card-link" onclick="quickStatus('${a.id}','Active')" title="Restore to active accounts">Reactivate</button>
+             <button class="prop-card-link del" onclick="delAcct('${a.id}')" title="Permanently delete from history">Delete</button>`}
       </div>
     </div>
   </div>`;
+}
+
+// Quick status change (used by Mark Failed / Reactivate buttons)
+function quickStatus(id,newStatus){
+  const a=propData.accounts.find(x=>x.id===id);
+  if(!a)return;
+  if(newStatus==='Failed'&&!confirm('Mark "'+a.name+'" as Failed?\n\nIt will move to Archive but its cost ('+_fmtMoney(a.cost||0)+') stays counted in your Net P/L.'))return;
+  a.status=newStatus;
+  a.updatedAt=new Date().toISOString();
+  saveProp();renderProp();
+  toast(newStatus==='Active'?'Account reactivated':'Moved to archive · '+newStatus);
 }
 
 // ── Add / Edit Account modal
@@ -2366,7 +2456,16 @@ function saveAcct(){
 function delAcct(id){
   const a=propData.accounts.find(x=>x.id===id);
   if(!a)return;
-  if(!confirm('Delete account "'+a.name+'"? This cannot be undone.'))return;
+  const cost=parseFloat(a.cost)||0;
+  const wd=(a.payouts||[]).reduce((s,p)=>s+(parseFloat(p.amount)||0),0);
+  let msg='Permanently delete "'+a.name+'"?\n\nThis cannot be undone.';
+  if(cost>0||wd>0){
+    msg='⚠ "'+a.name+'" has '+_fmtMoney(cost)+' cost and '+_fmtMoney(wd)+' withdrawn recorded.\n\n'
+       +'Deleting will REMOVE these from your Net P/L history.\n'
+       +'If the account just failed, click Cancel and use "Mark Failed" instead — that keeps the cost counted.\n\n'
+       +'Permanently delete anyway?';
+  }
+  if(!confirm(msg))return;
   propData.accounts=propData.accounts.filter(x=>x.id!==id);
   saveProp();renderProp();
   toast('Account deleted');
