@@ -1534,7 +1534,14 @@ select.prop-in{cursor:pointer}
         </div>
         <div class="prop-fld">
           <label class="prop-fld-lbl">Firm</label>
-          <input type="text" class="prop-in" id="pa-firm" placeholder="APEX" maxlength="20">
+          <select class="prop-in" id="pa-firm" onchange="_onFirmChange()">
+            <option value="APEX">APEX</option>
+            <option value="LUCID">LUCID</option>
+            <option value="LIFEUP">LIFEUP</option>
+            <option value="TRADEIFY">TRADEIFY</option>
+            <option value="__custom">Other (custom)…</option>
+          </select>
+          <input type="text" class="prop-in" id="pa-firm-custom" placeholder="Enter firm name" maxlength="20" style="display:none;margin-top:6px" oninput="_onCustomFirmInput()">
         </div>
       </div>
       <div class="prop-fld-row">
@@ -2382,11 +2389,54 @@ function quickStatus(id,newStatus){
 }
 
 // ── Add / Edit Account modal
+const PROP_PRESET_FIRMS=['APEX','LUCID','LIFEUP','TRADEIFY'];
+
+// Smart name-prefix updater: fills empty name, swaps known-firm prefix, leaves custom names alone
+function _updateNamePrefix(newFirm){
+  if(!newFirm)return;
+  const nameIn=document.getElementById('pa-name');
+  const cur=nameIn.value;
+  // Build set of known firm prefixes (presets + everything ever stored)
+  const knownFirms=new Set(PROP_PRESET_FIRMS);
+  (propData.accounts||[]).forEach(a=>{if(a.firm)knownFirms.add(a.firm.trim().toUpperCase())});
+  if(!cur){
+    nameIn.value=newFirm+'-';
+  } else {
+    const m=cur.match(/^([A-Za-z]+)-/);
+    if(m && knownFirms.has(m[1].toUpperCase())){
+      nameIn.value=newFirm+'-'+cur.slice(m[0].length);
+    }
+    // else: user has a custom name — don't touch
+  }
+  // Move cursor to end so user keeps typing the suffix
+  try{nameIn.setSelectionRange(nameIn.value.length,nameIn.value.length)}catch(e){}
+}
+
+function _onFirmChange(){
+  const sel=document.getElementById('pa-firm');
+  const customIn=document.getElementById('pa-firm-custom');
+  if(sel.value==='__custom'){
+    customIn.style.display='block';
+    customIn.value='';
+    setTimeout(()=>customIn.focus(),30);
+  } else {
+    customIn.style.display='none';
+    _updateNamePrefix(sel.value);
+    document.getElementById('pa-name').focus();
+  }
+}
+function _onCustomFirmInput(){
+  const v=document.getElementById('pa-firm-custom').value.trim().toUpperCase();
+  if(v)_updateNamePrefix(v);
+}
+
 function openAddAcct(){
   _editingAcctId=null;
   document.getElementById('prop-acct-ttl').textContent='ADD ACCOUNT';
-  document.getElementById('pa-name').value='';
   document.getElementById('pa-firm').value='APEX';
+  document.getElementById('pa-firm-custom').style.display='none';
+  document.getElementById('pa-firm-custom').value='';
+  document.getElementById('pa-name').value='APEX-';
   document.getElementById('pa-type').value='EVAL';
   document.getElementById('pa-size').value='50000';
   document.getElementById('pa-size-custom').style.display='none';
@@ -2395,7 +2445,11 @@ function openAddAcct(){
   document.getElementById('pa-cost').value='';
   _setStatusTab('Active');
   document.getElementById('prop-acct-overlay').classList.add('on');
-  setTimeout(()=>document.getElementById('pa-name').focus(),50);
+  setTimeout(()=>{
+    const i=document.getElementById('pa-name');
+    i.focus();
+    try{i.setSelectionRange(i.value.length,i.value.length)}catch(e){}
+  },50);
 }
 function openEditAcct(id){
   const a=propData.accounts.find(x=>x.id===id);
@@ -2403,7 +2457,23 @@ function openEditAcct(id){
   _editingAcctId=id;
   document.getElementById('prop-acct-ttl').textContent='EDIT ACCOUNT';
   document.getElementById('pa-name').value=a.name||'';
-  document.getElementById('pa-firm').value=a.firm||'';
+  // Firm: preset → select; otherwise → custom field
+  const firmUp=(a.firm||'').trim().toUpperCase();
+  const firmSel=document.getElementById('pa-firm');
+  const firmCustom=document.getElementById('pa-firm-custom');
+  if(PROP_PRESET_FIRMS.includes(firmUp)){
+    firmSel.value=firmUp;
+    firmCustom.style.display='none';
+    firmCustom.value='';
+  } else if(firmUp){
+    firmSel.value='__custom';
+    firmCustom.style.display='block';
+    firmCustom.value=a.firm||'';
+  } else {
+    firmSel.value='APEX';
+    firmCustom.style.display='none';
+    firmCustom.value='';
+  }
   document.getElementById('pa-type').value=a.type||'EVAL';
   const sizeSel=document.getElementById('pa-size');
   const sizes=['25000','50000','100000','150000','250000'];
@@ -2434,8 +2504,14 @@ document.addEventListener('change',e=>{
 function saveAcct(){
   const name=document.getElementById('pa-name').value.trim();
   if(!name){toast('Name required');return}
+  // Reject names that are just the prefix (e.g. "APEX-")
+  if(/^[A-Za-z]+-?$/.test(name)){toast('Add an identifier after the firm prefix');return}
   const type=document.getElementById('pa-type').value;
-  const firm=document.getElementById('pa-firm').value.trim();
+  const firmSel=document.getElementById('pa-firm').value;
+  const firm=firmSel==='__custom'
+    ? document.getElementById('pa-firm-custom').value.trim().toUpperCase()
+    : firmSel;
+  if(!firm){toast('Firm required');return}
   const sizeSel=document.getElementById('pa-size').value;
   const size=sizeSel==='custom'?parseFloat(document.getElementById('pa-size-custom').value)||0:parseFloat(sizeSel);
   const balance=parseFloat(document.getElementById('pa-balance').value)||0;
