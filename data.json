@@ -1,5 +1,5 @@
 {
-  "lastSync": "2026-04-21T06:56:20.424Z",
+  "lastSync": "2026-04-21T22:34:28.224Z",
   "crypto": [
     {
       "id": "3470081c-521f-8077-9ab9-c32e0ccd51df",
@@ -150,6 +150,57 @@
       "gxtPass": 7,
       "preTradeFilled": false,
       "reviewSummary": "로직은 완벽(Weekly Bearish+H4 FVG+2-Stage SMT+V-shape). Max RR 2.15. BUT Profile을 S&D로 오판(실제 Consolidation)+TP Pre-set 누락으로 수익 기회를 BE로 축소."
+    },
+    {
+      "id": "3490081c-521f-8093-b420-c1ef47ce9742",
+      "source": "crypto",
+      "num": "5",
+      "date": "2026-04-21",
+      "result": "L",
+      "dayOfWeek": "TuesDay",
+      "asset": "ETH",
+      "oneRPct": null,
+      "rr": -1,
+      "maxRR": 0,
+      "drawdown": "100%",
+      "direction": "Sell",
+      "setup": "London Reversal",
+      "entryPDA": [
+        "V-shape + Gap"
+      ],
+      "entryType": "Limit",
+      "emotions": [
+        "Greed"
+      ],
+      "entryTF": [
+        "m5"
+      ],
+      "swingType": "C2 Large Wick → C3",
+      "exitStrategy": "Full SL",
+      "actualRR": null,
+      "smtStage": "2-stage",
+      "smtType": [
+        "S.S",
+        "SMT"
+      ],
+      "universalModel": "Manipulation Range",
+      "candleProfiling": [
+        "H1"
+      ],
+      "condition": "Expansion",
+      "sl": 701,
+      "tp": 1068,
+      "dd": 701,
+      "slUnit": "ticks",
+      "htfChart": null,
+      "mtfChart": null,
+      "entryChart": null,
+      "notes": "너무 애매한 자리에서의 엔트리였음. V-shape이 깔끔하지가 않았음.",
+      "size": null,
+      "grade": null,
+      "gxtPass": null,
+      "preTradeFilled": true,
+      "reviewSummary": null
     },
     {
       "id": "3490081c-521f-80ea-ac3c-ffb6953cba7f",
