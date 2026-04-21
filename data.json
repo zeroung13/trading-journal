@@ -1,5 +1,5 @@
 {
-  "lastSync": "2026-04-20T22:38:28.758Z",
+  "lastSync": "2026-04-21T06:56:20.424Z",
   "crypto": [
     {
       "id": "3470081c-521f-8077-9ab9-c32e0ccd51df",
@@ -97,7 +97,7 @@
       "notes": "2R을 터치하면 반드시 반익절 후 본절로스라는 규칙을 지키지 않음. 쓸데없는 확신에 차서 불필요한 손실을 당함.",
       "size": null,
       "grade": "B-",
-      "gxtPass": null,
+      "gxtPass": 5,
       "preTradeFilled": false,
       "reviewSummary": "하단 2-Stage SMT+SS 완성 상태에서 상단 DOL 터치를 target으로 한 intraday retracement 매매. 로직 유효(Max RR 2.19). BUT 2R 반익절 규칙 의식적 위반 + Profile 예측 실패(S&D→Consolidation) + Pre-Trade Filled No. 실행/관리 실패로 Full SL."
     },
@@ -147,9 +147,59 @@
       "notes": "2R에서 1차 익절을 할 수 있었는데 조작 이슈로 하지 못함.",
       "size": null,
       "grade": "B",
-      "gxtPass": null,
+      "gxtPass": 7,
       "preTradeFilled": false,
       "reviewSummary": "로직은 완벽(Weekly Bearish+H4 FVG+2-Stage SMT+V-shape). Max RR 2.15. BUT Profile을 S&D로 오판(실제 Consolidation)+TP Pre-set 누락으로 수익 기회를 BE로 축소."
+    },
+    {
+      "id": "3490081c-521f-80ea-ac3c-ffb6953cba7f",
+      "source": "crypto",
+      "num": "4",
+      "date": "2026-04-21",
+      "result": "L",
+      "dayOfWeek": "Monday",
+      "asset": "ETH",
+      "oneRPct": null,
+      "rr": -1,
+      "maxRR": 148,
+      "drawdown": "100%",
+      "direction": "Buy",
+      "setup": "10 a.m. NY Continuation",
+      "entryPDA": [
+        "V-shape + Gap"
+      ],
+      "entryType": "Market",
+      "emotions": [
+        "Frustration"
+      ],
+      "entryTF": [
+        "m3"
+      ],
+      "swingType": "C2 Large Wick → C3",
+      "exitStrategy": "Full SL",
+      "actualRR": null,
+      "smtStage": "1-stage",
+      "smtType": [
+        "SMT"
+      ],
+      "universalModel": "IRL -> ERL",
+      "candleProfiling": [
+        "H1"
+      ],
+      "condition": "Expansion",
+      "sl": 747,
+      "tp": 2510,
+      "dd": 747,
+      "slUnit": "ticks",
+      "htfChart": "https://www.tradingview.com/x/V5kHgTxf/",
+      "mtfChart": "https://www.tradingview.com/x/GWKDYyGi/",
+      "entryChart": "https://www.tradingview.com/x/YfNW7t3v/",
+      "notes": "방향 자체는 맞았지만 엔트리가 너무 빨랐음. 솔직히 그냥 운이없다고 생각을 함. 포기하지 않았으면 다시 진입해서 수익을 봤을 매매.",
+      "size": null,
+      "grade": "C",
+      "gxtPass": 2,
+      "preTradeFilled": false,
+      "reviewSummary": "방향 판단과 Universal Sequence 프레임은 정확. BUT 얕은 sweep 위 1-stage SMT에서 조급 진입. Pre-Trade 계획(2-stage) vs 실행(1-stage) 괴리. 실제 상승은 second sweep 후 발생. 아래 더 깊은 유동성(2,294) 남은 상태에서의 진입이 본질적 결함."
     }
   ],
   "futures": [
