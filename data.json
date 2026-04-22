@@ -1,5 +1,5 @@
 {
-  "lastSync": "2026-04-22T01:48:58.870Z",
+  "lastSync": "2026-04-22T22:42:23.599Z",
   "crypto": [
     {
       "id": "3470081c-521f-8077-9ab9-c32e0ccd51df",
@@ -251,6 +251,56 @@
       "gxtPass": 2,
       "preTradeFilled": false,
       "reviewSummary": "방향 판단과 Universal Sequence 프레임은 정확. BUT 얕은 sweep 위 1-stage SMT에서 조급 진입. Pre-Trade 계획(2-stage) vs 실행(1-stage) 괴리. 실제 상승은 second sweep 후 발생. 아래 더 깊은 유동성(2,294) 남은 상태에서의 진입이 본질적 결함."
+    },
+    {
+      "id": "34a0081c-521f-8010-915c-d81fe8e040d1",
+      "source": "crypto",
+      "num": "6",
+      "date": "2026-04-22",
+      "result": null,
+      "dayOfWeek": "Wednesday",
+      "asset": "BTC",
+      "oneRPct": null,
+      "rr": 0,
+      "maxRR": null,
+      "drawdown": "N/A",
+      "direction": "Sell",
+      "setup": "10 a.m. NY Reversal",
+      "entryPDA": [
+        "V-shape",
+        "CSD"
+      ],
+      "entryType": "Market",
+      "emotions": [],
+      "entryTF": [
+        "m5"
+      ],
+      "swingType": "C2 DIrect (small wick)",
+      "exitStrategy": null,
+      "actualRR": null,
+      "smtStage": "2-stage",
+      "smtType": [
+        "S.S",
+        "SMT"
+      ],
+      "universalModel": "ERL -> IRL",
+      "candleProfiling": [
+        "H1"
+      ],
+      "condition": "Expansion",
+      "sl": null,
+      "tp": null,
+      "dd": null,
+      "slUnit": "ticks",
+      "htfChart": null,
+      "mtfChart": null,
+      "entryChart": null,
+      "notes": null,
+      "size": null,
+      "grade": null,
+      "gxtPass": null,
+      "preTradeFilled": false,
+      "reviewSummary": null
     }
   ],
   "futures": [
