@@ -1,5 +1,5 @@
 {
-  "lastSync": "2026-04-21T22:34:28.224Z",
+  "lastSync": "2026-04-22T01:48:11.261Z",
   "crypto": [
     {
       "id": "3470081c-521f-8077-9ab9-c32e0ccd51df",
@@ -556,6 +556,55 @@
       "gxtPass": 8,
       "preTradeFilled": false,
       "reviewSummary": "완벽한 Universal Sequence 매매(Memory #13 정석). IRL→ERL + 1-stage SMT Fill + V-shape+Gap + M15 Expansion. 감정 공란=차분한 실행. 1계약 한계로 분할 익절 불가."
+    },
+    {
+      "id": "34a0081c-521f-8086-836b-d5f52efe52d3",
+      "source": "futures",
+      "num": "7",
+      "date": "2026-04-22",
+      "result": "L",
+      "dayOfWeek": "Wednesday",
+      "asset": "MGC",
+      "oneRPct": null,
+      "rr": -1,
+      "maxRR": 1.27,
+      "drawdown": "100%",
+      "direction": "Sell",
+      "setup": "Asia Reversal",
+      "entryPDA": [
+        "CSD"
+      ],
+      "entryType": "Market",
+      "emotions": [],
+      "entryTF": [
+        "m3"
+      ],
+      "swingType": "C2 Large Wick → C3",
+      "exitStrategy": "SL Adjusted",
+      "actualRR": null,
+      "smtStage": "1-stage",
+      "smtType": [
+        "SMT Fill"
+      ],
+      "universalModel": "IRL -> ERL",
+      "candleProfiling": [
+        "H1",
+        "M30"
+      ],
+      "condition": "Expansion",
+      "sl": 51,
+      "tp": 136,
+      "dd": 51,
+      "slUnit": "pips",
+      "htfChart": "https://www.tradingview.com/x/eLr5XsR7/",
+      "mtfChart": "https://www.tradingview.com/x/xJ1Iqq6O/",
+      "entryChart": "https://www.tradingview.com/x/r8DEkjeZ/",
+      "notes": "깔끔한 V-shape siganature가 아니었음. 단순 Retracement에 가까운 무빙이었고, 오히려 되돌림에 AMD 롱 셋업이 가능했음.",
+      "size": null,
+      "grade": "C",
+      "gxtPass": 4,
+      "preTradeFilled": false,
+      "reviewSummary": "반전 매매로 분류했으나 1-Stage SMT로 진입(Checklist 내부 논리 모순). EQH + V-shape 부재 + 단순 CSD만 보고 진입 — 시장은 Bullish Continuation 신호였음. 4/21 ETH EQL과 동일 패턴 반복(EQH 버전). Profile 예측 틀렸다는 신호를 Profile 조정으로 합리화. 실행은 계획대로였으나 로직이 틀렸기에 손실 확정."
     }
   ]
 }
