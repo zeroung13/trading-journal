@@ -945,7 +945,8 @@ select.prop-in{cursor:pointer}
       <div class="tb-sync" id="sync-info"></div>
       <button class="btn-tb" id="sync-btn" onclick="triggerSync()">↻ Sync</button>
       <button class="btn-tb" onclick="exportCSV()">↓ CSV</button>
-      <button class="btn-tb" onclick="logout()">🔒</button>
+      <button class="btn-tb" onclick="openPwModal()" title="Change passphrase">🔑</button>
+      <button class="btn-tb" onclick="logout()" title="Lock">🔒</button>
     </div>
   </div>
 
@@ -1635,6 +1636,35 @@ select.prop-in{cursor:pointer}
   </div>
 </div>
 
+<!-- Change Passphrase Modal -->
+<div class="prop-overlay" id="pw-overlay" onclick="if(event.target===this)closePwModal()">
+  <div class="prop-modal" style="max-width:380px">
+    <div class="prop-modal-hd">
+      <div class="prop-modal-ttl">CHANGE PASSPHRASE</div>
+      <button class="prop-modal-close" onclick="closePwModal()" aria-label="close">×</button>
+    </div>
+    <div class="prop-modal-body">
+      <div class="prop-fld">
+        <label class="prop-fld-lbl">Current Passphrase</label>
+        <input type="password" class="prop-in" id="pw-cur" autocomplete="current-password">
+      </div>
+      <div class="prop-fld">
+        <label class="prop-fld-lbl">New Passphrase</label>
+        <input type="password" class="prop-in" id="pw-new" autocomplete="new-password" placeholder="min 3 characters">
+      </div>
+      <div class="prop-fld">
+        <label class="prop-fld-lbl">Confirm New Passphrase</label>
+        <input type="password" class="prop-in" id="pw-new2" autocomplete="new-password">
+      </div>
+      <div id="pw-err" style="font-family:'JetBrains Mono','SF Mono',monospace;font-size:11px;color:var(--r);min-height:14px;letter-spacing:.3px"></div>
+      <div class="prop-modal-actions">
+        <button class="btn btn-g btn-sm" onclick="closePwModal()">Cancel</button>
+        <button class="btn btn-p btn-sm" onclick="changePw()">Update</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 // ══════════════════════════════════════════════════
 // PASSWORD
@@ -1719,6 +1749,47 @@ function logout(){
   sessionStorage.removeItem('tj_unlocked');
   location.reload();
 }
+
+// ── Change Passphrase
+function openPwModal(){
+  document.getElementById('pw-cur').value='';
+  document.getElementById('pw-new').value='';
+  document.getElementById('pw-new2').value='';
+  document.getElementById('pw-err').textContent='';
+  document.getElementById('pw-overlay').classList.add('on');
+  setTimeout(()=>document.getElementById('pw-cur').focus(),50);
+}
+function closePwModal(){document.getElementById('pw-overlay').classList.remove('on')}
+async function changePw(){
+  const cur=document.getElementById('pw-cur').value;
+  const nw=document.getElementById('pw-new').value;
+  const nw2=document.getElementById('pw-new2').value;
+  const err=document.getElementById('pw-err');
+  err.textContent='';
+  if(!cur||!nw||!nw2){err.textContent='all fields required';return}
+  if(nw.length<3){err.textContent='new passphrase: min 3 characters';return}
+  if(nw!==nw2){err.textContent='new passphrases do not match';return}
+  if(nw===cur){err.textContent='new passphrase must differ from current';return}
+  // Verify current
+  const curHash=await sha256(cur);
+  if(curHash!==localStorage.getItem(LS_HASH)){
+    err.textContent='current passphrase incorrect';
+    document.getElementById('pw-cur').value='';
+    document.getElementById('pw-cur').focus();
+    return;
+  }
+  // Update
+  localStorage.setItem(LS_HASH,await sha256(nw));
+  closePwModal();
+  toast('Passphrase updated');
+}
+// Enter to submit pw modal (Esc handled by the global overlay closer below)
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Enter')return;
+  const ov=document.getElementById('pw-overlay');
+  if(!ov||!ov.classList.contains('on'))return;
+  e.preventDefault();changePw();
+});
 
 // ══════════════════════════════════════════════════
 // DATA
@@ -2659,7 +2730,7 @@ function importProp(ev){
 // Close PROP modals on Escape
 document.addEventListener('keydown',e=>{
   if(e.key!=='Escape')return;
-  ['prop-acct-overlay','prop-payout-overlay','prop-bal-overlay'].forEach(id=>{
+  ['prop-acct-overlay','prop-payout-overlay','prop-bal-overlay','pw-overlay'].forEach(id=>{
     const ov=document.getElementById(id);
     if(ov&&ov.classList.contains('on'))ov.classList.remove('on');
   });
