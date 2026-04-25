@@ -1,5 +1,5 @@
 {
-  "lastSync": "2026-04-24T22:34:55.383Z",
+  "lastSync": "2026-04-25T08:18:17.706Z",
   "crypto": [
     {
       "id": "3470081c-521f-8077-9ab9-c32e0ccd51df",
@@ -197,10 +197,10 @@
       "entryChart": null,
       "notes": "너무 애매한 자리에서의 엔트리였음. V-shape이 깔끔하지가 않았음.",
       "size": null,
-      "grade": null,
-      "gxtPass": null,
+      "grade": "D",
+      "gxtPass": 3,
       "preTradeFilled": true,
-      "reviewSummary": null
+      "reviewSummary": "매매 #4(같은 날 새벽 ETH Buy L) 직후 보복 매매. Pre-Trade 명목상은 2-stage S.S 충족했으나 실제 V-shape 약함+C2 large wick(본인 자평). Greed 감정으로 차트 quality 검증 생략. Max RR 0R로 Full SL = 시장이 setup 거부한 가장 안좋은 매매."
     },
     {
       "id": "3490081c-521f-80ea-ac3c-ffb6953cba7f",
@@ -257,13 +257,13 @@
       "source": "crypto",
       "num": "6",
       "date": "2026-04-22",
-      "result": null,
+      "result": "PL",
       "dayOfWeek": "Wednesday",
       "asset": "BTC",
       "oneRPct": null,
-      "rr": 0,
-      "maxRR": null,
-      "drawdown": "N/A",
+      "rr": -0.5,
+      "maxRR": 1.22,
+      "drawdown": "30.01%",
       "direction": "Sell",
       "setup": "10 a.m. NY Reversal",
       "entryPDA": [
@@ -271,16 +271,17 @@
         "CSD"
       ],
       "entryType": "Market",
-      "emotions": [],
+      "emotions": [
+        "Rule Breaking"
+      ],
       "entryTF": [
         "m5"
       ],
       "swingType": "C2 DIrect (small wick)",
-      "exitStrategy": null,
+      "exitStrategy": "SL Adjusted",
       "actualRR": null,
-      "smtStage": "2-stage",
+      "smtStage": "1-stage",
       "smtType": [
-        "S.S",
         "SMT"
       ],
       "universalModel": "ERL -> IRL",
@@ -288,19 +289,69 @@
         "H1"
       ],
       "condition": "Expansion",
-      "sl": null,
-      "tp": null,
-      "dd": null,
+      "sl": 14234,
+      "tp": 34592,
+      "dd": 4272,
       "slUnit": "ticks",
-      "htfChart": null,
+      "htfChart": "https://www.tradingview.com/x/tINgjt3m/",
       "mtfChart": null,
-      "entryChart": null,
-      "notes": null,
+      "entryChart": "https://www.tradingview.com/x/JftiBmOD/",
+      "notes": "시간봉 마감을 기다리면 2-stage PSP인데 C2 direct 매매를 한것이 잘못",
       "size": null,
-      "grade": null,
-      "gxtPass": null,
+      "grade": "D",
+      "gxtPass": 4,
+      "preTradeFilled": true,
+      "reviewSummary": "Checklist 내부 논리 모순(되돌림 매매 체크+SMT 2-Stage 체크 적었는데 실제 진입 시 적은 1-stage). Garrett 4/23 NQ recap과 같은 setup이지만 Garrett은 Two-Stage+SS 갖춘 후 진입, nnmm님은 1-stage C2 direct로 조급 진입. Rule Breaking 본인 인지. SL Adjusted로 손실 최소화가 구원 요소. C2 마감 대기 후 C3 continuation으로 접근해야 했음."
+    },
+    {
+      "id": "34d0081c-521f-8046-830c-ed3c254f2679",
+      "source": "crypto",
+      "num": "7",
+      "date": "2026-04-24",
+      "result": "W",
+      "dayOfWeek": "Friday",
+      "asset": "BTC",
+      "oneRPct": null,
+      "rr": 5.794034970699,
+      "maxRR": 5.79,
+      "drawdown": "57.03%",
+      "direction": "Sell",
+      "setup": "10 a.m. NY Reversal",
+      "entryPDA": [
+        "V-shape + Gap"
+      ],
+      "entryType": "Limit",
+      "emotions": [
+        "Underconfidence"
+      ],
+      "entryTF": [
+        "m5"
+      ],
+      "swingType": "C2 DIrect (small wick)",
+      "exitStrategy": "Full TP",
+      "actualRR": null,
+      "smtStage": "2-stage",
+      "smtType": [
+        "S.S"
+      ],
+      "universalModel": "IRL -> ERL",
+      "candleProfiling": [
+        "H4"
+      ],
+      "condition": "Consolidation",
+      "sl": 20989,
+      "tp": 121611,
+      "dd": 11971,
+      "slUnit": "ticks",
+      "htfChart": "https://www.tradingview.com/x/BO33ZPhv/",
+      "mtfChart": "https://www.tradingview.com/x/QdrvNDV2/",
+      "entryChart": "https://www.tradingview.com/x/uX0aLN8f/",
+      "notes": "V-shape 이후 consolidation이 나와서 불편했지만 결과는 좋음",
+      "size": null,
+      "grade": "A",
+      "gxtPass": 11,
       "preTradeFilled": false,
-      "reviewSummary": null
+      "reviewSummary": "이번 시리즈 최고의 매매. 모든 GxT 원칙 정렬(반전 매매+HTF 정렬+Reversal Profile+H4 Candle Profiling+H1 Key Level+2-Stage SMT+S.S+V-shape Gap+C2 Direct small wick+IRL→ERL+10am NY Reversal). Strength Switch까지 갖춘 고등급 셋업에서 Max RR 5.79 Full TP. 진입 후 V-shape 대신 consolidation 나와 심리적 흔들림(Underconfidence) 있었으나 plan 장악. 매매 #6에서의 자기진단을 #7에서 실제 적용한 구조적 발전. 유일한 결함: Pre-Trade Filled=No."
     }
   ],
   "futures": [
